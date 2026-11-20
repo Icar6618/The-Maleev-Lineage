@@ -1,5 +1,6 @@
 import React, { useState, useRef, useMemo, useCallback } from 'react';
 import type { Person } from '../types/family';
+import { MedievalTree3D } from './MedievalTree3D';
 import {
   ZoomIn,
   ZoomOut,
@@ -11,7 +12,9 @@ import {
   Calendar,
   Users,
   Info,
-  Crown
+  Crown,
+  Shield,
+  Sparkles
 } from 'lucide-react';
 
 interface TreeViewProps {
@@ -24,7 +27,7 @@ interface TreeViewProps {
 
 /* ================================================================
    LAYOUT ENGINE — Bottom-to-top hierarchical tree
-   Roots (Tier 2) -> Hub/Trunk (Tier 1) -> Zenith (Tier 0)
+   Roots (Tier 2) -> Kingdom Council (Tier 1) -> Crown (Tier 0)
    ================================================================ */
 
 interface NodePos {
@@ -43,10 +46,10 @@ interface Connector {
 }
 
 const CARD_W = 280;
-const CARD_H = 205;
-const GAP_X = 44;
-const GAP_Y = 135;
-const COUPLE_GAP = 28;
+const CARD_H = 215;
+const GAP_X = 46;
+const GAP_Y = 140;
+const COUPLE_GAP = 30;
 
 function buildLayout(persons: Person[]) {
   const positions: NodePos[] = [];
@@ -57,7 +60,7 @@ function buildLayout(persons: Person[]) {
   const totalW = pairW * 2 + tierGap;
   const startX = -totalW / 2;
 
-  // ---- Tier 2 (BOTTOM): Origins / Grandparents ----
+  // ---- Tier 2 (BOTTOM): Patriarchs & Founders of Kingdom ----
   const tier2_y = (CARD_H + GAP_Y) * 2;
 
   const pgf_x = startX;
@@ -70,7 +73,7 @@ function buildLayout(persons: Person[]) {
   positions.push({ id: 'p-maternal-grandfather', x: mgf_x, y: tier2_y });
   positions.push({ id: 'p-maternal-grandmother', x: mgm_x, y: tier2_y });
 
-  // ---- Tier 1 (MIDDLE): Core Trunk / Parents, Uncles, Aunts ----
+  // ---- Tier 1 (MIDDLE): Royal Council / Parents, Uncles, Aunts ----
   const tier1_y = CARD_H + GAP_Y;
 
   const patCentreX = (pgf_x + pgm_x + CARD_W) / 2;
@@ -93,7 +96,7 @@ function buildLayout(persons: Person[]) {
   positions.push({ id: 'p-maternal-aunt', x: mAunt_x, y: tier1_y });
   positions.push({ id: 'p-maternal-uncle', x: mUncle_x, y: tier1_y });
 
-  // ---- Tier 0 (TOP): Zenith / Me & Brother ----
+  // ---- Tier 0 (TOP): Supreme Crown / Me & Brother ----
   const tier0_y = 0;
   const me_x = parentsCentreX - COUPLE_GAP / 2 - CARD_W;
   const bro_x = parentsCentreX + COUPLE_GAP / 2;
@@ -111,7 +114,7 @@ function buildLayout(persons: Person[]) {
   });
 
   // ================================================================
-  // CONNECTORS (Clean, minimalist structural lines — no glow)
+  // CONNECTORS (Royal Gold Ribbons & Filaments)
   // ================================================================
   const posMap = new Map<string, NodePos>();
   positions.forEach(np => posMap.set(np.id, np));
@@ -119,7 +122,7 @@ function buildLayout(persons: Person[]) {
   const topOf = (np: NodePos) => ({ x: np.x + CARD_W / 2, y: np.y });
   const botOf = (np: NodePos) => ({ x: np.x + CARD_W / 2, y: np.y + CARD_H });
 
-  // Marriage connections (Clean horizontal link)
+  // Holy Marriage Union Bonds
   const marriagePairs: [string, string][] = [
     ['p-paternal-grandfather', 'p-paternal-grandmother'],
     ['p-maternal-grandfather', 'p-maternal-grandmother'],
@@ -136,13 +139,13 @@ function buildLayout(persons: Person[]) {
     connectors.push({
       key: `marriage-${a}-${b}`,
       d: `M ${xa} ${ya} L ${xb} ${ya}`,
-      color: '#475569',
-      width: 1.5,
-      label: 'link',
+      color: '#d4af37',
+      width: 2.5,
+      label: '👑',
     });
   });
 
-  // Paternal grandparents → Father, Uncle, Aunt
+  // Paternal Grandparents → Father, Uncle, Aunt
   const pgfPos = posMap.get('p-paternal-grandfather');
   const pgmPos = posMap.get('p-paternal-grandmother');
   if (pgfPos && pgmPos) {
@@ -157,13 +160,13 @@ function buildLayout(persons: Person[]) {
       connectors.push({
         key: `parent-patgp-${cid}`,
         d: `M ${hubX} ${hubY} C ${hubX} ${midY}, ${cb.x} ${hubY - (hubY - cb.y) * 0.25}, ${cb.x} ${cb.y}`,
-        color: '#334155',
-        width: 1.5,
+        color: '#b8860b',
+        width: 2,
       });
     });
   }
 
-  // Maternal grandparents → Mother, Aunt, Uncle
+  // Maternal Grandparents → Mother, Aunt, Uncle
   const mgfPos = posMap.get('p-maternal-grandfather');
   const mgmPos = posMap.get('p-maternal-grandmother');
   if (mgfPos && mgmPos) {
@@ -178,8 +181,8 @@ function buildLayout(persons: Person[]) {
       connectors.push({
         key: `parent-matgp-${cid}`,
         d: `M ${hubX} ${hubY} C ${hubX} ${midY}, ${cb.x} ${hubY - (hubY - cb.y) * 0.25}, ${cb.x} ${cb.y}`,
-        color: '#334155',
-        width: 1.5,
+        color: '#991b1b',
+        width: 2,
       });
     });
   }
@@ -199,8 +202,8 @@ function buildLayout(persons: Person[]) {
       connectors.push({
         key: `parent-fm-${cid}`,
         d: `M ${hubX} ${hubY} C ${hubX} ${midY}, ${cb.x} ${hubY - (hubY - cb.y) * 0.25}, ${cb.x} ${cb.y}`,
-        color: '#475569',
-        width: 1.5,
+        color: '#d4af37',
+        width: 2.5,
       });
     });
   }
@@ -215,7 +218,7 @@ function buildLayout(persons: Person[]) {
         connectors.push({
           key: `dyn-father-${p.id}`,
           d: `M ${topOf(fp).x} ${topOf(fp).y} C ${topOf(fp).x} ${botOf(cp).y}, ${botOf(cp).x} ${topOf(fp).y}, ${botOf(cp).x} ${botOf(cp).y}`,
-          color: '#334155',
+          color: '#b8860b',
           width: 1.5,
           dashed: true,
         });
@@ -228,7 +231,7 @@ function buildLayout(persons: Person[]) {
         connectors.push({
           key: `dyn-mother-${p.id}`,
           d: `M ${topOf(mp).x} ${topOf(mp).y} C ${topOf(mp).x} ${botOf(cp).y}, ${botOf(cp).x} ${topOf(mp).y}, ${botOf(cp).x} ${botOf(cp).y}`,
-          color: '#334155',
+          color: '#991b1b',
           width: 1.5,
           dashed: true,
         });
@@ -241,7 +244,7 @@ function buildLayout(persons: Person[]) {
 
 
 /* ================================================================
-   MAIN TREE VIEW COMPONENT (MINIMALIST GLASSMORPHISM — NO GLOWS)
+   MAIN TREE VIEW COMPONENT (MEDIEVAL KINGDOM 3D)
    ================================================================ */
 
 export const TreeView: React.FC<TreeViewProps> = ({
@@ -279,7 +282,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
       minY = Math.min(minY, np.y);
       maxY = Math.max(maxY, np.y + CARD_H);
     });
-    return { minX: minX - 140, maxX: maxX + 140, minY: minY - 160, maxY: maxY + 120 };
+    return { minX: minX - 160, maxX: maxX + 160, minY: minY - 180, maxY: maxY + 140 };
   }, [positions]);
 
   const canvasW = bounds.maxX - bounds.minX;
@@ -328,13 +331,13 @@ export const TreeView: React.FC<TreeViewProps> = ({
   }, []);
 
   // ================================================================
-  // RENDER PURE MINIMALIST GLASSMORPHIC CARD (NO GLOWS)
+  // RENDER MEDIEVAL ROYAL HERALDIC PARCHMENT CARD
   // ================================================================
   const renderCard = (person: Person, pos: NodePos) => {
     const hasName = Boolean(person.firstName || person.lastName);
     const fullName = hasName
       ? `${person.lastName} ${person.firstName}`.trim()
-      : (person.roleLabel || 'Не заповнено');
+      : (person.roleLabel || 'Не вписано в літопис');
     const isMe = person.id === 'p-me';
     const isMale = person.gender === 'male';
     const initialLetter = person.firstName?.[0] || person.lastName?.[0] || person.roleLabel?.[0] || '?';
@@ -353,19 +356,23 @@ export const TreeView: React.FC<TreeViewProps> = ({
       (person.spouseIds?.length || 0) +
       (person.childrenIds?.length || 0);
 
-    // Clean Minimalist Glassmorphism Tokens (Strictly no neon halos)
-    const glassBorder = isMe
-      ? 'border-amber-400/60'
+    // Medieval Royalty Card Styling
+    const parchmentBorder = isMe
+      ? 'border-2 border-[#d4af37] shadow-[0_0_20px_rgba(212,175,55,0.3)]'
       : isMale
-        ? 'border-slate-700/80 hover:border-cyan-500/50'
-        : 'border-slate-700/80 hover:border-rose-500/50';
+        ? 'border-2 border-[#b8860b]/60 hover:border-[#d4af37]'
+        : 'border-2 border-[#991b1b]/60 hover:border-[#dc2626]';
 
-    const glassBg = 'bg-slate-900/60 hover:bg-slate-850/80 backdrop-blur-xl';
+    const parchmentBg = isMe
+      ? 'bg-gradient-to-b from-[#2b1b0e]/95 via-[#1a1109]/95 to-[#120c06]/95'
+      : isMale
+        ? 'bg-gradient-to-b from-[#1e150d]/95 via-[#150f09]/95 to-[#0d0905]/95'
+        : 'bg-gradient-to-b from-[#261010]/95 via-[#180a0a]/95 to-[#0d0505]/95';
 
     return (
       <div
         key={person.id}
-        className="person-node absolute transition-all duration-200 touch-manipulation group"
+        className="person-node absolute transition-all duration-300 touch-manipulation group"
         style={{
           left: pos.x - bounds.minX,
           top: pos.y - bounds.minY,
@@ -378,56 +385,63 @@ export const TreeView: React.FC<TreeViewProps> = ({
       >
         <div
           onClick={() => onSelectPerson(person)}
-          className={`w-full h-full rounded-2xl p-4 cursor-pointer relative overflow-hidden transition-all duration-200 border shadow-lg shadow-black/40
-            ${glassBg}
-            ${glassBorder}
+          className={`w-full h-full rounded-2xl p-4 cursor-pointer relative overflow-hidden transition-all duration-200 backdrop-blur-md shadow-2xl shadow-black/80
+            ${parchmentBg}
+            ${parchmentBorder}
             ${isSearchMatch
-              ? 'ring-2 ring-cyan-400 border-cyan-400 scale-102'
+              ? 'ring-4 ring-[#d4af37] scale-105 shadow-[0_0_30px_rgba(212,175,55,0.6)]'
               : isHovered
-                ? '-translate-y-1'
+                ? '-translate-y-1.5 scale-[1.02]'
                 : ''
             }
-            ${!hasName ? 'border-dashed border-slate-700 opacity-80 hover:opacity-100' : ''}
+            ${!hasName ? 'border-dashed border-[#d4af37]/40 opacity-85 hover:opacity-100' : ''}
           `}
         >
-          {/* Top Row: Clean Minimal Role Badge & Generation */}
+          {/* Antique Gold Filigree Header Bar */}
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent" />
+
+          {/* Corner Heraldic Castles/Rivet Accents */}
+          <div className="absolute top-1.5 left-1.5 text-[8px] text-[#d4af37]/60">❖</div>
+          <div className="absolute top-1.5 right-1.5 text-[8px] text-[#d4af37]/60">❖</div>
+
+          {/* Top Row: Royal Title Banner + Dynasty Generation */}
           <div className="flex items-center justify-between gap-1 mb-2.5">
-            <span className={`text-[10px] font-mono font-medium px-2 py-0.5 rounded-lg flex items-center gap-1.5 border ${
+            <span className={`text-[10px] font-['Cinzel'] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1.5 border shadow-sm ${
               isMe
-                ? 'bg-amber-500/10 text-amber-300 border-amber-500/30'
+                ? 'bg-[#d4af37]/20 text-[#fef3c7] border-[#d4af37]/60 shadow-[0_0_8px_rgba(212,175,55,0.3)]'
                 : isMale
-                  ? 'bg-cyan-500/10 text-cyan-300 border-cyan-500/20'
-                  : 'bg-rose-500/10 text-rose-300 border-rose-500/20'
+                  ? 'bg-[#b8860b]/20 text-[#fef3c7] border-[#b8860b]/40'
+                  : 'bg-[#991b1b]/20 text-[#fca5a5] border-[#991b1b]/40'
             }`}>
-              {isMe && <Crown className="w-3 h-3 text-amber-400 inline" />}
-              <span className="truncate">{person.roleLabel || (isMale ? 'Чоловік' : 'Жінка')}</span>
+              {isMe ? <Crown className="w-3.5 h-3.5 text-[#d4af37] inline" /> : <Shield className="w-3 h-3 opacity-70" />}
+              <span className="truncate">{person.roleLabel || (isMale ? 'Шляхтич' : 'Шляхтянка')}</span>
             </span>
 
-            {/* Simple dot + Gen indicator */}
+            {/* Red Royal Wax Seal Motif */}
             <div className="flex items-center gap-1.5">
-              {person.isLiving && (
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400" title="Живий" />
-              )}
-              <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-slate-800/80 border border-slate-700/60 text-slate-400">
+              <span className="w-4 h-4 rounded-full bg-[#991b1b] border border-[#f87171] shadow-sm flex items-center justify-center text-[7px] text-[#fef3c7] font-bold" title="Королівська Печать">
+                ⚜
+              </span>
+              <span className="text-[9px] font-['Cinzel'] font-bold px-1.5 py-0.5 rounded bg-[#1e150d] border border-[#d4af37]/40 text-[#d4af37]">
                 П{person.generation}
               </span>
             </div>
           </div>
 
-          {/* Clean Avatar & Identity Area */}
+          {/* Cameo Medallion + Name Area */}
           <div className="flex items-start gap-3 mb-2.5">
-            <div className={`relative w-11 h-11 rounded-xl shrink-0 p-0.5 border ${
+            <div className={`relative w-12 h-12 rounded-full shrink-0 p-[2px] shadow-xl ${
               isMe
-                ? 'border-amber-400/50 bg-amber-950/40'
+                ? 'bg-gradient-to-tr from-[#d4af37] via-[#f59e0b] to-[#78350f] ring-2 ring-[#d4af37]/60'
                 : isMale
-                  ? 'border-cyan-500/30 bg-cyan-950/30'
-                  : 'border-rose-500/30 bg-rose-950/30'
+                  ? 'bg-gradient-to-tr from-[#b8860b] via-[#78350f] to-[#1e150d] ring-1 ring-[#d4af37]/40'
+                  : 'bg-gradient-to-tr from-[#991b1b] via-[#78350f] to-[#1e150d] ring-1 ring-[#f87171]/40'
             }`}>
-              <div className="w-full h-full rounded-[10px] bg-slate-950 flex items-center justify-center font-['Outfit'] text-sm font-semibold overflow-hidden">
+              <div className="w-full h-full rounded-full bg-[#120c06] flex items-center justify-center font-['Cinzel'] text-base font-bold overflow-hidden">
                 {person.avatarUrl ? (
                   <img src={person.avatarUrl} alt={fullName} className="w-full h-full object-cover" />
                 ) : (
-                  <span className={isMe ? 'text-amber-300' : isMale ? 'text-cyan-300' : 'text-rose-300'}>
+                  <span className={isMe ? 'text-[#d4af37]' : isMale ? 'text-[#fef3c7]' : 'text-[#fca5a5]'}>
                     {initialLetter}
                   </span>
                 )}
@@ -435,96 +449,96 @@ export const TreeView: React.FC<TreeViewProps> = ({
             </div>
 
             <div className="flex-1 min-w-0">
-              <h3 className={`font-['Outfit'] font-semibold text-sm leading-tight transition-colors truncate ${
+              <h3 className={`font-['Cinzel'] font-bold text-sm leading-tight transition-colors truncate ${
                 hasName 
-                  ? 'text-slate-100 group-hover:text-cyan-300' 
-                  : 'text-slate-300 font-medium'
+                  ? 'text-[#fffbeb] group-hover:text-[#d4af37]' 
+                  : 'text-[#d4af37]/90 font-medium'
               }`}>
                 {fullName}
               </h3>
 
               {person.middleName && (
-                <p className="text-xs text-slate-400 truncate mt-0.5 font-sans">{person.middleName}</p>
+                <p className="text-xs text-[#d4af37]/70 truncate mt-0.5 font-serif italic">{person.middleName}</p>
               )}
               {person.maidenName && (
-                <p className="text-[11px] text-slate-400 italic truncate">({person.maidenName})</p>
+                <p className="text-[11px] text-[#fca5a5] italic truncate">({person.maidenName})</p>
               )}
 
               {!hasName && (
-                <p className="text-[11px] text-slate-400 flex items-center gap-1 mt-1 font-mono">
-                  <PlusCircle className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Внести дані</span>
+                <p className="text-[11px] text-[#d4af37] flex items-center gap-1 mt-1 font-serif">
+                  <PlusCircle className="w-3.5 h-3.5 text-[#d4af37]" />
+                  <span>Вписати у Грамоту</span>
                 </p>
               )}
             </div>
           </div>
 
-          {/* Details Grid (Dates, Geo, Profession) */}
-          <div className="border-t border-slate-800/80 pt-2 space-y-1 text-xs">
-            <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
-              <Calendar className="w-3 h-3 shrink-0 text-slate-500" />
+          {/* Details (Dates, Lordship, Coat of Arms) */}
+          <div className="border-t border-[#d4af37]/20 pt-2 space-y-1 text-xs font-serif">
+            <div className="flex items-center gap-1.5 text-[11px] text-[#d4af37]/80">
+              <Calendar className="w-3.5 h-3.5 shrink-0 text-[#d4af37]" />
               {person.birthDate ? (
-                <span className="font-mono text-slate-300">
-                  {person.birthDate} — {person.isLiving ? 'досі' : (person.deathDate || '?')}
+                <span className="font-['Cinzel'] text-[#fef3c7]">
+                  {person.birthDate} — {person.isLiving ? 'донині' : (person.deathDate || '?')}
                 </span>
               ) : (
-                <span className="italic text-slate-500 font-mono">Дати не вказано</span>
+                <span className="italic text-[#d4af37]/50">Епоха не зазначена</span>
               )}
             </div>
 
             {person.birthPlace && (
-              <div className="flex items-center gap-1.5 text-[11px] text-slate-400 truncate">
-                <MapPin className="w-3 h-3 shrink-0 text-slate-500" />
-                <span className="truncate">{person.birthPlace}</span>
+              <div className="flex items-center gap-1.5 text-[11px] text-[#d4af37]/80 truncate">
+                <MapPin className="w-3.5 h-3.5 shrink-0 text-[#d4af37]" />
+                <span className="truncate">Володіння: {person.birthPlace}</span>
               </div>
             )}
 
             {person.profession && (
-              <div className="flex items-center gap-1.5 text-[11px] text-slate-400 truncate">
-                <Briefcase className="w-3 h-3 shrink-0 text-slate-500" />
-                <span className="truncate">{person.profession}</span>
+              <div className="flex items-center gap-1.5 text-[11px] text-[#d4af37]/80 truncate">
+                <Briefcase className="w-3.5 h-3.5 shrink-0 text-[#d4af37]" />
+                <span className="truncate">Сан: {person.profession}</span>
               </div>
             )}
 
-            {/* Connection Count & Status */}
-            <div className="flex items-center justify-between text-[10px] text-slate-500 pt-0.5 font-mono">
+            {/* Connection count & Dynasty status */}
+            <div className="flex items-center justify-between text-[10px] text-[#d4af37]/70 pt-0.5">
               <span className="flex items-center gap-1">
-                <Users className="w-3 h-3" />
-                <span>{connectionCount} зв'язків</span>
+                <Users className="w-3 h-3 text-[#d4af37]" />
+                <span>{connectionCount} узів роду</span>
               </span>
 
-              <span className={`px-2 py-0.5 rounded text-[9px] ${
+              <span className={`px-2 py-0.5 rounded-full font-serif font-bold text-[9px] ${
                 person.isLiving
-                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                  : 'bg-slate-800/80 text-slate-400'
+                  ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-500/30'
+                  : 'bg-[#1e150d] text-[#d4af37]/60 border border-[#d4af37]/30'
               }`}>
-                {person.isLiving ? 'Живий(а)' : 'Пам’ять'}
+                {person.isLiving ? 'У Здравії' : 'Вічна Пам’ять'}
               </span>
             </div>
           </div>
 
-          {/* Minimalist Action Footer */}
-          <div className="absolute bottom-2.5 left-4 right-4 pt-1.5 border-t border-slate-800/60 flex items-center justify-between text-[11px]">
+          {/* Action Footer (Royal Signet Buttons) */}
+          <div className="absolute bottom-2.5 left-4 right-4 pt-1.5 border-t border-[#d4af37]/20 flex items-center justify-between text-[11px]">
             <button
               onClick={(e) => { e.stopPropagation(); onSelectPerson(person); }}
-              className="px-2 py-0.5 text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700/80 active:bg-slate-700 border border-slate-700/60 rounded-lg transition-all flex items-center gap-1 font-mono text-[10px]"
+              className="px-2.5 py-0.5 text-[#d4af37] hover:text-white bg-[#d4af37]/15 hover:bg-[#d4af37]/25 active:bg-[#d4af37]/35 border border-[#d4af37]/40 rounded-lg transition-all flex items-center gap-1 font-['Cinzel'] font-bold text-[10px]"
             >
               <Edit3 className="w-3 h-3" />
-              <span>{hasName ? 'ЗМІНИТИ' : 'ВНЕСТИ'}</span>
+              <span>{hasName ? 'ГРАМОТА' : 'ВПИСАТИ'}</span>
             </button>
 
-            <div className="flex items-center gap-1.5 text-slate-400 font-mono text-[10px]">
+            <div className="flex items-center gap-1.5 text-[#d4af37]/80 font-serif text-[10px]">
               <button
                 onClick={(e) => { e.stopPropagation(); onAddChild(person); }}
-                className="px-2 py-0.5 hover:text-slate-200 hover:bg-slate-800/60 rounded transition"
-                title="Додати дитину"
+                className="px-2 py-0.5 hover:text-[#fef3c7] hover:bg-[#d4af37]/15 rounded transition"
+                title="Вписати нащадка"
               >
-                +Дитина
+                +Нащадок
               </button>
               <button
                 onClick={(e) => { e.stopPropagation(); onAddSpouse(person); }}
-                className="px-2 py-0.5 hover:text-slate-200 hover:bg-slate-800/60 rounded transition"
-                title="Додати союз"
+                className="px-2 py-0.5 hover:text-[#fef3c7] hover:bg-[#d4af37]/15 rounded transition"
+                title="Вписати шлюб"
               >
                 +Союз
               </button>
@@ -535,82 +549,88 @@ export const TreeView: React.FC<TreeViewProps> = ({
     );
   };
 
-  // Clean Minimalist Tier Labels
+  // Royal Stage Decrees
   const tierLabels = useMemo(() => {
     const tier0_y = 0;
     const tier1_y = CARD_H + GAP_Y;
     const tier2_y = (CARD_H + GAP_Y) * 2;
     return [
-      { y: tier0_y, label: 'ПОКОЛІННЯ 3 • ТЕПЕРІШНЄ ПОКОЛІННЯ (Я ТА БРАТ)', color: 'text-slate-400 bg-slate-900/60 border-slate-800' },
-      { y: tier1_y, label: 'ПОКОЛІННЯ 2 • БАТЬКИ, ДЯДЬКИ ТА ТІТКИ', color: 'text-slate-400 bg-slate-900/60 border-slate-800' },
-      { y: tier2_y, label: 'ПОКОЛІННЯ 1 • ДІДУСІ ТА БАБУСІ', color: 'text-slate-400 bg-slate-900/60 border-slate-800' },
+      { y: tier0_y, label: '👑 ВЕРХОВНА КОРОНА ДИНАСТІЇ • МОЛОДЕ ПОКОЛІННЯ (Я ТА БРАТ)', color: 'text-[#fef3c7] bg-[#2a1a0e]/90 border-[#d4af37]' },
+      { y: tier1_y, label: '⚔️ ДЕРЖАВНА РАДА КОРОЛІВСТВА • БАТЬКИ, КНЯЗІ ТА КНЯГИНІ', color: 'text-[#fef3c7] bg-[#1e150d]/90 border-[#b8860b]' },
+      { y: tier2_y, label: '🛡️ ПАТРІАРХИ-ЗАСНОВНИКИ ДИНАСТІЇ • ДІДУСІ ТА БАБУСІ', color: 'text-[#fef3c7] bg-[#181109]/90 border-[#78350f]' },
     ];
   }, []);
 
   return (
-    <div className="relative w-full h-[calc(100dvh-130px)] sm:h-[calc(100vh-140px)] bg-[#030712] overflow-hidden select-none touch-none">
+    <div className="relative w-full h-[calc(100dvh-130px)] sm:h-[calc(100vh-140px)] bg-[#0c0906] overflow-hidden select-none touch-none">
 
-      {/* Very subtle minimalist grid dots (calm and clean) */}
+      {/* Medieval Castle Stone / Tapestry Atmosphere */}
       <div 
-        className="absolute inset-0 pointer-events-none opacity-20"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage: `radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px)`,
-          backgroundSize: '32px 32px',
+          backgroundImage: `
+            radial-gradient(ellipse 90% 70% at 50% 90%, rgba(120,53,15,0.25) 0%, transparent 60%),
+            radial-gradient(ellipse 70% 50% at 50% 10%, rgba(212,175,55,0.15) 0%, transparent 50%),
+            radial-gradient(circle at center, rgba(30,19,10,0.8) 0%, transparent 80%)
+          `,
         }}
       />
 
-      {/* Minimalist Floating Glass Toolbar */}
-      <div className="absolute top-3 left-3 z-30 flex items-center gap-1.5 bg-slate-900/80 backdrop-blur-xl p-1.5 sm:p-2 rounded-2xl border border-slate-800 shadow-xl">
-        <button onClick={() => handleZoom(0.12)} className="p-2 text-slate-300 hover:text-white hover:bg-slate-800/80 active:bg-slate-700 rounded-xl transition" title="Збільшити">
+      {/* Floating Medieval Toolbar */}
+      <div className="absolute top-3 left-3 z-30 flex items-center gap-1.5 bg-[#181109]/90 backdrop-blur-xl p-1.5 sm:p-2 rounded-2xl border border-[#d4af37]/40 shadow-2xl shadow-black/80">
+        <button onClick={() => handleZoom(0.12)} className="p-2 text-[#d4af37] hover:text-[#fffbeb] bg-[#26190e] active:bg-[#3d2716] rounded-xl transition" title="Збільшити">
           <ZoomIn className="w-4 h-4" />
         </button>
-        <button onClick={() => handleZoom(-0.12)} className="p-2 text-slate-300 hover:text-white hover:bg-slate-800/80 active:bg-slate-700 rounded-xl transition" title="Зменшити">
+        <button onClick={() => handleZoom(-0.12)} className="p-2 text-[#d4af37] hover:text-[#fffbeb] bg-[#26190e] active:bg-[#3d2716] rounded-xl transition" title="Зменшити">
           <ZoomOut className="w-4 h-4" />
         </button>
-        <button onClick={handleResetZoom} className="p-2 text-slate-300 hover:text-white hover:bg-slate-800/80 active:bg-slate-700 rounded-xl transition" title="Центрувати">
+        <button onClick={handleResetZoom} className="p-2 text-[#d4af37] hover:text-[#fffbeb] bg-[#26190e] active:bg-[#3d2716] rounded-xl transition" title="Центрувати літопис">
           <Maximize2 className="w-4 h-4" />
         </button>
-        <span className="text-[11px] text-slate-400 font-mono px-1 font-medium">{Math.round(scale * 100)}%</span>
-        <div className="h-4 w-px bg-slate-800 mx-0.5" />
+        <span className="text-[11px] text-[#fef3c7] font-['Cinzel'] font-bold px-1.5">{Math.round(scale * 100)}%</span>
+        <div className="h-4 w-px bg-[#d4af37]/30 mx-0.5" />
         <button
           onClick={() => setShowLegend(v => !v)}
           className={`p-2 rounded-xl transition cursor-pointer ${
             showLegend 
-              ? 'bg-slate-800 text-white border border-slate-700' 
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              ? 'bg-[#d4af37] text-slate-950 font-bold shadow-md shadow-[#d4af37]/30' 
+              : 'text-[#d4af37] hover:text-[#fffbeb] bg-[#26190e]'
           }`}
-          title="Легенда"
+          title="Гербова Легенда"
         >
           <Info className="w-4 h-4" />
         </button>
       </div>
 
-      {/* Minimalist Clean Legend Card */}
+      {/* Medieval Heraldic Legend Card */}
       {showLegend && (
-        <div className="absolute top-3 right-3 z-30 bg-slate-900/90 backdrop-blur-2xl p-3.5 rounded-2xl border border-slate-800 shadow-xl text-[11px] space-y-2 max-w-[200px] animate-in fade-in duration-200">
-          <h4 className="text-xs font-mono font-medium text-slate-300 border-b border-slate-800 pb-1.5">
-            Зв'язки дерева
+        <div className="absolute top-3 right-3 z-30 bg-[#181109]/95 backdrop-blur-2xl p-4 rounded-2xl border border-[#d4af37]/50 shadow-2xl shadow-black/90 text-[11px] space-y-2 max-w-[220px] animate-in fade-in duration-200 font-serif">
+          <h4 className="text-xs font-['Cinzel'] font-bold text-[#fef3c7] flex items-center gap-1.5 border-b border-[#d4af37]/30 pb-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-[#d4af37]" />
+            <span>Геральдичні Узи</span>
           </h4>
-          <div className="flex items-center gap-2"><div className="w-5 h-0.5 bg-slate-500 rounded" /><span className="text-slate-400 font-mono text-[10px]">Шлюбний зв'язок</span></div>
-          <div className="flex items-center gap-2"><div className="w-5 h-0.5 bg-slate-600 rounded" /><span className="text-slate-400 font-mono text-[10px]">Батьки → Діти</span></div>
-          <div className="mt-2 pt-2 border-t border-slate-800 space-y-1.5">
-            <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded border border-cyan-500/40 bg-cyan-950/40" /><span className="text-slate-400 font-mono text-[10px]">Чоловік</span></div>
-            <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded border border-rose-500/40 bg-rose-950/40" /><span className="text-slate-400 font-mono text-[10px]">Жінка</span></div>
-            <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded border border-amber-400/50 bg-amber-950/40" /><span className="text-slate-400 font-mono text-[10px]">👑 Я (Власник)</span></div>
+          <div className="flex items-center gap-2"><div className="w-5 h-1 bg-[#d4af37] rounded-full shadow-sm" /><span className="text-[#fef3c7] font-serif">👑 Священний Шлюб</span></div>
+          <div className="flex items-center gap-2"><div className="w-5 h-1 bg-[#b8860b] rounded-full" /><span className="text-[#d4af37]">Кров Батька</span></div>
+          <div className="flex items-center gap-2"><div className="w-5 h-1 bg-[#991b1b] rounded-full" /><span className="text-[#fca5a5]">Кров Матері</span></div>
+          <div className="flex items-center gap-2"><div className="w-5 h-1 bg-[#d4af37] rounded-full" /><span className="text-[#fef3c7]">Спадкоємці Престолу</span></div>
+          <div className="mt-2 pt-2 border-t border-[#d4af37]/30 space-y-1.5">
+            <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full border border-[#d4af37] bg-[#2a1a0e]" /><span className="text-[#fef3c7]">Шляхтич</span></div>
+            <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full border border-[#f87171] bg-[#261010]" /><span className="text-[#fca5a5]">Шляхтянка</span></div>
+            <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full border-2 border-[#d4af37] bg-[#78350f]" /><span className="text-[#fef3c7] font-bold">👑 Його Величність</span></div>
           </div>
-          <div className="mt-2 pt-2 border-t border-slate-800 text-slate-500 font-mono text-[9px]">
-            Scroll для зуму • Drag для руху
+          <div className="mt-2 pt-2 border-t border-[#d4af37]/30 text-[#d4af37]/60 text-[9px] italic">
+            🌳 Живе 3D Дерево Королівства
           </div>
         </div>
       )}
 
-      {/* Minimalist Bottom Indicator */}
-      <div className="absolute bottom-3 left-3 right-3 sm:right-auto z-30 pointer-events-none text-[11px] text-slate-400 bg-slate-900/80 px-3.5 py-1.5 rounded-xl border border-slate-800 backdrop-blur-xl flex items-center gap-2.5 shadow-lg font-mono">
-        <span>Покоління 3 (Я)</span>
-        <span className="text-slate-600">▲</span>
-        <span>Покоління 2 (Батьки)</span>
-        <span className="text-slate-600">▲</span>
-        <span>Покоління 1 (Дідусі)</span>
+      {/* Bottom Royal Ribbon Indicator */}
+      <div className="absolute bottom-3 left-3 right-3 sm:right-auto z-30 pointer-events-none text-[11px] sm:text-xs text-[#fef3c7] bg-[#181109]/90 px-3.5 py-2 rounded-2xl border border-[#d4af37]/40 backdrop-blur-xl flex items-center gap-2.5 shadow-xl font-['Cinzel'] font-bold">
+        <span className="text-[#d4af37]">🍃 Престол (Я)</span>
+        <span className="text-[#d4af37]/50">▲</span>
+        <span className="text-[#fef3c7]">⚔️ Державна Рада (Батьки)</span>
+        <span className="text-[#d4af37]/50">▲</span>
+        <span className="text-[#b8860b]">🛡️ Коріння Династії (Дідусі)</span>
       </div>
 
       {/* Canvas Area */}
@@ -637,7 +657,14 @@ export const TreeView: React.FC<TreeViewProps> = ({
             margin: '0 auto',
           }}
         >
-          {/* Clean Structural SVG Connectors (No glows, no blur filters, no background trunk lasers) */}
+          {/* ======================================================== */}
+          {/* LAYER 1: INTERACTIVE 3D MEDIEVAL TREE OF LIFE            */}
+          {/* ======================================================== */}
+          <MedievalTree3D canvasW={canvasW} canvasH={canvasH} />
+
+          {/* ======================================================== */}
+          {/* LAYER 2: ROYAL GOLD RIBBONS & CHAINS                     */}
+          {/* ======================================================== */}
           <svg
             className="absolute inset-0 w-full h-full pointer-events-none"
             style={{ width: canvasW, height: canvasH, zIndex: 10 }}
@@ -663,12 +690,12 @@ export const TreeView: React.FC<TreeViewProps> = ({
                   strokeWidth={c.width} 
                   strokeLinecap="round" 
                   strokeDasharray={c.dashed ? '6 4' : undefined}
-                  opacity={0.8} 
+                  opacity={0.9} 
                 />
               );
             })}
 
-            {/* Marriage Minimalist Signet Point */}
+            {/* Holy Marriage Wax Signet Badge */}
             {connectors.filter(c => c.label).map(c => {
               const coords = c.d.match(/-?\d+\.?\d*/g);
               if (!coords || coords.length < 4) return null;
@@ -681,24 +708,32 @@ export const TreeView: React.FC<TreeViewProps> = ({
 
               return (
                 <g key={`signet-${c.key}`}>
-                  <circle cx={mx} cy={my} r={4} fill="#0f172a" stroke="#475569" strokeWidth="1.5" />
+                  <circle cx={mx} cy={my} r={14} fill="#181109" stroke="#d4af37" strokeWidth="2" />
+                  <circle cx={mx} cy={my} r={10} fill="#991b1b" />
+                  <text x={mx} y={my + 1} textAnchor="middle" dominantBaseline="central" fontSize="11" fill="#fef3c7">
+                    👑
+                  </text>
                 </g>
               );
             })}
           </svg>
 
-          {/* Minimalist Tier Stage Headers */}
+          {/* ======================================================== */}
+          {/* LAYER 3: ROYAL STAGE DECREE BANNERS                      */}
+          {/* ======================================================== */}
           {tierLabels.map(({ y, label, color }) => (
             <div
               key={label}
-              className={`absolute z-10 text-[10px] font-mono font-medium tracking-wider px-3 py-1 rounded-lg border backdrop-blur-md ${color}`}
-              style={{ left: 16, top: y - bounds.minY - 34 }}
+              className={`absolute z-10 text-[10px] font-['Cinzel'] font-bold tracking-wider px-4 py-1.5 rounded-full border backdrop-blur-xl shadow-2xl ${color}`}
+              style={{ left: 16, top: y - bounds.minY - 40 }}
             >
               {label}
             </div>
           ))}
 
-          {/* Minimalist Glassmorphic Person Cards */}
+          {/* ======================================================== */}
+          {/* LAYER 4: ROYAL HERALDIC PARCHMENT CARDS                  */}
+          {/* ======================================================== */}
           {positions.map(pos => {
             const person = personMap.get(pos.id);
             if (!person) return null;
