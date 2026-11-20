@@ -418,12 +418,6 @@ export const TreeView: React.FC<TreeViewProps> = ({
           {/* Metallic Gold Leaf Shimmer Top Bar */}
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#ffd700] to-transparent shadow-[0_1px_5px_rgba(212,175,55,0.7)]" />
 
-          {/* Corner Heraldic Fleur-de-lis Accents */}
-          <div className="absolute top-1.5 left-2 text-[10px] text-[#d4af37]/80">⚜</div>
-          <div className="absolute top-1.5 right-2 text-[10px] text-[#d4af37]/80">⚜</div>
-          <div className="absolute bottom-1 left-2 text-[9px] text-[#d4af37]/50">⚜</div>
-          <div className="absolute bottom-1 right-2 text-[9px] text-[#d4af37]/50">⚜</div>
-
           {/* Top Row: 2) Назва / Роль */}
           <div className="flex items-center justify-between gap-1 mb-2 pl-3 pr-3">
             <span className="text-[10px] font-['Cinzel'] font-bold px-2 py-0.5 rounded-full flex items-center gap-1.5 bg-[#26190e]/90 border border-[#d4af37]/60 text-[#fef3c7] shadow-xs">
