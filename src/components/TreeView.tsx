@@ -13,7 +13,8 @@ import {
   Users,
   Info,
   Shield,
-  Sparkles
+  Sparkles,
+  Quote
 } from 'lucide-react';
 
 interface TreeViewProps {
@@ -44,10 +45,10 @@ interface Connector {
   label?: string;
 }
 
-const CARD_W = 280;
-const CARD_H = 215;
+const CARD_W = 295;
+const CARD_H = 270;
 const GAP_X = 46;
-const GAP_Y = 140;
+const GAP_Y = 130;
 const COUPLE_GAP = 30;
 
 function buildLayout(persons: Person[]) {
@@ -381,18 +382,14 @@ export const TreeView: React.FC<TreeViewProps> = ({
       (person.spouseIds?.length || 0) +
       (person.childrenIds?.length || 0);
 
-    // Medieval Royalty Card Styling
-    const parchmentBorder = isMe
-      ? 'border-2 border-[#d4af37] shadow-[0_0_20px_rgba(212,175,55,0.3)]'
+    // White-Gold Metallic Plate Styling
+    const metallicBorder = isMe
+      ? 'border-2 border-[#ffd700] ring-2 ring-[#d4af37]/60 shadow-[0_12px_36px_rgba(0,0,0,0.8),inset_0_1px_2px_rgba(255,255,255,1),0_0_24px_rgba(212,175,55,0.4)]'
       : isMale
-        ? 'border-2 border-[#b8860b]/60 hover:border-[#d4af37]'
-        : 'border-2 border-[#991b1b]/60 hover:border-[#dc2626]';
+        ? 'border-2 border-[#d4af37]/90 hover:border-[#f59e0b] shadow-[0_10px_30px_rgba(0,0,0,0.7),inset_0_1px_2px_rgba(255,255,255,1)]'
+        : 'border-2 border-[#e6b17e] hover:border-[#d4af37] shadow-[0_10px_30px_rgba(0,0,0,0.7),inset_0_1px_2px_rgba(255,255,255,1)]';
 
-    const parchmentBg = isMe
-      ? 'bg-gradient-to-b from-[#2b1b0e]/95 via-[#1a1109]/95 to-[#120c06]/95'
-      : isMale
-        ? 'bg-gradient-to-b from-[#1e150d]/95 via-[#150f09]/95 to-[#0d0905]/95'
-        : 'bg-gradient-to-b from-[#261010]/95 via-[#180a0a]/95 to-[#0d0505]/95';
+    const metallicBg = 'bg-gradient-to-br from-[#ffffff] via-[#f8f6f0] to-[#eae3cf] text-[#1c1309]';
 
     return (
       <div
@@ -410,162 +407,167 @@ export const TreeView: React.FC<TreeViewProps> = ({
       >
         <div
           onClick={() => onSelectPerson(person)}
-          className={`w-full h-full rounded-2xl p-4 cursor-pointer relative overflow-hidden transition-all duration-200 backdrop-blur-md shadow-2xl shadow-black/90
-            ${parchmentBg}
-            ${parchmentBorder}
+          className={`w-full h-full rounded-2xl p-3.5 cursor-pointer relative overflow-hidden transition-all duration-200 shadow-2xl
+            ${metallicBg}
+            ${metallicBorder}
             ${isSearchMatch
-              ? 'ring-4 ring-[#d4af37] scale-105 shadow-[0_0_30px_rgba(212,175,55,0.7)]'
+              ? 'ring-4 ring-[#d4af37] scale-105 shadow-[0_0_35px_rgba(212,175,55,0.8)]'
               : isHovered
                 ? '-translate-y-1.5 scale-[1.02]'
                 : ''
             }
-            ${!hasName ? 'border-dashed border-[#d4af37]/40 opacity-85 hover:opacity-100' : ''}
+            ${!hasName ? 'border-dashed border-[#d4af37]/60 opacity-90 hover:opacity-100' : ''}
           `}
         >
-          {/* Antique Gold Filigree Header Bar */}
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent" />
+          {/* Metallic Gold Leaf Shimmer Top Bar */}
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#ffd700] to-transparent shadow-[0_1px_4px_rgba(212,175,55,0.7)]" />
 
           {/* Corner Heraldic Fleur-de-lis Accents */}
-          <div className="absolute top-1.5 left-2 text-[10px] text-[#d4af37]/80">⚜</div>
-          <div className="absolute top-1.5 right-2 text-[10px] text-[#d4af37]/80">⚜</div>
-          <div className="absolute bottom-1 left-2 text-[9px] text-[#d4af37]/50">⚜</div>
-          <div className="absolute bottom-1 right-2 text-[9px] text-[#d4af37]/50">⚜</div>
+          <div className="absolute top-1.5 left-2 text-[10px] text-[#b48608] font-bold drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)]">⚜</div>
+          <div className="absolute top-1.5 right-2 text-[10px] text-[#b48608] font-bold drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)]">⚜</div>
+          <div className="absolute bottom-1 left-2 text-[9px] text-[#b48608]/60">⚜</div>
+          <div className="absolute bottom-1 right-2 text-[9px] text-[#b48608]/60">⚜</div>
 
-          {/* Top Row: Title Banner + Dynasty Generation */}
-          <div className="flex items-center justify-between gap-1 mb-2.5 pl-3 pr-3">
-            <span className={`text-[10px] font-['Cinzel'] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1.5 border shadow-sm ${
-              isMe
-                ? 'bg-[#d4af37]/25 text-[#fffbeb] border-[#d4af37] shadow-[0_0_10px_rgba(212,175,55,0.3)]'
-                : isMale
-                  ? 'bg-[#b8860b]/20 text-[#fef3c7] border-[#b8860b]/50'
-                  : 'bg-[#991b1b]/25 text-[#fca5a5] border-[#991b1b]/50'
-            }`}>
-              <Shield className="w-3 h-3 text-[#d4af37] inline opacity-90" />
+          {/* Top Row: 2) Назва / Роль + Покоління + Печать */}
+          <div className="flex items-center justify-between gap-1 mb-2 pl-3 pr-3">
+            <span className="text-[10px] font-['Cinzel'] font-bold px-2 py-0.5 rounded-full flex items-center gap-1.5 bg-gradient-to-r from-[#fef3c7] via-[#fde68a] to-[#fef3c7] border border-[#d4af37] text-[#78350f] shadow-xs">
+              <Shield className="w-3 h-3 text-[#b45309] inline opacity-90" />
               <span className="truncate">{person.roleLabel || (isMe ? 'Власник Дерева' : isMale ? 'Член роду' : 'Членкиня роду')}</span>
             </span>
 
-            {/* Red Wax Seal Motif */}
+            {/* Red Wax Seal Motif + Generation */}
             <div className="flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded-full bg-[#991b1b] border border-[#f87171] shadow-md flex items-center justify-center text-[7px] text-[#fef3c7] font-bold" title="Родинна Печать">
+              <span className="w-4 h-4 rounded-full bg-gradient-to-br from-[#991b1b] to-[#7f1d1d] border border-[#f87171] shadow-xs flex items-center justify-center text-[7px] text-[#fffbeb] font-bold" title="Родинна Печать">
                 ⚜
               </span>
-              <span className="text-[9px] font-['Cinzel'] font-bold px-1.5 py-0.5 rounded bg-[#1e150d] border border-[#d4af37]/50 text-[#d4af37]">
+              <span className="text-[9px] font-['Cinzel'] font-bold px-1.5 py-0.5 rounded bg-[#fef3c7] border border-[#d4af37] text-[#78350f] shadow-xs">
                 П{person.generation}
               </span>
             </div>
           </div>
 
-          {/* Cameo Medallion + Name Area */}
-          <div className="flex items-start gap-3 mb-2.5">
-            <div className={`relative w-12 h-12 rounded-full shrink-0 p-[2px] shadow-xl ${
+          {/* 1) Фото + 2) Назва / Ім'я */}
+          <div className="flex items-start gap-2.5 mb-2">
+            {/* 1) Фото Cameo Medallion */}
+            <div className={`relative w-12 h-12 rounded-full shrink-0 p-[2px] shadow-md ring-2 ring-white/90 ${
               isMe
-                ? 'bg-gradient-to-tr from-[#d4af37] via-[#f59e0b] to-[#78350f] ring-2 ring-[#d4af37]/60'
+                ? 'bg-gradient-to-tr from-[#d4af37] via-[#ffd700] to-[#b45309]'
                 : isMale
-                  ? 'bg-gradient-to-tr from-[#b8860b] via-[#78350f] to-[#1e150d] ring-1 ring-[#d4af37]/40'
-                  : 'bg-gradient-to-tr from-[#991b1b] via-[#78350f] to-[#1e150d] ring-1 ring-[#f87171]/40'
+                  ? 'bg-gradient-to-tr from-[#d4af37] via-[#fef08a] to-[#78350f]'
+                  : 'bg-gradient-to-tr from-[#e6b17e] via-[#fef08a] to-[#991b1b]'
             }`}>
-              <div className="w-full h-full rounded-full bg-[#120c06] flex items-center justify-center font-['Cinzel'] text-base font-bold overflow-hidden">
+              <div className="w-full h-full rounded-full bg-[#fdfbf7] flex items-center justify-center font-['Cinzel'] text-base font-extrabold overflow-hidden border border-[#d4af37]/40">
                 {person.avatarUrl ? (
                   <img src={person.avatarUrl} alt={fullName} className="w-full h-full object-cover" />
                 ) : (
-                  <span className={isMe ? 'text-[#d4af37]' : isMale ? 'text-[#fef3c7]' : 'text-[#fca5a5]'}>
-                    {initialLetter}
-                  </span>
+                  <span className="text-[#78350f]">{initialLetter}</span>
                 )}
               </div>
             </div>
 
+            {/* 2) Назва / ПІБ */}
             <div className="flex-1 min-w-0">
-              <h3 className={`font-['Cinzel'] font-bold text-sm leading-tight transition-colors truncate ${
+              <h3 className={`font-['Cinzel'] font-extrabold text-[13px] leading-tight transition-colors truncate drop-shadow-xs ${
                 hasName 
-                  ? 'text-[#fffbeb] group-hover:text-[#d4af37]' 
-                  : 'text-[#d4af37]/90 font-medium'
+                  ? 'text-[#1c1309] group-hover:text-[#b45309]' 
+                  : 'text-[#92400e] font-bold'
               }`}>
                 {fullName}
               </h3>
 
               {person.middleName && (
-                <p className="text-xs text-[#d4af37]/70 truncate mt-0.5 font-serif italic">{person.middleName}</p>
+                <p className="text-[11px] text-[#78350f] truncate font-serif italic">{person.middleName}</p>
               )}
               {person.maidenName && (
-                <p className="text-[11px] text-[#fca5a5] italic truncate">({person.maidenName})</p>
+                <p className="text-[10px] text-[#991b1b] italic font-serif truncate">({person.maidenName})</p>
               )}
 
               {!hasName && (
-                <p className="text-[11px] text-[#d4af37] flex items-center gap-1 mt-1 font-serif">
-                  <PlusCircle className="w-3.5 h-3.5 text-[#d4af37]" />
-                  <span>Вписати у Грамоту</span>
+                <p className="text-[10px] text-[#b45309] flex items-center gap-1 mt-0.5 font-serif font-bold">
+                  <PlusCircle className="w-3 h-3 text-[#b45309]" />
+                  <span>Вписати ім'я</span>
                 </p>
               )}
             </div>
           </div>
 
-          {/* Details (Dates, Lordship, Coat of Arms) */}
-          <div className="border-t border-[#d4af37]/20 pt-2 space-y-1 text-xs font-serif">
-            <div className="flex items-center gap-1.5 text-[11px] text-[#d4af37]/80">
-              <Calendar className="w-3.5 h-3.5 shrink-0 text-[#d4af37]" />
-              {person.birthDate ? (
-                <span className="font-['Cinzel'] text-[#fef3c7]">
-                  {person.birthDate} — {person.isLiving ? 'донині' : (person.deathDate || '?')}
+          {/* Data List (3: Дата нар., 4: Дата смерті, 7: Місце нар., 6: Професія, 5: Цитата) */}
+          <div className="space-y-1 text-xs font-serif pt-1 border-t border-[#d4af37]/30">
+            {/* 3) Дата народження & 4) Дата смерті */}
+            <div className="grid grid-cols-2 gap-1 bg-[#fefce8]/70 px-2 py-0.5 rounded-lg border border-[#d4af37]/40 text-[10px] shadow-xs">
+              <div className="flex items-center gap-1 text-[#78350f] truncate" title={`Дата народження: ${person.birthDate || 'не вказано'}`}>
+                <Calendar className="w-3 h-3 text-[#b45309] shrink-0" />
+                <span className="font-semibold text-[#78350f]">Нар:</span>
+                <span className="font-['Cinzel'] font-bold text-[#1c1309] truncate">{person.birthDate || '—'}</span>
+              </div>
+              <div className="flex items-center gap-1 text-[#78350f] truncate" title={`Дата смерті: ${person.deathDate || (person.isLiving ? 'живе' : 'не вказано')}`}>
+                <span className="text-[#b45309] text-[10px] font-bold">†</span>
+                <span className="font-semibold text-[#78350f]">Смерть:</span>
+                <span className="font-['Cinzel'] font-bold text-[#1c1309] truncate">
+                  {person.isLiving ? 'живе' : (person.deathDate || '—')}
                 </span>
-              ) : (
-                <span className="italic text-[#d4af37]/50">Епоха не зазначена</span>
-              )}
+              </div>
             </div>
 
-            {person.birthPlace && (
-              <div className="flex items-center gap-1.5 text-[11px] text-[#d4af37]/80 truncate">
-                <MapPin className="w-3.5 h-3.5 shrink-0 text-[#d4af37]" />
-                <span className="truncate">Володіння: {person.birthPlace}</span>
-              </div>
-            )}
+            {/* 7) Місце народження */}
+            <div className="flex items-center gap-1.5 text-[10px] text-[#451a03] truncate" title={`Місце народження: ${person.birthPlace || 'Не зазначено'}`}>
+              <MapPin className="w-3 h-3 text-[#b45309] shrink-0" />
+              <span className="text-[#78350f] font-semibold shrink-0">Місце нар.:</span>
+              <span className="font-medium text-[#1c1309] truncate">{person.birthPlace || 'Не зазначено'}</span>
+            </div>
 
-            {person.profession && (
-              <div className="flex items-center gap-1.5 text-[11px] text-[#d4af37]/80 truncate">
-                <Briefcase className="w-3.5 h-3.5 shrink-0 text-[#d4af37]" />
-                <span className="truncate">Сан: {person.profession}</span>
-              </div>
-            )}
+            {/* 6) Професія (одна або декілька) */}
+            <div className="flex items-center gap-1.5 text-[10px] text-[#451a03] truncate" title={`Професія: ${person.profession || 'Не зазначено'}`}>
+              <Briefcase className="w-3 h-3 text-[#b45309] shrink-0" />
+              <span className="text-[#78350f] font-semibold shrink-0">Фах:</span>
+              <span className="font-medium text-[#1c1309] truncate">{person.profession || 'Не зазначено'}</span>
+            </div>
 
-            {/* Connection count & Dynasty status */}
-            <div className="flex items-center justify-between text-[10px] text-[#d4af37]/70 pt-0.5">
+            {/* 5) Улюблена цитата */}
+            <div className="bg-gradient-to-r from-[#fef3c7] via-[#fef9c3]/90 to-[#fef3c7] px-2 py-0.5 rounded border-l-2 border-[#d4af37] text-[10px] text-[#5c2406] italic truncate flex items-center gap-1 shadow-xs" title={person.favoriteQuote || 'Життєве кредо не вказано'}>
+              <Quote className="w-2.5 h-2.5 text-[#b45309] shrink-0 inline opacity-90" />
+              <span className="truncate">{person.favoriteQuote ? `«${person.favoriteQuote}»` : '«Життєве кредо / цитата»'}</span>
+            </div>
+
+            {/* Connection count & Life status */}
+            <div className="flex items-center justify-between text-[10px] text-[#78350f] pt-0.5">
               <span className="flex items-center gap-1">
-                <Users className="w-3 h-3 text-[#d4af37]" />
-                <span>{connectionCount} узів роду</span>
+                <Users className="w-3 h-3 text-[#b45309]" />
+                <span className="font-medium">{connectionCount} зв'язків</span>
               </span>
 
-              <span className={`px-2 py-0.5 rounded-full font-serif font-bold text-[9px] ${
+              <span className={`px-2 py-0.2 rounded-full font-serif font-bold text-[9px] shadow-xs ${
                 person.isLiving
-                  ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-500/30'
-                  : 'bg-[#1e150d] text-[#d4af37]/60 border border-[#d4af37]/30'
+                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-400/60'
+                  : 'bg-[#f5e6d3] text-[#78350f] border border-[#d4af37]/60'
               }`}>
-                {person.isLiving ? 'У Здравії' : 'Вічна Пам’ять'}
+                {person.isLiving ? 'У здравії' : 'Вічна пам’ять'}
               </span>
             </div>
           </div>
 
-          {/* Action Footer (Royal Signet Buttons) */}
-          <div className="absolute bottom-2.5 left-4 right-4 pt-1.5 border-t border-[#d4af37]/20 flex items-center justify-between text-[11px]">
+          {/* Action Footer (Metallic Gold Signet Buttons) */}
+          <div className="absolute bottom-2 left-3 right-3 pt-1 border-t border-[#d4af37]/30 flex items-center justify-between text-[10px]">
             <button
               onClick={(e) => { e.stopPropagation(); onSelectPerson(person); }}
-              className="px-2.5 py-0.5 text-[#d4af37] hover:text-white bg-[#d4af37]/15 hover:bg-[#d4af37]/25 active:bg-[#d4af37]/35 border border-[#d4af37]/40 rounded-lg transition-all flex items-center gap-1 font-['Cinzel'] font-bold text-[10px]"
+              className="px-2.5 py-1 bg-gradient-to-r from-[#d4af37] via-[#f59e0b] to-[#d4af37] text-[#1c1309] hover:text-black font-['Cinzel'] font-bold rounded-lg shadow-sm border border-[#b45309]/50 flex items-center gap-1 transition-all active:scale-95 cursor-pointer"
             >
-              <Edit3 className="w-3 h-3" />
+              <Edit3 className="w-3 h-3 text-[#1c1309]" />
               <span>{hasName ? 'ГРАМОТА' : 'ВПИСАТИ'}</span>
             </button>
 
-            <div className="flex items-center gap-1.5 text-[#d4af37]/80 font-serif text-[10px]">
+            <div className="flex items-center gap-1.5 font-['Cinzel'] font-bold text-[9px]">
               <button
                 onClick={(e) => { e.stopPropagation(); onAddChild(person); }}
-                className="px-2 py-0.5 hover:text-[#fef3c7] hover:bg-[#d4af37]/15 rounded transition"
+                className="px-2 py-0.5 bg-white/90 hover:bg-[#fef3c7] text-[#78350f] border border-[#d4af37]/60 rounded-md transition cursor-pointer shadow-xs"
                 title="Вписати нащадка"
               >
                 +Нащадок
               </button>
               <button
                 onClick={(e) => { e.stopPropagation(); onAddSpouse(person); }}
-                className="px-2 py-0.5 hover:text-[#fef3c7] hover:bg-[#d4af37]/15 rounded transition"
-                title="Вписати шлюб"
+                className="px-2 py-0.5 bg-white/90 hover:bg-[#fef3c7] text-[#78350f] border border-[#d4af37]/60 rounded-md transition cursor-pointer shadow-xs"
+                title="Вписати союз"
               >
                 +Союз
               </button>

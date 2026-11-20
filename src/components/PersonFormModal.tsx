@@ -34,6 +34,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
   const [deathDate, setDeathDate] = useState('');
   const [deathPlace, setDeathPlace] = useState('');
   const [profession, setProfession] = useState('');
+  const [favoriteQuote, setFavoriteQuote] = useState('');
   const [branch, setBranch] = useState('Основна гілка');
   const [fatherId, setFatherId] = useState<string>('');
   const [motherId, setMotherId] = useState<string>('');
@@ -57,6 +58,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
       setDeathDate(initialPerson.deathDate || '');
       setDeathPlace(initialPerson.deathPlace || '');
       setProfession(initialPerson.profession || '');
+      setFavoriteQuote(initialPerson.favoriteQuote || '');
       setBranch(initialPerson.branch || 'Основна гілка');
       setFatherId(initialPerson.fatherId || '');
       setMotherId(initialPerson.motherId || '');
@@ -77,6 +79,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
       setDeathDate('');
       setDeathPlace('');
       setProfession('');
+      setFavoriteQuote('');
       setBranch('Основна гілка');
       setBio('');
       setTagsStr('');
@@ -137,6 +140,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
       deathDate: !isLiving ? deathDate.trim() || undefined : undefined,
       deathPlace: !isLiving ? deathPlace.trim() || undefined : undefined,
       profession: profession.trim() || undefined,
+      favoriteQuote: favoriteQuote.trim() || undefined,
       branch: branch.trim() || undefined,
       fatherId: fatherId || undefined,
       motherId: motherId || undefined,
@@ -457,6 +461,20 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 ))}
               </select>
             </div>
+          </div>
+
+          {/* Favorite Quote */}
+          <div>
+            <label className="block text-xs font-medium text-slate-300 mb-1">
+              Улюблена цитата / Життєве кредо
+            </label>
+            <input
+              type="text"
+              value={favoriteQuote}
+              onChange={(e) => setFavoriteQuote(e.target.value)}
+              placeholder="напр. «Сім'я — це коріння, з якого проростає майбутнє»"
+              className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none italic font-serif"
+            />
           </div>
 
           {/* Bio / Memories */}

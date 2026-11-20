@@ -6,7 +6,8 @@ import {
   Calendar, 
   User, 
   ArrowUpDown,
-  PlusCircle
+  PlusCircle,
+  Quote
 } from 'lucide-react';
 
 interface CardsViewProps {
@@ -195,100 +196,110 @@ export const CardsView: React.FC<CardsViewProps> = ({
               <div
                 key={person.id}
                 onClick={() => onSelectPerson(person)}
-                className={`group bg-slate-900/90 hover:bg-slate-850 border rounded-2xl p-5 shadow-lg hover:shadow-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between ${
-                  hasName ? 'border-slate-800' : 'border-2 border-dashed border-slate-800 hover:border-amber-500/50'
-                } ${
-                  isMale ? 'hover:border-cyan-500/40' : 'hover:border-rose-500/40'
+                className={`group bg-gradient-to-br from-[#ffffff] via-[#f8f6f0] to-[#eae3cf] text-[#1c1309] border-2 rounded-2xl p-4 shadow-xl hover:shadow-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between relative overflow-hidden ${
+                  hasName ? 'border-[#d4af37]/80 hover:border-[#f59e0b]' : 'border-2 border-dashed border-[#d4af37]/50 hover:border-[#f59e0b]'
                 }`}
               >
+                {/* Gold Shimmer Bar */}
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#ffd700] to-transparent shadow-[0_1px_3px_rgba(212,175,55,0.6)]" />
+
                 <div>
                   {/* Header Row */}
-                  <div className="flex items-center justify-between gap-2 mb-3">
-                    <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-slate-800 text-slate-400">
-                      Покоління {person.generation || 1}
+                  <div className="flex items-center justify-between gap-2 mb-2.5">
+                    <span className="text-[10px] font-['Cinzel'] font-bold px-2 py-0.5 rounded-full bg-gradient-to-r from-[#fef3c7] via-[#fde68a] to-[#fef3c7] text-[#78350f] border border-[#d4af37]">
+                      Покоління {person.generation || 1} • {person.roleLabel || 'Член роду'}
                     </span>
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-serif font-bold ${
                       hasName 
                         ? person.isLiving
-                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                          : 'bg-slate-800 text-slate-400'
-                        : 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
+                          ? 'bg-emerald-100 text-emerald-800 border border-emerald-400/60'
+                          : 'bg-[#f5e6d3] text-[#78350f] border border-[#d4af37]/60'
+                        : 'bg-amber-100 text-amber-800 border border-amber-400/50'
                     }`}>
-                      {hasName ? (person.isLiving ? 'Живий(а)' : 'У вічності') : 'Порожнє поле'}
+                      {hasName ? (person.isLiving ? 'У здравії' : 'Вічна пам’ять') : 'Порожнє поле'}
                     </span>
                   </div>
 
-                  {/* Avatar & Name */}
-                  <div className="flex items-center gap-3.5 mb-3">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-serif text-lg font-bold shrink-0 ${
+                  {/* 1) Фото & 2) Назва */}
+                  <div className="flex items-center gap-3 mb-2.5">
+                    <div className={`w-12 h-12 rounded-full p-[2px] shadow-md ring-2 ring-white/90 shrink-0 ${
                       isMale
-                        ? 'bg-gradient-to-tr from-cyan-900/40 to-cyan-700/30 text-cyan-300 border border-cyan-500/30'
-                        : 'bg-gradient-to-tr from-rose-900/40 to-rose-700/30 text-rose-300 border border-rose-500/30'
+                        ? 'bg-gradient-to-tr from-[#d4af37] via-[#fef08a] to-[#78350f]'
+                        : 'bg-gradient-to-tr from-[#e6b17e] via-[#fef08a] to-[#991b1b]'
                     }`}>
-                      {person.avatarUrl ? (
-                        <img
-                          src={person.avatarUrl}
-                          alt={fullName}
-                          className="w-full h-full object-cover rounded-xl"
-                        />
-                      ) : (
-                        <span>{initialLetter}</span>
-                      )}
+                      <div className="w-full h-full rounded-full bg-[#fdfbf7] flex items-center justify-center font-['Cinzel'] text-base font-extrabold overflow-hidden border border-[#d4af37]/40">
+                        {person.avatarUrl ? (
+                          <img
+                            src={person.avatarUrl}
+                            alt={fullName}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <span className="text-[#78350f]">{initialLetter}</span>
+                        )}
+                      </div>
                     </div>
 
                     <div className="min-w-0">
-                      <h4 className={`font-semibold transition text-sm truncate ${
-                        hasName ? 'text-slate-100 group-hover:text-amber-400' : 'text-amber-400'
-                      }`}>
+                      <h4 className="font-['Cinzel'] font-extrabold text-sm text-[#1c1309] group-hover:text-[#b45309] transition truncate">
                         {fullName}
                       </h4>
                       {person.middleName ? (
-                        <p className="text-xs text-slate-400 truncate">{person.middleName}</p>
+                        <p className="text-xs text-[#78350f] italic truncate font-serif">{person.middleName}</p>
                       ) : !hasName ? (
-                        <p className="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5">
-                          <PlusCircle className="w-3 h-3 text-amber-400" />
+                        <p className="text-[11px] text-[#b45309] flex items-center gap-1 mt-0.5 font-serif font-bold">
+                          <PlusCircle className="w-3 h-3 text-[#b45309]" />
                           <span>Заповнити профіль</span>
                         </p>
                       ) : null}
                       {person.maidenName && (
-                        <p className="text-[11px] text-amber-400/80 italic truncate">
+                        <p className="text-[10px] text-[#991b1b] italic truncate font-serif">
                           ({person.maidenName})
                         </p>
                       )}
                     </div>
                   </div>
 
-                  {/* Info list */}
-                  <div className="space-y-1.5 text-xs text-slate-400 mb-3">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-                      <span className="font-mono text-slate-300">
-                        {person.birthDate ? (
-                          `${person.birthDate} — ${person.isLiving ? 'досі' : (person.deathDate || '?')}`
-                        ) : (
-                          <span className="text-slate-400 italic">Роки життя не вказано</span>
-                        )}
+                  {/* 3) Дата народження & 4) Дата смерті */}
+                  <div className="grid grid-cols-2 gap-1 bg-[#fefce8]/70 px-2.5 py-1 rounded-xl border border-[#d4af37]/40 text-[10px] font-serif shadow-xs mb-2">
+                    <div className="flex items-center gap-1 text-[#78350f] truncate">
+                      <Calendar className="w-3 h-3 text-[#b45309] shrink-0" />
+                      <span className="font-semibold text-[#78350f]">Нар:</span>
+                      <span className="font-['Cinzel'] font-bold text-[#1c1309] truncate">{person.birthDate || '—'}</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-[#78350f] truncate">
+                      <span className="text-[#b45309] text-[10px] font-bold">†</span>
+                      <span className="font-semibold text-[#78350f]">Смерть:</span>
+                      <span className="font-['Cinzel'] font-bold text-[#1c1309] truncate">
+                        {person.isLiving ? 'живе' : (person.deathDate || '—')}
                       </span>
                     </div>
+                  </div>
 
-                    {person.profession && (
-                      <div className="flex items-center gap-2 truncate">
-                        <Briefcase className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-                        <span className="truncate">{person.profession}</span>
-                      </div>
-                    )}
+                  {/* 7) Місце народження & 6) Професія */}
+                  <div className="space-y-1 text-xs font-serif text-[#451a03] mb-2">
+                    <div className="flex items-center gap-1.5 text-[11px] truncate">
+                      <MapPin className="w-3.5 h-3.5 text-[#b45309] shrink-0" />
+                      <span className="text-[#78350f] font-semibold shrink-0">Місце нар.:</span>
+                      <span className="font-medium text-[#1c1309] truncate">{person.birthPlace || 'Не зазначено'}</span>
+                    </div>
 
-                    {person.birthPlace && (
-                      <div className="flex items-center gap-2 truncate">
-                        <MapPin className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-                        <span className="truncate">{person.birthPlace}</span>
-                      </div>
-                    )}
+                    <div className="flex items-center gap-1.5 text-[11px] truncate">
+                      <Briefcase className="w-3.5 h-3.5 text-[#b45309] shrink-0" />
+                      <span className="text-[#78350f] font-semibold shrink-0">Професія:</span>
+                      <span className="font-medium text-[#1c1309] truncate">{person.profession || 'Не зазначено'}</span>
+                    </div>
+                  </div>
+
+                  {/* 5) Улюблена цитата */}
+                  <div className="bg-gradient-to-r from-[#fef3c7] via-[#fef9c3]/90 to-[#fef3c7] px-2.5 py-1 rounded-lg border-l-2 border-[#d4af37] text-[10px] text-[#5c2406] italic flex items-center gap-1 shadow-xs mb-2">
+                    <Quote className="w-2.5 h-2.5 text-[#b45309] shrink-0 inline opacity-90" />
+                    <span className="truncate">{person.favoriteQuote ? `«${person.favoriteQuote}»` : '«Життєве кредо / цитата»'}</span>
                   </div>
 
                   {/* Bio teaser */}
                   {person.bio && (
-                    <p className="text-xs text-slate-400 line-clamp-2 italic bg-slate-950/40 p-2 rounded-lg border border-slate-800/50">
+                    <p className="text-[11px] text-[#5c2406] line-clamp-2 italic bg-[#fefce8]/50 p-2 rounded-lg border border-[#d4af37]/30">
                       "{person.bio}"
                     </p>
                   )}
@@ -296,11 +307,11 @@ export const CardsView: React.FC<CardsViewProps> = ({
 
                 {/* Tags footer */}
                 {person.tags && person.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mt-4 pt-3 border-t border-slate-800/80">
+                  <div className="flex flex-wrap gap-1 mt-3 pt-2 border-t border-[#d4af37]/30">
                     {person.tags.map((t) => (
                       <span
                         key={t}
-                        className="text-[10px] bg-slate-800/60 hover:bg-slate-800 text-slate-400 px-2 py-0.5 rounded-md"
+                        className="text-[9px] font-['Cinzel'] font-bold bg-[#fef3c7] border border-[#d4af37]/50 text-[#78350f] px-2 py-0.5 rounded shadow-xs"
                       >
                         #{t}
                       </span>

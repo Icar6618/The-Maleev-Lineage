@@ -21,6 +21,7 @@ export interface Person {
   isLiving: boolean;
   avatarUrl?: string;
   profession?: string;
+  favoriteQuote?: string;
   bio?: string;
   generation: number;
   branch?: string;

@@ -233,6 +233,15 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
             )}
           </div>
 
+          {/* Favorite Quote */}
+          {person.favoriteQuote && (
+            <div className="bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent p-3.5 rounded-2xl border-l-4 border-amber-400 text-xs sm:text-sm text-amber-200 italic font-serif">
+              <span className="text-amber-400 text-base font-bold mr-1">“</span>
+              {person.favoriteQuote}
+              <span className="text-amber-400 text-base font-bold ml-1">”</span>
+            </div>
+          )}
+
           {/* Biography & Memories */}
           {person.bio && (
             <div className="space-y-2">
