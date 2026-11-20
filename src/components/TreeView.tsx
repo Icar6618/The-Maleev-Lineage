@@ -273,7 +273,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
     return m;
   }, [persons]);
 
-  // Compute bounds
+  // Compute bounds with generous margins so cards and 3D tree never touch edges
   const bounds = useMemo(() => {
     let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
     positions.forEach(np => {
@@ -282,7 +282,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
       minY = Math.min(minY, np.y);
       maxY = Math.max(maxY, np.y + CARD_H);
     });
-    return { minX: minX - 160, maxX: maxX + 160, minY: minY - 180, maxY: maxY + 140 };
+    return { minX: minX - 320, maxX: maxX + 320, minY: minY - 280, maxY: maxY + 320 };
   }, [positions]);
 
   const canvasW = bounds.maxX - bounds.minX;
