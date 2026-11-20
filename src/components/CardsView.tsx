@@ -165,7 +165,7 @@ export const CardsView: React.FC<CardsViewProps> = ({
             onChange={(e) => setSortBy(e.target.value as any)}
             className="bg-slate-800 border border-slate-700 text-xs text-slate-200 rounded-xl px-3 py-1.5 focus:outline-none focus:border-amber-500 cursor-pointer"
           >
-            <option value="generation">За поколінням</option>
+            <option value="generation">За старшинством роду</option>
             <option value="name">За прізвищем та ім'ям</option>
             <option value="birthDate">За роком народження</option>
           </select>
@@ -207,7 +207,7 @@ export const CardsView: React.FC<CardsViewProps> = ({
                   {/* Header Row */}
                   <div className="flex items-center justify-between gap-2 mb-2.5">
                     <span className="text-[10px] font-['Cinzel'] font-bold px-2 py-0.5 rounded-full bg-[#26190e]/90 text-[#fef3c7] border border-[#d4af37]/60">
-                      Покоління {person.generation || 1} • {person.roleLabel || 'Член роду'}
+                      {person.roleLabel || 'Член роду'}
                     </span>
                     <span className={`text-[10px] px-2 py-0.5 rounded-full font-serif font-bold ${
                       hasName 

@@ -428,20 +428,17 @@ export const TreeView: React.FC<TreeViewProps> = ({
           <div className="absolute bottom-1 left-2 text-[9px] text-[#d4af37]/50">⚜</div>
           <div className="absolute bottom-1 right-2 text-[9px] text-[#d4af37]/50">⚜</div>
 
-          {/* Top Row: 2) Назва / Роль + Покоління + Печать */}
+          {/* Top Row: 2) Назва / Роль + Печать */}
           <div className="flex items-center justify-between gap-1 mb-2 pl-3 pr-3">
             <span className="text-[10px] font-['Cinzel'] font-bold px-2 py-0.5 rounded-full flex items-center gap-1.5 bg-[#26190e]/90 border border-[#d4af37]/60 text-[#fef3c7] shadow-xs">
               <Shield className="w-3 h-3 text-[#d4af37] inline opacity-90" />
               <span className="truncate">{person.roleLabel || (isMe ? 'Власник Дерева' : isMale ? 'Член роду' : 'Членкиня роду')}</span>
             </span>
 
-            {/* Red Wax Seal Motif + Generation */}
+            {/* Red Wax Seal Motif */}
             <div className="flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded-full bg-gradient-to-br from-[#991b1b] to-[#7f1d1d] border border-[#f87171] shadow-xs flex items-center justify-center text-[7px] text-[#fffbeb] font-bold" title="Родинна Печать">
+              <span className="w-5 h-5 rounded-full bg-gradient-to-br from-[#991b1b] to-[#7f1d1d] border border-[#f87171] shadow-xs flex items-center justify-center text-[8px] text-[#fffbeb] font-bold" title="Родинна Печать">
                 ⚜
-              </span>
-              <span className="text-[9px] font-['Cinzel'] font-bold px-1.5 py-0.5 rounded bg-[#1e150d] border border-[#d4af37]/50 text-[#d4af37] shadow-xs">
-                П{person.generation}
               </span>
             </div>
           </div>
@@ -629,7 +626,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
           <div className="flex items-center gap-2"><div className="w-5 h-1 bg-[#d4af37] rounded-full shadow-sm" /><span className="text-[#fef3c7] font-serif">⚜ Родинний Союз</span></div>
           <div className="flex items-center gap-2"><div className="w-5 h-1 bg-[#b8860b] rounded-full" /><span className="text-[#d4af37]">Батьківська лінія</span></div>
           <div className="flex items-center gap-2"><div className="w-5 h-1 bg-[#991b1b] rounded-full" /><span className="text-[#fca5a5]">Материнська лінія</span></div>
-          <div className="flex items-center gap-2"><div className="w-5 h-1 bg-[#d4af37] rounded-full" /><span className="text-[#fef3c7]">Молодше покоління (Я та брат)</span></div>
+          <div className="flex items-center gap-2"><div className="w-5 h-1 bg-[#d4af37] rounded-full" /><span className="text-[#fef3c7]">Гілка нащадків (Я та брат)</span></div>
           <div className="mt-2 pt-2 border-t border-[#d4af37]/30 space-y-1.5">
             <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full border border-[#d4af37] bg-[#2a1a0e]" /><span className="text-[#fef3c7]">Чоловіча гілка</span></div>
             <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full border border-[#f87171] bg-[#261010]" /><span className="text-[#fca5a5]">Жіноча гілка</span></div>

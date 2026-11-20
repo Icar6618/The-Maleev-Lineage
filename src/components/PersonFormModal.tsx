@@ -263,7 +263,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
           </div>
 
           {/* Gender & Living status */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-[#150d07]/90 p-3.5 sm:p-4 rounded-2xl border border-[#d4af37]/35">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#150d07]/90 p-3.5 sm:p-4 rounded-2xl border border-[#d4af37]/35">
             <div>
               <label className="block text-xs font-semibold text-[#d4af37] mb-1.5 font-['Cinzel']">
                 Стать
@@ -292,20 +292,6 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                   Жінка
                 </button>
               </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-[#d4af37] mb-1.5 font-['Cinzel']">
-                Покоління
-              </label>
-              <input
-                type="number"
-                min="1"
-                max="10"
-                value={generation}
-                onChange={(e) => setGeneration(Number(e.target.value))}
-                className="w-full px-3.5 py-2 bg-[#120b06] border border-[#d4af37]/40 focus:border-[#ffd700] rounded-xl text-base sm:text-sm text-[#fffbeb] focus:outline-none"
-              />
             </div>
 
             <div className="flex items-center pt-2 sm:pt-4">

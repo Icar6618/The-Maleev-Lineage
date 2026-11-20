@@ -110,9 +110,11 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
                     }`}>
                       {isBirth ? 'Народження' : 'У вічність'}
                     </span>
-                    <span className="text-xs text-slate-500 font-mono">
-                      (Покоління {evt.person.generation})
-                    </span>
+                    {evt.person.roleLabel && (
+                      <span className="text-xs text-slate-500 font-mono">
+                        ({evt.person.roleLabel})
+                      </span>
+                    )}
                   </div>
 
                   <span className="text-xs text-slate-400 hover:text-amber-400 transition">

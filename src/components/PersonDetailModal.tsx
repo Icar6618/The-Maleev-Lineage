@@ -90,12 +90,13 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
         {/* Header Banner */}
         <div className="p-4 sm:p-5 flex items-start justify-between shrink-0 relative bg-gradient-to-r from-[#2a1a0f] via-[#1a110a] to-[#140c06] border-b border-[#d4af37]/40">
           <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="text-xs px-2.5 py-1 rounded-full bg-[#22140a] text-[#fef3c7] border border-[#d4af37]/40 font-['Cinzel'] tracking-wide">
-              Покоління {person.generation}
-            </span>
-            {person.roleLabel && (
-              <span className="text-xs px-2.5 py-1 rounded-full bg-[#2d1b0d] text-[#ffd700] border border-[#d4af37]/70 font-['Cinzel'] font-bold">
+            {person.roleLabel ? (
+              <span className="text-xs px-3 py-1 rounded-full bg-[#2d1b0d] text-[#ffd700] border border-[#d4af37]/70 font-['Cinzel'] font-bold shadow-xs">
                 {person.roleLabel}
+              </span>
+            ) : (
+              <span className="text-xs px-3 py-1 rounded-full bg-[#22140a] text-[#fef3c7] border border-[#d4af37]/40 font-['Cinzel'] tracking-wide">
+                Член роду
               </span>
             )}
           </div>
