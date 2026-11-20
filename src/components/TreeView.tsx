@@ -139,7 +139,6 @@ function buildLayout(persons: Person[]) {
       d: `M ${xa} ${ya} L ${xb} ${ya}`,
       color: '#d4af37',
       width: 2.5,
-      label: '⚜',
     });
   });
 
@@ -425,19 +424,12 @@ export const TreeView: React.FC<TreeViewProps> = ({
           <div className="absolute bottom-1 left-2 text-[9px] text-[#d4af37]/50">⚜</div>
           <div className="absolute bottom-1 right-2 text-[9px] text-[#d4af37]/50">⚜</div>
 
-          {/* Top Row: 2) Назва / Роль + Печать */}
+          {/* Top Row: 2) Назва / Роль */}
           <div className="flex items-center justify-between gap-1 mb-2 pl-3 pr-3">
             <span className="text-[10px] font-['Cinzel'] font-bold px-2 py-0.5 rounded-full flex items-center gap-1.5 bg-[#26190e]/90 border border-[#d4af37]/60 text-[#fef3c7] shadow-xs">
               <Shield className="w-3 h-3 text-[#d4af37] inline opacity-90" />
               <span className="truncate">{person.roleLabel || (isMe ? 'Власник Дерева' : isMale ? 'Член роду' : 'Членкиня роду')}</span>
             </span>
-
-            {/* Red Wax Seal Motif */}
-            <div className="flex items-center gap-1.5">
-              <span className="w-5 h-5 rounded-full bg-gradient-to-br from-[#991b1b] to-[#7f1d1d] border border-[#f87171] shadow-xs flex items-center justify-center text-[8px] text-[#fffbeb] font-bold" title="Родинна Печать">
-                ⚜
-              </span>
-            </div>
           </div>
 
           {/* 1) Фото + 2) Назва / Ім'я */}
@@ -661,28 +653,6 @@ export const TreeView: React.FC<TreeViewProps> = ({
                   strokeDasharray={c.dashed ? '6 4' : undefined}
                   opacity={0.9} 
                 />
-              );
-            })}
-
-            {/* Holy Marriage Wax Signet Badge */}
-            {connectors.filter(c => c.label).map(c => {
-              const coords = c.d.match(/-?\d+\.?\d*/g);
-              if (!coords || coords.length < 4) return null;
-              const x1 = parseFloat(coords[0]) - bounds.minX;
-              const y1 = parseFloat(coords[1]) - bounds.minY;
-              const x2 = parseFloat(coords[2]) - bounds.minX;
-              const y2 = parseFloat(coords[3]) - bounds.minY;
-              const mx = (x1 + x2) / 2;
-              const my = (y1 + y2) / 2;
-
-              return (
-                <g key={`signet-${c.key}`}>
-                  <circle cx={mx} cy={my} r={14} fill="#181109" stroke="#d4af37" strokeWidth="2" />
-                  <circle cx={mx} cy={my} r={10} fill="#991b1b" />
-                  <text x={mx} y={my + 1} textAnchor="middle" dominantBaseline="central" fontSize="10" fill="#fef3c7">
-                    ⚜
-                  </text>
-                </g>
               );
             })}
           </svg>
