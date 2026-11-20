@@ -8,6 +8,7 @@ export interface FamilyPhoto {
 
 export interface Person {
   id: string;
+  roleLabel?: string; // напр. 'Я', 'Батько', 'Мати', 'Дідусь (по батькові)'
   firstName: string;
   lastName: string;
   middleName?: string;

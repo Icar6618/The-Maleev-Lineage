@@ -21,8 +21,9 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
   presetParent,
   presetSpouse,
 }) => {
+  const [roleLabel, setRoleLabel] = useState('');
   const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('Малеєв');
+  const [lastName, setLastName] = useState('');
   const [middleName, setMiddleName] = useState('');
   const [maidenName, setMaidenName] = useState('');
   const [gender, setGender] = useState<Gender>('male');
@@ -43,8 +44,9 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
 
   useEffect(() => {
     if (initialPerson) {
-      setFirstName(initialPerson.firstName);
-      setLastName(initialPerson.lastName);
+      setRoleLabel(initialPerson.roleLabel || '');
+      setFirstName(initialPerson.firstName || '');
+      setLastName(initialPerson.lastName || '');
       setMiddleName(initialPerson.middleName || '');
       setMaidenName(initialPerson.maidenName || '');
       setGender(initialPerson.gender);
@@ -63,9 +65,10 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
       setTagsStr((initialPerson.tags || []).join(', '));
       setAvatarUrl(initialPerson.avatarUrl || '');
     } else {
-      // Reset defaults
+      // Empty defaults
+      setRoleLabel('');
       setFirstName('');
-      setLastName('Малеєв');
+      setLastName('');
       setMiddleName('');
       setMaidenName('');
       setGender('male');
@@ -109,8 +112,9 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!firstName.trim() || !lastName.trim()) {
-      alert("Будь ласка, вкажіть ім'я та прізвище родича.");
+
+    if (!firstName.trim() && !lastName.trim() && !roleLabel.trim()) {
+      alert("Будь ласка, вкажіть хоча б ім'я або роль родича.");
       return;
     }
 
@@ -121,6 +125,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
 
     const newPerson: Person = {
       id: initialPerson ? initialPerson.id : `p-${Date.now()}`,
+      roleLabel: roleLabel.trim() || undefined,
       firstName: firstName.trim(),
       lastName: lastName.trim(),
       middleName: middleName.trim() || undefined,
@@ -168,7 +173,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
           <div className="flex items-center gap-2">
             <UserPlus className="w-5 h-5 text-amber-400" />
             <h2 className="font-serif text-lg font-bold text-slate-100">
-              {initialPerson ? 'Редагувати профіль родича' : 'Додати нового родича до дерева'}
+              {initialPerson ? `Заповнення: ${initialPerson.roleLabel || initialPerson.firstName || 'Картка родича'}` : 'Додати нового родича до дерева'}
             </h2>
           </div>
           <button
@@ -182,32 +187,44 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-5 max-h-[80vh] overflow-y-auto">
           
+          {/* Role Label */}
+          <div>
+            <label className="block text-xs font-medium text-slate-300 mb-1">
+              Роль / Ким приходиться (напр. «Я», «Батько», «Дідусь по татові»)
+            </label>
+            <input
+              type="text"
+              value={roleLabel}
+              onChange={(e) => setRoleLabel(e.target.value)}
+              placeholder="напр. Батько, Тітка, Я"
+              className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
+            />
+          </div>
+
           {/* Names Row */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-medium text-slate-300 mb-1">
-                Прізвище *
+                Прізвище
               </label>
               <input
                 type="text"
-                required
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                placeholder="Малеєв / Малеєва"
+                placeholder="напр. Малеєв"
                 className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
               />
             </div>
 
             <div>
               <label className="block text-xs font-medium text-slate-300 mb-1">
-                Ім'я *
+                Ім'я
               </label>
               <input
                 type="text"
-                required
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                placeholder="Ім'я"
+                placeholder="напр. Віктор, Олександр"
                 className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
               />
             </div>
@@ -220,14 +237,14 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 type="text"
                 value={middleName}
                 onChange={(e) => setMiddleName(e.target.value)}
-                placeholder="Володимирович / Володимирівна"
+                placeholder="напр. Володимирович"
                 className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
               />
             </div>
 
             <div>
               <label className="block text-xs font-medium text-slate-300 mb-1">
-                Дівоче прізвище (якщо є)
+                Дівоче прізвище (для жінок)
               </label>
               <input
                 type="text"
@@ -302,13 +319,13 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-medium text-slate-300 mb-1">
-                Дата народження
+                Рік / дата народження
               </label>
               <input
                 type="text"
                 value={birthDate}
                 onChange={(e) => setBirthDate(e.target.value)}
-                placeholder="напр. 1958 або 12.04.1958"
+                placeholder="напр. 1965 або 12.04.1965"
                 className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
               />
             </div>
@@ -321,7 +338,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 type="text"
                 value={birthPlace}
                 onChange={(e) => setBirthPlace(e.target.value)}
-                placeholder="напр. Київ, Україна"
+                placeholder="напр. Київ, Одеса"
                 className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
               />
             </div>
@@ -336,14 +353,14 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                     type="text"
                     value={deathDate}
                     onChange={(e) => setDeathDate(e.target.value)}
-                    placeholder="напр. 2015"
+                    placeholder="напр. 2010"
                     className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
                   />
                 </div>
 
                 <div>
                   <label className="block text-xs font-medium text-slate-300 mb-1">
-                    Місце упокоєння
+                    Місце спочинку
                   </label>
                   <input
                     type="text"
@@ -361,26 +378,26 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-medium text-slate-300 mb-1">
-                Професія / Покликання
+                Професія / Рід діяльності
               </label>
               <input
                 type="text"
                 value={profession}
                 onChange={(e) => setProfession(e.target.value)}
-                placeholder="напр. Лікар, Інженер, Викладач"
+                placeholder="напр. Інженер, Лікар, Вчитель"
                 className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
               />
             </div>
 
             <div>
               <label className="block text-xs font-medium text-slate-300 mb-1">
-                Гілка роду
+                Лінія / Гілка роду
               </label>
               <input
                 type="text"
                 value={branch}
                 onChange={(e) => setBranch(e.target.value)}
-                placeholder="напр. Основна гілка, Київська гілка"
+                placeholder="напр. Лінія батька, Лінія матері"
                 className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
               />
             </div>
@@ -400,7 +417,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 <option value="">Не вказано</option>
                 {potentialFathers.map((f) => (
                   <option key={f.id} value={f.id}>
-                    {f.firstName} {f.lastName} ({f.birthDate || '?'})
+                    {f.firstName || f.lastName ? `${f.firstName} ${f.lastName}` : (f.roleLabel || 'Чоловік')}
                   </option>
                 ))}
               </select>
@@ -418,7 +435,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 <option value="">Не вказано</option>
                 {potentialMothers.map((m) => (
                   <option key={m.id} value={m.id}>
-                    {m.firstName} {m.lastName} {m.maidenName ? `(${m.maidenName})` : ''}
+                    {m.firstName || m.lastName ? `${m.firstName} ${m.lastName}` : (m.roleLabel || 'Жінка')}
                   </option>
                 ))}
               </select>
@@ -426,7 +443,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
 
             <div className="sm:col-span-2">
               <label className="block text-xs font-medium text-slate-300 mb-1">
-                Подружжя (Чоловік / Дружина)
+                Подружжя
               </label>
               <select
                 value={spouseIds[0] || ''}
@@ -436,7 +453,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 <option value="">Не вказано</option>
                 {potentialSpouses.map((s) => (
                   <option key={s.id} value={s.id}>
-                    {s.firstName} {s.lastName} ({s.birthDate || '?'})
+                    {s.firstName || s.lastName ? `${s.firstName} ${s.lastName}` : (s.roleLabel || 'Родич')}
                   </option>
                 ))}
               </select>
@@ -446,13 +463,13 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
           {/* Bio / Memories */}
           <div>
             <label className="block text-xs font-medium text-slate-300 mb-1">
-              Біографія, історія та спогади
+              Біографія, спогади та цікаві факти
             </label>
             <textarea
               rows={3}
               value={bio}
               onChange={(e) => setBio(e.target.value)}
-              placeholder="Цікаві факти з життя, досягнення, родинні перекази..."
+              placeholder="Спогади з життя, досягнення, родинні історії..."
               className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
             />
           </div>
@@ -467,7 +484,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 type="text"
                 value={tagsStr}
                 onChange={(e) => setTagsStr(e.target.value)}
-                placeholder="напр. Інженер, Засновник, Архівіст"
+                placeholder="напр. Архів, Засновник"
                 className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
               />
             </div>
@@ -500,7 +517,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
               className="flex items-center gap-2 px-5 py-2 bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 text-sm font-semibold rounded-xl shadow-lg shadow-amber-500/20 transition cursor-pointer"
             >
               <Save className="w-4 h-4" />
-              Зберегти родича
+              Зберегти
             </button>
           </div>
 

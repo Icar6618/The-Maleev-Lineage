@@ -5,7 +5,8 @@ import {
   MapPin, 
   Calendar, 
   User, 
-  ArrowUpDown
+  ArrowUpDown,
+  PlusCircle
 } from 'lucide-react';
 
 interface CardsViewProps {
@@ -39,7 +40,7 @@ export const CardsView: React.FC<CardsViewProps> = ({
         // Search query
         if (searchQuery) {
           const q = searchQuery.toLowerCase();
-          const fullName = `${p.lastName} ${p.firstName} ${p.middleName || ''} ${p.maidenName || ''}`.toLowerCase();
+          const fullName = `${p.lastName} ${p.firstName} ${p.roleLabel || ''} ${p.middleName || ''} ${p.maidenName || ''}`.toLowerCase();
           const details = `${p.profession || ''} ${p.birthPlace || ''} ${p.bio || ''}`.toLowerCase();
           if (!fullName.includes(q) && !details.includes(q)) return false;
         }
@@ -61,7 +62,9 @@ export const CardsView: React.FC<CardsViewProps> = ({
           return (a.generation || 1) - (b.generation || 1);
         }
         if (sortBy === 'name') {
-          return a.lastName.localeCompare(b.lastName, 'uk') || a.firstName.localeCompare(b.firstName, 'uk');
+          const nameA = a.lastName || a.roleLabel || '';
+          const nameB = b.lastName || b.roleLabel || '';
+          return nameA.localeCompare(nameB, 'uk');
         }
         if (sortBy === 'birthDate') {
           const yearA = parseInt(a.birthDate || '9999');
@@ -180,13 +183,21 @@ export const CardsView: React.FC<CardsViewProps> = ({
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
           {filteredPersons.map((person) => {
+            const hasName = Boolean(person.firstName || person.lastName);
+            const fullName = hasName 
+              ? `${person.lastName} ${person.firstName}`.trim() 
+              : (person.roleLabel || 'Не заповнено');
+
             const isMale = person.gender === 'male';
+            const initialLetter = person.firstName?.[0] || person.lastName?.[0] || person.roleLabel?.[0] || '?';
 
             return (
               <div
                 key={person.id}
                 onClick={() => onSelectPerson(person)}
-                className={`group bg-slate-900/90 hover:bg-slate-850 border border-slate-800 rounded-2xl p-5 shadow-lg hover:shadow-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between ${
+                className={`group bg-slate-900/90 hover:bg-slate-850 border rounded-2xl p-5 shadow-lg hover:shadow-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between ${
+                  hasName ? 'border-slate-800' : 'border-2 border-dashed border-slate-800 hover:border-amber-500/50'
+                } ${
                   isMale ? 'hover:border-cyan-500/40' : 'hover:border-rose-500/40'
                 }`}
               >
@@ -197,11 +208,13 @@ export const CardsView: React.FC<CardsViewProps> = ({
                       Покоління {person.generation || 1}
                     </span>
                     <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
-                      person.isLiving
-                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                        : 'bg-slate-800 text-slate-400'
+                      hasName 
+                        ? person.isLiving
+                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                          : 'bg-slate-800 text-slate-400'
+                        : 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
                     }`}>
-                      {person.isLiving ? 'Живий(а)' : 'У вічності'}
+                      {hasName ? (person.isLiving ? 'Живий(а)' : 'У вічності') : 'Порожнє поле'}
                     </span>
                   </div>
 
@@ -215,21 +228,28 @@ export const CardsView: React.FC<CardsViewProps> = ({
                       {person.avatarUrl ? (
                         <img
                           src={person.avatarUrl}
-                          alt={person.firstName}
+                          alt={fullName}
                           className="w-full h-full object-cover rounded-xl"
                         />
                       ) : (
-                        <span>{person.firstName[0]}{person.lastName[0]}</span>
+                        <span>{initialLetter}</span>
                       )}
                     </div>
 
                     <div className="min-w-0">
-                      <h4 className="font-semibold text-slate-100 group-hover:text-amber-400 transition text-sm truncate">
-                        {person.lastName} {person.firstName}
+                      <h4 className={`font-semibold transition text-sm truncate ${
+                        hasName ? 'text-slate-100 group-hover:text-amber-400' : 'text-amber-400'
+                      }`}>
+                        {fullName}
                       </h4>
-                      {person.middleName && (
+                      {person.middleName ? (
                         <p className="text-xs text-slate-400 truncate">{person.middleName}</p>
-                      )}
+                      ) : !hasName ? (
+                        <p className="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5">
+                          <PlusCircle className="w-3 h-3 text-amber-400" />
+                          <span>Заповнити профіль</span>
+                        </p>
+                      ) : null}
                       {person.maidenName && (
                         <p className="text-[11px] text-amber-400/80 italic truncate">
                           ({person.maidenName})
@@ -243,7 +263,11 @@ export const CardsView: React.FC<CardsViewProps> = ({
                     <div className="flex items-center gap-2">
                       <Calendar className="w-3.5 h-3.5 text-slate-500 shrink-0" />
                       <span className="font-mono text-slate-300">
-                        {person.birthDate || '?'} — {person.isLiving ? 'досі' : (person.deathDate || '?')}
+                        {person.birthDate ? (
+                          `${person.birthDate} — ${person.isLiving ? 'досі' : (person.deathDate || '?')}`
+                        ) : (
+                          <span className="text-slate-400 italic">Роки життя не вказано</span>
+                        )}
                       </span>
                     </div>
 

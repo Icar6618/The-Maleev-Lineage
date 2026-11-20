@@ -8,7 +8,9 @@ import {
   MapPin, 
   Briefcase,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  PlusCircle,
+  Edit3
 } from 'lucide-react';
 
 interface TreeViewProps {
@@ -103,11 +105,10 @@ export const TreeView: React.FC<TreeViewProps> = ({
   };
 
   const genLabels: Record<number, string> = {
-    1: 'I Покоління • Пращури та засновники',
-    2: 'II Покоління • Старше покоління',
-    3: 'III Покоління • Батьківське покоління',
-    4: 'IV Покоління • Сучасники та молодь',
-    5: 'V Покоління • Нащадки та діти',
+    1: 'I Покоління • Дідусі та бабусі',
+    2: 'II Покоління • Батьки, дядьки та тітки',
+    3: 'III Покоління • Я та мій брат',
+    4: 'IV Покоління • Наступне покоління',
   };
 
   return (
@@ -160,7 +161,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
               onChange={(e) => setSelectedBranch(e.target.value)}
               className="bg-slate-800 border border-slate-700 text-xs text-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:border-amber-500 cursor-pointer"
             >
-              <option value="all">Усі гілки роду</option>
+              <option value="all">Усі лінії роду</option>
               {branches.map((b) => (
                 <option key={b} value={b}>
                   {b}
@@ -172,8 +173,9 @@ export const TreeView: React.FC<TreeViewProps> = ({
       </div>
 
       {/* Helper hint */}
-      <div className="absolute bottom-4 left-4 z-20 pointer-events-none text-xs text-slate-500 bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-800 backdrop-blur-sm hidden sm:block">
-        💡 Затисніть та перетягуйте мишкою дерево • Клікніть на картку для біографії
+      <div className="absolute bottom-4 left-4 z-20 pointer-events-none text-xs text-slate-400 bg-slate-900/90 px-3.5 py-2 rounded-xl border border-slate-800 backdrop-blur-md hidden sm:flex items-center gap-2 shadow-lg">
+        <Edit3 className="w-4 h-4 text-amber-400 shrink-0" />
+        <span>Клікніть на будь-яку картку з написом <b>«+ Заповнити дані»</b>, щоб внести інформацію</span>
       </div>
 
       {/* Canvas Area */}
@@ -223,8 +225,13 @@ export const TreeView: React.FC<TreeViewProps> = ({
                 {!isCollapsed && (
                   <div className="flex flex-wrap items-center justify-center gap-8 relative z-10 max-w-7xl">
                     {filteredMembers.map((person) => {
+                      const hasName = Boolean(person.firstName || person.lastName);
+                      const fullName = hasName 
+                        ? `${person.lastName} ${person.firstName}`.trim() 
+                        : (person.roleLabel || 'Не заповнено');
+
                       const isMatchesSearch = searchQuery && (
-                        `${person.firstName} ${person.lastName} ${person.maidenName || ''} ${person.profession || ''} ${person.birthPlace || ''}`
+                        `${fullName} ${person.roleLabel || ''} ${person.middleName || ''} ${person.profession || ''} ${person.birthPlace || ''}`
                           .toLowerCase()
                           .includes(searchQuery.toLowerCase())
                       );
@@ -234,6 +241,9 @@ export const TreeView: React.FC<TreeViewProps> = ({
                         .filter(Boolean) as Person[];
 
                       const isMale = person.gender === 'male';
+
+                      // Initial letter for avatar circle
+                      const initialLetter = person.firstName?.[0] || person.lastName?.[0] || person.roleLabel?.[0] || '?';
 
                       return (
                         <div
@@ -246,30 +256,38 @@ export const TreeView: React.FC<TreeViewProps> = ({
                             className={`w-64 rounded-2xl p-4 transition-all duration-200 cursor-pointer text-left relative group ${
                               isMatchesSearch
                                 ? 'ring-2 ring-amber-400 bg-slate-900 shadow-amber-500/20 shadow-xl'
-                                : 'bg-slate-900/90 hover:bg-slate-850 border border-slate-800 hover:border-slate-700 shadow-xl hover:shadow-2xl'
+                                : hasName
+                                  ? 'bg-slate-900/90 hover:bg-slate-850 border border-slate-800 hover:border-slate-700 shadow-xl hover:shadow-2xl'
+                                  : 'bg-slate-900/60 hover:bg-slate-900 border-2 border-dashed border-slate-800 hover:border-amber-500/60 shadow-lg'
                             } ${
                               isMale 
-                                ? 'hover:border-cyan-500/50' 
-                                : 'hover:border-rose-500/50'
+                                ? 'hover:border-cyan-500/60' 
+                                : 'hover:border-rose-500/60'
                             }`}
                           >
-                            {/* Branch or Living Status Badge */}
-                            <div className="flex items-center justify-between gap-1 mb-2">
+                            {/* Branch or Role Badge */}
+                            <div className="flex items-center justify-between gap-1 mb-2.5">
                               <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
                                 isMale
                                   ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20'
                                   : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
                               }`}>
-                                {isMale ? 'Чоловік' : 'Жінка'}
+                                {person.roleLabel || (isMale ? 'Чоловік' : 'Жінка')}
                               </span>
 
-                              <span className={`text-[10px] px-2 py-0.5 rounded-full ${
-                                person.isLiving
-                                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                                  : 'bg-slate-800 text-slate-400'
-                              }`}>
-                                {person.isLiving ? 'Живий(а)' : 'У вічності'}
-                              </span>
+                              {hasName ? (
+                                <span className={`text-[10px] px-2 py-0.5 rounded-full ${
+                                  person.isLiving
+                                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                                    : 'bg-slate-800 text-slate-400'
+                                }`}>
+                                  {person.isLiving ? 'Живий(а)' : 'У вічності'}
+                                </span>
+                              ) : (
+                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 flex items-center gap-1 animate-pulse">
+                                  Порожнє поле
+                                </span>
+                              )}
                             </div>
 
                             {/* Avatar & Names */}
@@ -282,23 +300,34 @@ export const TreeView: React.FC<TreeViewProps> = ({
                                 {person.avatarUrl ? (
                                   <img
                                     src={person.avatarUrl}
-                                    alt={person.firstName}
+                                    alt={fullName}
                                     className="w-full h-full object-cover rounded-xl"
                                   />
                                 ) : (
-                                  <span>{person.firstName[0]}{person.lastName[0]}</span>
+                                  <span>{initialLetter}</span>
                                 )}
                               </div>
 
                               <div className="flex-1 min-w-0">
-                                <h3 className="font-semibold text-sm text-slate-100 group-hover:text-amber-400 transition truncate">
-                                  {person.firstName} {person.lastName}
+                                <h3 className={`font-semibold text-sm transition truncate ${
+                                  hasName 
+                                    ? 'text-slate-100 group-hover:text-amber-400' 
+                                    : 'text-amber-300/90 font-medium'
+                                }`}>
+                                  {fullName}
                                 </h3>
-                                {person.middleName && (
+
+                                {person.middleName ? (
                                   <p className="text-xs text-slate-400 truncate">
                                     {person.middleName}
                                   </p>
-                                )}
+                                ) : !hasName ? (
+                                  <p className="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5">
+                                    <PlusCircle className="w-3 h-3 text-amber-400" />
+                                    <span>Заповнити дані</span>
+                                  </p>
+                                ) : null}
+
                                 {person.maidenName && (
                                   <p className="text-[11px] text-amber-400/80 italic">
                                     ({person.maidenName})
@@ -310,21 +339,25 @@ export const TreeView: React.FC<TreeViewProps> = ({
                             {/* Dates & Profession */}
                             <div className="mt-3 pt-2.5 border-t border-slate-800/80 space-y-1 text-xs text-slate-400">
                               <div className="flex items-center gap-1.5">
-                                <span className="text-[11px] font-mono text-slate-300">
-                                  {person.birthDate || '?'} — {person.isLiving ? 'сьогодні' : (person.deathDate || '?')}
+                                <span className="text-[11px] font-mono text-slate-400">
+                                  {person.birthDate ? (
+                                    `${person.birthDate} — ${person.isLiving ? 'досі' : (person.deathDate || '?')}`
+                                  ) : (
+                                    <span className="italic text-slate-400">Роки не вказано</span>
+                                  )}
                                 </span>
                               </div>
 
                               {person.profession && (
                                 <div className="flex items-center gap-1.5 text-slate-400 truncate text-[11px]">
-                                  <Briefcase className="w-3 h-3 text-slate-500 shrink-0" />
+                                  <Briefcase className="w-3 h-3 text-slate-400 shrink-0" />
                                   <span className="truncate">{person.profession}</span>
                                 </div>
                               )}
 
                               {person.birthPlace && (
                                 <div className="flex items-center gap-1.5 text-slate-400 truncate text-[11px]">
-                                  <MapPin className="w-3 h-3 text-slate-500 shrink-0" />
+                                  <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
                                   <span className="truncate">{person.birthPlace}</span>
                                 </div>
                               )}
@@ -335,27 +368,41 @@ export const TreeView: React.FC<TreeViewProps> = ({
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  onAddChild(person);
+                                  onSelectPerson(person);
                                 }}
-                                className="px-2 py-0.5 text-slate-400 hover:text-amber-400 hover:bg-slate-800 rounded transition cursor-pointer"
-                                title="Додати дитину до цього родича"
+                                className="px-2 py-0.5 text-amber-400 hover:text-amber-300 hover:bg-slate-800 rounded transition cursor-pointer flex items-center gap-1"
+                                title="Редагувати цю картку"
                               >
-                                + Дитина
+                                <Edit3 className="w-3 h-3" />
+                                <span>Редагувати</span>
                               </button>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  onAddSpouse(person);
-                                }}
-                                className="px-2 py-0.5 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded transition cursor-pointer"
-                                title="Додати дружину/чоловіка"
-                              >
-                                + Подружжя
-                              </button>
+
+                              <div className="flex items-center gap-1">
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    onAddChild(person);
+                                  }}
+                                  className="px-2 py-0.5 text-slate-400 hover:text-amber-400 hover:bg-slate-800 rounded transition cursor-pointer"
+                                  title="Додати дитину"
+                                >
+                                  + Дитина
+                                </button>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    onAddSpouse(person);
+                                  }}
+                                  className="px-2 py-0.5 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded transition cursor-pointer"
+                                  title="Додати подружжя"
+                                >
+                                  + Подружжя
+                                </button>
+                              </div>
                             </div>
                           </div>
 
-                          {/* Spouse connector badge if spouse exists in same generation */}
+                          {/* Spouse connector badge */}
                           {spouses.length > 0 && person.gender === 'male' && (
                             <div className="flex items-center text-rose-400" title="Подружній союз">
                               <Heart className="w-4 h-4 fill-rose-500/20 text-rose-400" />

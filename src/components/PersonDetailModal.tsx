@@ -9,7 +9,8 @@ import {
   Briefcase, 
   Users, 
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  PlusCircle
 } from 'lucide-react';
 
 interface PersonDetailModalProps {
@@ -47,7 +48,6 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
   }, [person.spouseIds, personMap]);
 
   const children = useMemo(() => {
-    // Both explicitly listed in childrenIds and people who have this person as father/mother
     const directChildren = (person.childrenIds || [])
       .map((id) => personMap.get(id))
       .filter(Boolean) as Person[];
@@ -71,6 +71,11 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
   }, [person, allPersons]);
 
   const isMale = person.gender === 'male';
+  const hasName = Boolean(person.firstName || person.lastName);
+  const fullName = hasName 
+    ? `${person.lastName} ${person.firstName} ${person.middleName || ''}`.trim()
+    : (person.roleLabel || 'Не заповнено');
+  const initialLetter = person.firstName?.[0] || person.lastName?.[0] || person.roleLabel?.[0] || '?';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm overflow-y-auto animate-in fade-in duration-200">
@@ -88,9 +93,9 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
             <span className="text-xs px-2.5 py-1 rounded-full bg-slate-800/80 text-slate-300 font-mono">
               Покоління {person.generation}
             </span>
-            {person.branch && (
+            {person.roleLabel && (
               <span className="text-xs px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30">
-                {person.branch}
+                {person.roleLabel}
               </span>
             )}
           </div>
@@ -98,14 +103,15 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={() => onEdit(person)}
-              className="p-2 bg-slate-800/80 hover:bg-slate-700 text-slate-200 rounded-xl transition cursor-pointer"
-              title="Редагувати картку"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold text-xs rounded-xl shadow-md transition cursor-pointer"
+              title="Редагувати / заповнити"
             >
-              <Edit3 className="w-4 h-4" />
+              <Edit3 className="w-3.5 h-3.5" />
+              <span>{hasName ? 'Редагувати' : 'Заповнити дані'}</span>
             </button>
             <button
               onClick={() => {
-                if (window.confirm(`Ви впевнені, що хочете видалити ${person.firstName} ${person.lastName} з дерева?`)) {
+                if (window.confirm(`Видалити цю картку з дерева?`)) {
                   onDelete(person.id);
                   onClose();
                 }
@@ -138,18 +144,26 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
               {person.avatarUrl ? (
                 <img
                   src={person.avatarUrl}
-                  alt={person.firstName}
+                  alt={fullName}
                   className="w-full h-full object-cover rounded-2xl"
                 />
               ) : (
-                <span>{person.firstName[0]}{person.lastName[0]}</span>
+                <span>{initialLetter}</span>
               )}
             </div>
 
             <div className="flex-1">
               <h2 className="text-2xl sm:text-3xl font-bold font-serif text-slate-100">
-                {person.lastName} {person.firstName} {person.middleName}
+                {fullName}
               </h2>
+
+              {!hasName && (
+                <p className="text-xs text-amber-400 mt-1 flex items-center justify-center sm:justify-start gap-1">
+                  <PlusCircle className="w-3.5 h-3.5" />
+                  <span>Порожній шаблон • Натисніть кнопку «Заповнити дані» вгорі</span>
+                </p>
+              )}
+
               {person.maidenName && (
                 <p className="text-sm text-amber-400 italic mt-0.5">
                   Дівоче прізвище: {person.maidenName}
@@ -158,11 +172,13 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
 
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mt-3">
                 <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
-                  person.isLiving
-                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                    : 'bg-slate-800 text-slate-400 border border-slate-700'
+                  hasName
+                    ? person.isLiving
+                      ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                      : 'bg-slate-800 text-slate-400 border border-slate-700'
+                    : 'bg-slate-800 text-slate-400'
                 }`}>
-                  {person.isLiving ? '🟢 Нині живий(а)' : '🕊️ Світла пам’ять'}
+                  {hasName ? (person.isLiving ? '🟢 Нині живий(а)' : '🕊️ Світла пам’ять') : 'Статус не вказано'}
                 </span>
 
                 <span className="text-xs px-2.5 py-1 rounded-full bg-slate-800 text-slate-300">
@@ -180,42 +196,38 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
                 <span className="text-slate-300 font-medium">Роки життя:</span>
               </div>
               <p className="text-sm font-mono text-slate-200 pl-6">
-                {person.birthDate || 'невідомо'} — {person.isLiving ? 'досі' : (person.deathDate || 'невідомо')}
+                {person.birthDate ? `${person.birthDate} — ${person.isLiving ? 'досі' : (person.deathDate || '?')}` : 'Не вказано'}
               </p>
             </div>
 
-            {person.profession && (
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-xs text-slate-400">
-                  <Briefcase className="w-4 h-4 text-cyan-400 shrink-0" />
-                  <span className="text-slate-300 font-medium">Професія:</span>
-                </div>
-                <p className="text-sm text-slate-200 pl-6 truncate">
-                  {person.profession}
-                </p>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-xs text-slate-400">
+                <Briefcase className="w-4 h-4 text-cyan-400 shrink-0" />
+                <span className="text-slate-300 font-medium">Професія:</span>
               </div>
-            )}
+              <p className="text-sm text-slate-200 pl-6 truncate">
+                {person.profession || 'Не вказано'}
+              </p>
+            </div>
 
-            {person.birthPlace && (
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-xs text-slate-400">
-                  <MapPin className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span className="text-slate-300 font-medium">Місце народження:</span>
-                </div>
-                <p className="text-sm text-slate-200 pl-6 truncate">
-                  {person.birthPlace}
-                </p>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-xs text-slate-400">
+                <MapPin className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span className="text-slate-300 font-medium">Місце народження:</span>
               </div>
-            )}
+              <p className="text-sm text-slate-200 pl-6 truncate">
+                {person.birthPlace || 'Не вказано'}
+              </p>
+            </div>
 
-            {!person.isLiving && person.deathPlace && (
+            {!person.isLiving && (
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-xs text-slate-400">
                   <MapPin className="w-4 h-4 text-rose-400 shrink-0" />
                   <span className="text-slate-300 font-medium">Місце упокоєння:</span>
                 </div>
                 <p className="text-sm text-slate-200 pl-6 truncate">
-                  {person.deathPlace}
+                  {person.deathPlace || 'Не вказано'}
                 </p>
               </div>
             )}
@@ -254,7 +266,7 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
                         className="w-full flex items-center justify-between p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-xs text-left transition cursor-pointer"
                       >
                         <span className="text-cyan-300 font-medium truncate">
-                          👨 Батько: {father.firstName} {father.lastName}
+                          👨 Батько: {father.firstName || father.lastName ? `${father.firstName} ${father.lastName}` : (father.roleLabel || 'Батько')}
                         </span>
                         <ArrowRight className="w-3 h-3 text-slate-500" />
                       </button>
@@ -265,7 +277,7 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
                         className="w-full flex items-center justify-between p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-xs text-left transition cursor-pointer"
                       >
                         <span className="text-rose-300 font-medium truncate">
-                          👩 Мати: {mother.firstName} {mother.lastName}
+                          👩 Мати: {mother.firstName || mother.lastName ? `${mother.firstName} ${mother.lastName}` : (mother.roleLabel || 'Мати')}
                         </span>
                         <ArrowRight className="w-3 h-3 text-slate-500" />
                       </button>
@@ -288,7 +300,7 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
                         className="w-full flex items-center justify-between p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-xs text-left transition cursor-pointer"
                       >
                         <span className="text-amber-300 font-medium truncate">
-                          💍 {sp.firstName} {sp.lastName} {sp.maidenName ? `(${sp.maidenName})` : ''}
+                          💍 {sp.firstName || sp.lastName ? `${sp.firstName} ${sp.lastName}` : (sp.roleLabel || 'Подружжя')}
                         </span>
                         <ArrowRight className="w-3 h-3 text-slate-500" />
                       </button>
@@ -311,7 +323,7 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
                         className="w-full flex items-center justify-between p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-xs text-left transition cursor-pointer"
                       >
                         <span className="text-slate-200 font-medium truncate">
-                          👶 {ch.firstName} {ch.lastName}
+                          👶 {ch.firstName || ch.lastName ? `${ch.firstName} ${ch.lastName}` : (ch.roleLabel || 'Дитина')}
                         </span>
                         <ArrowRight className="w-3 h-3 text-slate-500" />
                       </button>
@@ -334,7 +346,7 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
                         className="w-full flex items-center justify-between p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-xs text-left transition cursor-pointer"
                       >
                         <span className="text-slate-300 font-medium truncate">
-                          🤝 {sb.firstName} {sb.lastName}
+                          🤝 {sb.firstName || sb.lastName ? `${sb.firstName} ${sb.lastName}` : (sb.roleLabel || 'Брат/сестра')}
                         </span>
                         <ArrowRight className="w-3 h-3 text-slate-500" />
                       </button>
@@ -347,20 +359,6 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
 
             </div>
           </div>
-
-          {/* Tags */}
-          {person.tags && person.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 pt-2 border-t border-slate-800">
-              {person.tags.map((t) => (
-                <span
-                  key={t}
-                  className="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full border border-slate-700"
-                >
-                  #{t}
-                </span>
-              ))}
-            </div>
-          )}
 
         </div>
       </div>
