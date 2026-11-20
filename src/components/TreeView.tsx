@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo, useCallback } from 'react';
+import React, { useState, useRef, useMemo, useCallback, useEffect } from 'react';
 import type { Person } from '../types/family';
 import { MedievalTree3D } from './MedievalTree3D';
 import {
@@ -322,7 +322,33 @@ export const TreeView: React.FC<TreeViewProps> = ({
   const handleTouchEnd = () => { setIsDragging(false); setPinchStartDist(null); };
 
   const handleZoom = (delta: number) => setScale(prev => Math.min(Math.max(0.15, prev + delta), 2.5));
-  const handleResetZoom = () => { setScale(0.55); setPan({ x: 0, y: 0 }); };
+
+  // Perfect centering of the Tree of Life in the viewport on startup and reset
+  const handleResetZoom = useCallback(() => {
+    if (!containerRef.current) {
+      setScale(0.55);
+      setPan({ x: 0, y: 0 });
+      return;
+    }
+    const { clientWidth: cw, clientHeight: ch } = containerRef.current;
+    if (cw > 0 && ch > 0) {
+      // Calculate fit scale so entire tree and cards are beautifully framed
+      const fitScale = Math.min(
+        (cw * 0.92) / canvasW,
+        (ch * 0.92) / canvasH,
+        0.75
+      );
+      setScale(Math.max(0.2, Math.min(fitScale, 0.65)));
+    } else {
+      setScale(0.55);
+    }
+    setPan({ x: 0, y: 0 });
+  }, [canvasW, canvasH]);
+
+  // Center tree on initial mount and when canvas dimensions update
+  useEffect(() => {
+    handleResetZoom();
+  }, [handleResetZoom]);
 
   const handleWheel = useCallback((e: React.WheelEvent) => {
     e.preventDefault();
@@ -625,17 +651,18 @@ export const TreeView: React.FC<TreeViewProps> = ({
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         onWheel={handleWheel}
-        className={`w-full h-full overflow-hidden ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+        className={`w-full h-full overflow-hidden relative ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
       >
         <div
           style={{
-            transform: `translate(${pan.x}px, ${pan.y}px) scale(${scale})`,
-            transformOrigin: 'center center',
-            transition: isDragging ? 'none' : 'transform 0.12s ease-out',
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
             width: canvasW,
             height: canvasH,
-            position: 'relative',
-            margin: '0 auto',
+            transform: `translate(calc(-50% + ${pan.x}px), calc(-50% + ${pan.y}px)) scale(${scale})`,
+            transformOrigin: 'center center',
+            transition: isDragging ? 'none' : 'transform 0.12s ease-out',
           }}
         >
           {/* ======================================================== */}
