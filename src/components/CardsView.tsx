@@ -196,25 +196,25 @@ export const CardsView: React.FC<CardsViewProps> = ({
               <div
                 key={person.id}
                 onClick={() => onSelectPerson(person)}
-                className={`group bg-gradient-to-br from-[#ffffff] via-[#f8f6f0] to-[#eae3cf] text-[#1c1309] border-2 rounded-2xl p-4 shadow-xl hover:shadow-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between relative overflow-hidden ${
-                  hasName ? 'border-[#d4af37]/80 hover:border-[#f59e0b]' : 'border-2 border-dashed border-[#d4af37]/50 hover:border-[#f59e0b]'
+                className={`group bg-gradient-to-br from-[#1a130a]/95 via-[#130d07]/95 to-[#0b0704]/95 text-[#fef3c7] border-2 rounded-2xl p-4 shadow-xl hover:shadow-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between relative overflow-hidden ${
+                  hasName ? 'border-[#d4af37]/80 hover:border-[#ffd700]' : 'border-2 border-dashed border-[#d4af37]/50 hover:border-[#ffd700]'
                 }`}
               >
                 {/* Gold Shimmer Bar */}
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#ffd700] to-transparent shadow-[0_1px_3px_rgba(212,175,55,0.6)]" />
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#ffd700] to-transparent shadow-[0_1px_4px_rgba(212,175,55,0.7)]" />
 
                 <div>
                   {/* Header Row */}
                   <div className="flex items-center justify-between gap-2 mb-2.5">
-                    <span className="text-[10px] font-['Cinzel'] font-bold px-2 py-0.5 rounded-full bg-gradient-to-r from-[#fef3c7] via-[#fde68a] to-[#fef3c7] text-[#78350f] border border-[#d4af37]">
+                    <span className="text-[10px] font-['Cinzel'] font-bold px-2 py-0.5 rounded-full bg-[#26190e]/90 text-[#fef3c7] border border-[#d4af37]/60">
                       Покоління {person.generation || 1} • {person.roleLabel || 'Член роду'}
                     </span>
                     <span className={`text-[10px] px-2 py-0.5 rounded-full font-serif font-bold ${
                       hasName 
                         ? person.isLiving
-                          ? 'bg-emerald-100 text-emerald-800 border border-emerald-400/60'
-                          : 'bg-[#f5e6d3] text-[#78350f] border border-[#d4af37]/60'
-                        : 'bg-amber-100 text-amber-800 border border-amber-400/50'
+                          ? 'bg-emerald-950/70 text-emerald-300 border border-emerald-500/40'
+                          : 'bg-[#24170d] text-[#d4af37]/70 border border-[#d4af37]/30'
+                        : 'bg-[#24170d] text-[#d4af37]/70 border border-[#d4af37]/30'
                     }`}>
                       {hasName ? (person.isLiving ? 'У здравії' : 'Вічна пам’ять') : 'Порожнє поле'}
                     </span>
@@ -227,7 +227,7 @@ export const CardsView: React.FC<CardsViewProps> = ({
                         ? 'bg-gradient-to-tr from-[#d4af37] via-[#fef08a] to-[#78350f]'
                         : 'bg-gradient-to-tr from-[#e6b17e] via-[#fef08a] to-[#991b1b]'
                     }`}>
-                      <div className="w-full h-full rounded-full bg-[#fdfbf7] flex items-center justify-center font-['Cinzel'] text-base font-extrabold overflow-hidden border border-[#d4af37]/40">
+                      <div className="w-full h-full rounded-full bg-[#120c06] flex items-center justify-center font-['Cinzel'] text-base font-extrabold overflow-hidden border border-[#d4af37]/40">
                         {person.avatarUrl ? (
                           <img
                             src={person.avatarUrl}
@@ -235,25 +235,25 @@ export const CardsView: React.FC<CardsViewProps> = ({
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <span className="text-[#78350f]">{initialLetter}</span>
+                          <span className="text-[#d4af37]">{initialLetter}</span>
                         )}
                       </div>
                     </div>
 
                     <div className="min-w-0">
-                      <h4 className="font-['Cinzel'] font-extrabold text-sm text-[#1c1309] group-hover:text-[#b45309] transition truncate">
+                      <h4 className="font-['Cinzel'] font-extrabold text-sm text-[#fffbeb] group-hover:text-[#ffd700] transition truncate">
                         {fullName}
                       </h4>
                       {person.middleName ? (
-                        <p className="text-xs text-[#78350f] italic truncate font-serif">{person.middleName}</p>
+                        <p className="text-xs text-[#d4af37]/75 italic truncate font-serif">{person.middleName}</p>
                       ) : !hasName ? (
-                        <p className="text-[11px] text-[#b45309] flex items-center gap-1 mt-0.5 font-serif font-bold">
-                          <PlusCircle className="w-3 h-3 text-[#b45309]" />
+                        <p className="text-[11px] text-[#d4af37] flex items-center gap-1 mt-0.5 font-serif font-bold">
+                          <PlusCircle className="w-3 h-3 text-[#d4af37]" />
                           <span>Заповнити профіль</span>
                         </p>
                       ) : null}
                       {person.maidenName && (
-                        <p className="text-[10px] text-[#991b1b] italic truncate font-serif">
+                        <p className="text-[10px] text-[#fca5a5] italic truncate font-serif">
                           ({person.maidenName})
                         </p>
                       )}
@@ -261,45 +261,45 @@ export const CardsView: React.FC<CardsViewProps> = ({
                   </div>
 
                   {/* 3) Дата народження & 4) Дата смерті */}
-                  <div className="grid grid-cols-2 gap-1 bg-[#fefce8]/70 px-2.5 py-1 rounded-xl border border-[#d4af37]/40 text-[10px] font-serif shadow-xs mb-2">
-                    <div className="flex items-center gap-1 text-[#78350f] truncate">
-                      <Calendar className="w-3 h-3 text-[#b45309] shrink-0" />
-                      <span className="font-semibold text-[#78350f]">Нар:</span>
-                      <span className="font-['Cinzel'] font-bold text-[#1c1309] truncate">{person.birthDate || '—'}</span>
+                  <div className="grid grid-cols-2 gap-1 bg-[#1f150c]/80 px-2.5 py-1 rounded-xl border border-[#d4af37]/35 text-[10px] font-serif shadow-xs mb-2">
+                    <div className="flex items-center gap-1 text-[#d4af37]/90 truncate">
+                      <Calendar className="w-3 h-3 text-[#d4af37] shrink-0" />
+                      <span className="font-semibold text-[#d4af37]/80">Нар:</span>
+                      <span className="font-['Cinzel'] font-bold text-[#fffbeb] truncate">{person.birthDate || '—'}</span>
                     </div>
-                    <div className="flex items-center gap-1 text-[#78350f] truncate">
-                      <span className="text-[#b45309] text-[10px] font-bold">†</span>
-                      <span className="font-semibold text-[#78350f]">Смерть:</span>
-                      <span className="font-['Cinzel'] font-bold text-[#1c1309] truncate">
+                    <div className="flex items-center gap-1 text-[#d4af37]/90 truncate">
+                      <span className="text-[#d4af37] text-[10px] font-bold">†</span>
+                      <span className="font-semibold text-[#d4af37]/80">Смерть:</span>
+                      <span className="font-['Cinzel'] font-bold text-[#fffbeb] truncate">
                         {person.isLiving ? 'живе' : (person.deathDate || '—')}
                       </span>
                     </div>
                   </div>
 
                   {/* 7) Місце народження & 6) Професія */}
-                  <div className="space-y-1 text-xs font-serif text-[#451a03] mb-2">
+                  <div className="space-y-1 text-xs font-serif text-[#fef3c7] mb-2">
                     <div className="flex items-center gap-1.5 text-[11px] truncate">
-                      <MapPin className="w-3.5 h-3.5 text-[#b45309] shrink-0" />
-                      <span className="text-[#78350f] font-semibold shrink-0">Місце нар.:</span>
-                      <span className="font-medium text-[#1c1309] truncate">{person.birthPlace || 'Не зазначено'}</span>
+                      <MapPin className="w-3.5 h-3.5 text-[#d4af37] shrink-0" />
+                      <span className="text-[#d4af37]/80 font-semibold shrink-0">Місце нар.:</span>
+                      <span className="font-medium text-[#fef3c7] truncate">{person.birthPlace || 'Не зазначено'}</span>
                     </div>
 
                     <div className="flex items-center gap-1.5 text-[11px] truncate">
-                      <Briefcase className="w-3.5 h-3.5 text-[#b45309] shrink-0" />
-                      <span className="text-[#78350f] font-semibold shrink-0">Професія:</span>
-                      <span className="font-medium text-[#1c1309] truncate">{person.profession || 'Не зазначено'}</span>
+                      <Briefcase className="w-3.5 h-3.5 text-[#d4af37] shrink-0" />
+                      <span className="text-[#d4af37]/80 font-semibold shrink-0">Професія:</span>
+                      <span className="font-medium text-[#fef3c7] truncate">{person.profession || 'Не зазначено'}</span>
                     </div>
                   </div>
 
                   {/* 5) Улюблена цитата */}
-                  <div className="bg-gradient-to-r from-[#fef3c7] via-[#fef9c3]/90 to-[#fef3c7] px-2.5 py-1 rounded-lg border-l-2 border-[#d4af37] text-[10px] text-[#5c2406] italic flex items-center gap-1 shadow-xs mb-2">
-                    <Quote className="w-2.5 h-2.5 text-[#b45309] shrink-0 inline opacity-90" />
+                  <div className="bg-[#24170d]/90 px-2.5 py-1 rounded-lg border-l-2 border-[#d4af37] text-[10px] text-[#fef3c7] italic flex items-center gap-1 shadow-xs mb-2">
+                    <Quote className="w-2.5 h-2.5 text-[#ffd700] shrink-0 inline opacity-90" />
                     <span className="truncate">{person.favoriteQuote ? `«${person.favoriteQuote}»` : '«Життєве кредо / цитата»'}</span>
                   </div>
 
                   {/* Bio teaser */}
                   {person.bio && (
-                    <p className="text-[11px] text-[#5c2406] line-clamp-2 italic bg-[#fefce8]/50 p-2 rounded-lg border border-[#d4af37]/30">
+                    <p className="text-[11px] text-[#d4af37]/90 line-clamp-2 italic bg-[#1f150c]/60 p-2 rounded-lg border border-[#d4af37]/30">
                       "{person.bio}"
                     </p>
                   )}
@@ -311,7 +311,7 @@ export const CardsView: React.FC<CardsViewProps> = ({
                     {person.tags.map((t) => (
                       <span
                         key={t}
-                        className="text-[9px] font-['Cinzel'] font-bold bg-[#fef3c7] border border-[#d4af37]/50 text-[#78350f] px-2 py-0.5 rounded shadow-xs"
+                        className="text-[9px] font-['Cinzel'] font-bold bg-[#26190e] border border-[#d4af37]/40 text-[#fef3c7] px-2 py-0.5 rounded shadow-xs"
                       >
                         #{t}
                       </span>

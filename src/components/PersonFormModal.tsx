@@ -166,22 +166,25 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/80 backdrop-blur-sm overflow-y-auto animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto animate-in fade-in duration-200">
       <div 
-        className="bg-slate-900 border border-slate-800 rounded-t-3xl sm:rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden max-h-[92vh] sm:max-h-[85vh] flex flex-col"
+        className="bg-gradient-to-br from-[#1c140c] via-[#120d07] to-[#090603] border-2 border-[#d4af37]/80 rounded-t-3xl sm:rounded-3xl max-w-2xl w-full shadow-[0_25px_60px_rgba(0,0,0,0.95)] overflow-hidden max-h-[92vh] sm:max-h-[85vh] flex flex-col relative"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Top Metallic Gold Shimmer Bar */}
+        <div className="h-1.5 w-full bg-gradient-to-r from-transparent via-[#ffd700] to-transparent shadow-[0_2px_10px_rgba(212,175,55,0.7)] shrink-0" />
+
         {/* Header */}
-        <div className="p-4 sm:p-6 border-b border-slate-800 flex items-center justify-between shrink-0">
+        <div className="p-4 sm:p-5 border-b border-[#d4af37]/40 flex items-center justify-between shrink-0 bg-gradient-to-r from-[#2a1a0f] via-[#1a110a] to-[#140c06]">
           <div className="flex items-center gap-2">
-            <UserPlus className="w-5 h-5 text-amber-400" />
-            <h2 className="font-serif text-base sm:text-lg font-bold text-slate-100 truncate">
+            <UserPlus className="w-5 h-5 text-[#ffd700]" />
+            <h2 className="font-['Cinzel'] text-base sm:text-lg font-bold text-[#ffd700] truncate">
               {initialPerson ? `Заповнення: ${initialPerson.roleLabel || initialPerson.firstName || 'Картка'}` : 'Додати родича'}
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-white rounded-xl active:bg-slate-800 transition"
+            className="p-2 text-[#d4af37] hover:text-[#ffd700] rounded-xl active:bg-[#22140a] transition cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -192,7 +195,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
           
           {/* Role Label */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1">
+            <label className="block text-xs font-semibold text-[#d4af37] mb-1 font-['Cinzel']">
               Роль / Ким приходиться
             </label>
             <input
@@ -200,14 +203,14 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
               value={roleLabel}
               onChange={(e) => setRoleLabel(e.target.value)}
               placeholder="напр. Батько, Тітка, Я"
-              className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
+              className="w-full px-3.5 py-2.5 bg-[#120b06] border border-[#d4af37]/40 focus:border-[#ffd700] rounded-xl text-base sm:text-sm text-[#fffbeb] placeholder-[#a89078]/50 focus:outline-none"
             />
           </div>
 
           {/* Names Row */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-[#d4af37] mb-1 font-['Cinzel']">
                 Прізвище
               </label>
               <input
@@ -215,12 +218,12 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 placeholder="напр. Малеєв"
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-[#120b06] border border-[#d4af37]/40 focus:border-[#ffd700] rounded-xl text-base sm:text-sm text-[#fffbeb] placeholder-[#a89078]/50 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-[#d4af37] mb-1 font-['Cinzel']">
                 Ім'я
               </label>
               <input
@@ -228,12 +231,12 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 placeholder="напр. Віктор"
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-[#120b06] border border-[#d4af37]/40 focus:border-[#ffd700] rounded-xl text-base sm:text-sm text-[#fffbeb] placeholder-[#a89078]/50 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-[#d4af37] mb-1 font-['Cinzel']">
                 По батькові
               </label>
               <input
@@ -241,12 +244,12 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 value={middleName}
                 onChange={(e) => setMiddleName(e.target.value)}
                 placeholder="напр. Володимирович"
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-[#120b06] border border-[#d4af37]/40 focus:border-[#ffd700] rounded-xl text-base sm:text-sm text-[#fffbeb] placeholder-[#a89078]/50 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-[#d4af37] mb-1 font-['Cinzel']">
                 Дівоче прізвище (для жінок)
               </label>
               <input
@@ -254,25 +257,25 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 value={maidenName}
                 onChange={(e) => setMaidenName(e.target.value)}
                 placeholder="Дівоче прізвище"
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-[#120b06] border border-[#d4af37]/40 focus:border-[#ffd700] rounded-xl text-base sm:text-sm text-[#fffbeb] placeholder-[#a89078]/50 focus:outline-none"
               />
             </div>
           </div>
 
           {/* Gender & Living status */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-950/60 p-3.5 sm:p-4 rounded-2xl border border-slate-800">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-[#150d07]/90 p-3.5 sm:p-4 rounded-2xl border border-[#d4af37]/35">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-[#d4af37] mb-1.5 font-['Cinzel']">
                 Стать
               </label>
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={() => setGender('male')}
-                  className={`flex-1 py-2 sm:py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
+                  className={`flex-1 py-2 sm:py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer font-['Cinzel'] ${
                     gender === 'male'
-                      ? 'bg-cyan-500 text-slate-950'
-                      : 'bg-slate-800 text-slate-400 active:text-white'
+                      ? 'bg-gradient-to-r from-[#2a1a0f] to-[#3d2411] text-[#ffd700] border border-[#d4af37] shadow-sm'
+                      : 'bg-[#120b06] text-[#a89078] border border-[#d4af37]/20 active:text-white'
                   }`}
                 >
                   Чоловік
@@ -280,10 +283,10 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setGender('female')}
-                  className={`flex-1 py-2 sm:py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
+                  className={`flex-1 py-2 sm:py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer font-['Cinzel'] ${
                     gender === 'female'
-                      ? 'bg-rose-500 text-slate-950'
-                      : 'bg-slate-800 text-slate-400 active:text-white'
+                      ? 'bg-gradient-to-r from-[#3d1822] to-[#241016] text-[#fca5a5] border border-rose-500/60 shadow-sm'
+                      : 'bg-[#120b06] text-[#a89078] border border-[#d4af37]/20 active:text-white'
                   }`}
                 >
                   Жінка
@@ -292,7 +295,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-[#d4af37] mb-1.5 font-['Cinzel']">
                 Покоління
               </label>
               <input
@@ -301,17 +304,17 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 max="10"
                 value={generation}
                 onChange={(e) => setGeneration(Number(e.target.value))}
-                className="w-full px-3.5 py-2 bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
+                className="w-full px-3.5 py-2 bg-[#120b06] border border-[#d4af37]/40 focus:border-[#ffd700] rounded-xl text-base sm:text-sm text-[#fffbeb] focus:outline-none"
               />
             </div>
 
             <div className="flex items-center pt-2 sm:pt-4">
-              <label className="flex items-center gap-2.5 cursor-pointer text-xs sm:text-sm font-medium text-slate-200">
+              <label className="flex items-center gap-2.5 cursor-pointer text-xs sm:text-sm font-semibold text-[#fef3c7] font-['Cinzel']">
                 <input
                   type="checkbox"
                   checked={isLiving}
                   onChange={(e) => setIsLiving(e.target.checked)}
-                  className="w-5 h-5 rounded text-amber-500 focus:ring-amber-500 bg-slate-900 border-slate-700"
+                  className="w-5 h-5 rounded text-[#d4af37] focus:ring-[#ffd700] bg-[#120b06] border-[#d4af37]/50"
                 />
                 <span>Нині живий(а)</span>
               </label>
@@ -321,7 +324,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
           {/* Dates & Places */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-[#d4af37] mb-1 font-['Cinzel']">
                 Рік / дата народження
               </label>
               <input
@@ -329,12 +332,12 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 value={birthDate}
                 onChange={(e) => setBirthDate(e.target.value)}
                 placeholder="напр. 1965"
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-[#120b06] border border-[#d4af37]/40 focus:border-[#ffd700] rounded-xl text-base sm:text-sm text-[#fffbeb] placeholder-[#a89078]/50 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-[#d4af37] mb-1 font-['Cinzel']">
                 Місце народження
               </label>
               <input
@@ -342,14 +345,14 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 value={birthPlace}
                 onChange={(e) => setBirthPlace(e.target.value)}
                 placeholder="напр. Київ"
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-[#120b06] border border-[#d4af37]/40 focus:border-[#ffd700] rounded-xl text-base sm:text-sm text-[#fffbeb] placeholder-[#a89078]/50 focus:outline-none"
               />
             </div>
 
             {!isLiving && (
               <>
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">
+                  <label className="block text-xs font-semibold text-[#d4af37] mb-1 font-['Cinzel']">
                     Рік / дата смерті
                   </label>
                   <input
@@ -357,12 +360,12 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                     value={deathDate}
                     onChange={(e) => setDeathDate(e.target.value)}
                     placeholder="напр. 2010"
-                    className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-[#120b06] border border-[#d4af37]/40 focus:border-[#ffd700] rounded-xl text-base sm:text-sm text-[#fffbeb] placeholder-[#a89078]/50 focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">
+                  <label className="block text-xs font-semibold text-[#d4af37] mb-1 font-['Cinzel']">
                     Місце спочинку
                   </label>
                   <input
@@ -370,7 +373,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                     value={deathPlace}
                     onChange={(e) => setDeathPlace(e.target.value)}
                     placeholder="напр. Київ"
-                    className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-[#120b06] border border-[#d4af37]/40 focus:border-[#ffd700] rounded-xl text-base sm:text-sm text-[#fffbeb] placeholder-[#a89078]/50 focus:outline-none"
                   />
                 </div>
               </>
@@ -380,7 +383,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
           {/* Profession & Branch */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-[#d4af37] mb-1 font-['Cinzel']">
                 Професія
               </label>
               <input
@@ -388,12 +391,12 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 value={profession}
                 onChange={(e) => setProfession(e.target.value)}
                 placeholder="напр. Інженер, Лікар"
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-[#120b06] border border-[#d4af37]/40 focus:border-[#ffd700] rounded-xl text-base sm:text-sm text-[#fffbeb] placeholder-[#a89078]/50 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-[#d4af37] mb-1 font-['Cinzel']">
                 Лінія / Гілка
               </label>
               <input
@@ -401,21 +404,21 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 value={branch}
                 onChange={(e) => setBranch(e.target.value)}
                 placeholder="напр. Лінія батька"
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-[#120b06] border border-[#d4af37]/40 focus:border-[#ffd700] rounded-xl text-base sm:text-sm text-[#fffbeb] placeholder-[#a89078]/50 focus:outline-none"
               />
             </div>
           </div>
 
           {/* Parents & Spouses Selectors */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 bg-slate-950/40 p-3.5 sm:p-4 rounded-2xl border border-slate-800">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 bg-[#150d07]/90 p-3.5 sm:p-4 rounded-2xl border border-[#d4af37]/35">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-[#d4af37] mb-1 font-['Cinzel']">
                 Батько
               </label>
               <select
                 value={fatherId}
                 onChange={(e) => setFatherId(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-xs text-slate-200 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-[#120b06] border border-[#d4af37]/40 focus:border-[#ffd700] rounded-xl text-base sm:text-xs text-[#fffbeb] focus:outline-none"
               >
                 <option value="">Не вказано</option>
                 {potentialFathers.map((f) => (
@@ -427,13 +430,13 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-[#d4af37] mb-1 font-['Cinzel']">
                 Мати
               </label>
               <select
                 value={motherId}
                 onChange={(e) => setMotherId(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-xs text-slate-200 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-[#120b06] border border-[#d4af37]/40 focus:border-[#ffd700] rounded-xl text-base sm:text-xs text-[#fffbeb] focus:outline-none"
               >
                 <option value="">Не вказано</option>
                 {potentialMothers.map((m) => (
@@ -445,13 +448,13 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
             </div>
 
             <div className="sm:col-span-2">
-              <label className="block text-xs font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-[#d4af37] mb-1 font-['Cinzel']">
                 Подружжя
               </label>
               <select
                 value={spouseIds[0] || ''}
                 onChange={(e) => setSpouseIds(e.target.value ? [e.target.value] : [])}
-                className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-xs text-slate-200 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-[#120b06] border border-[#d4af37]/40 focus:border-[#ffd700] rounded-xl text-base sm:text-xs text-[#fffbeb] focus:outline-none"
               >
                 <option value="">Не вказано</option>
                 {potentialSpouses.map((s) => (
@@ -465,7 +468,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
 
           {/* Favorite Quote */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1">
+            <label className="block text-xs font-semibold text-[#d4af37] mb-1 font-['Cinzel']">
               Улюблена цитата / Життєве кредо
             </label>
             <input
@@ -473,13 +476,13 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
               value={favoriteQuote}
               onChange={(e) => setFavoriteQuote(e.target.value)}
               placeholder="напр. «Сім'я — це коріння, з якого проростає майбутнє»"
-              className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none italic font-serif"
+              className="w-full px-3.5 py-2.5 bg-[#120b06] border border-[#d4af37]/40 focus:border-[#ffd700] rounded-xl text-base sm:text-sm text-[#fffbeb] placeholder-[#a89078]/50 focus:outline-none italic font-serif"
             />
           </div>
 
           {/* Bio / Memories */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1">
+            <label className="block text-xs font-semibold text-[#d4af37] mb-1 font-['Cinzel']">
               Біографія та спогади
             </label>
             <textarea
@@ -487,22 +490,22 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               placeholder="Цікаві спогади з життя..."
-              className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
+              className="w-full px-3.5 py-2.5 bg-[#120b06] border border-[#d4af37]/40 focus:border-[#ffd700] rounded-xl text-base sm:text-sm text-[#fffbeb] placeholder-[#a89078]/50 focus:outline-none"
             />
           </div>
 
           {/* Sticky/Fixed Footer on Mobile */}
-          <div className="pt-3 border-t border-slate-800 flex items-center justify-end gap-2.5 pb-2">
+          <div className="pt-3 border-t border-[#d4af37]/30 flex items-center justify-end gap-2.5 pb-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2.5 bg-slate-800 active:bg-slate-700 text-slate-300 text-sm font-medium rounded-xl transition cursor-pointer"
+              className="px-4 py-2.5 bg-[#22140a] hover:bg-[#331c0e] active:bg-[#331c0e] text-[#fef3c7] border border-[#d4af37]/40 text-sm font-semibold rounded-xl transition cursor-pointer font-['Cinzel']"
             >
               Скасувати
             </button>
             <button
               type="submit"
-              className="flex items-center gap-2 px-6 py-2.5 bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 text-sm font-semibold rounded-xl shadow-lg shadow-amber-500/20 transition cursor-pointer"
+              className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[#b48228] via-[#d4af37] to-[#996515] hover:brightness-110 active:scale-95 text-[#1a1107] text-sm font-bold rounded-xl shadow-lg shadow-[#d4af37]/25 transition cursor-pointer font-['Cinzel']"
             >
               <Save className="w-4 h-4" />
               <span>Зберегти</span>
