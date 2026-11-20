@@ -47,8 +47,8 @@ interface Connector {
 
 const CARD_W = 270;
 const CARD_H = 210;
-const GAP_X = 40;
-const GAP_Y = 130;
+const GAP_X = 42;
+const GAP_Y = 135;
 const COUPLE_GAP = 28;
 
 function buildLayout(persons: Person[]) {
@@ -244,11 +244,16 @@ function buildLayout(persons: Person[]) {
 
 
 /* ================================================================
-   ORGANIC TREE OF LIFE ARTWORK (SVG)
-   Magnificent layered ancient oak tree growing from roots upward
+   ANCIENT OAK TREE ARTWORK (SVG) — ВІКОВИЙ ДУБ
+   Iconic features of an ancient oak:
+   1. Extremely wide, powerful flaring trunk with furrowed oak bark fissures
+   2. Gnarled, muscular, twisting elbow boughs
+   3. Lobed oak foliage clusters (лопатеві листки дуба)
+   4. Clusters of hanging golden-bronze acorns (жолуді з шапочками)
+   5. Deep buttress roots gripping the earth with ancient moss
    ================================================================ */
 
-const OrganicTreeSVG: React.FC<{ canvasW: number; canvasH: number }> = ({ canvasW, canvasH }) => {
+const AncientOakTreeSVG: React.FC<{ canvasW: number; canvasH: number }> = ({ canvasW, canvasH }) => {
   const cx = canvasW / 2;
   const bottom = canvasH + 60;
   const trunkBottom = bottom - 50;
@@ -264,47 +269,78 @@ const OrganicTreeSVG: React.FC<{ canvasW: number; canvasH: number }> = ({ canvas
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>
-        {/* Rich Bark Gradient */}
-        <linearGradient id="barkGradient" x1="0%" y1="100%" x2="0%" y2="0%">
-          <stop offset="0%" stopColor="#2e1065" />
-          <stop offset="20%" stopColor="#451a03" />
-          <stop offset="50%" stopColor="#78350f" />
-          <stop offset="85%" stopColor="#b45309" />
+        {/* Ancient Oak Weathered Bark Gradient */}
+        <linearGradient id="oakBarkGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+          <stop offset="0%" stopColor="#1a0c06" />
+          <stop offset="25%" stopColor="#2e140a" />
+          <stop offset="50%" stopColor="#451e0e" />
+          <stop offset="75%" stopColor="#632e15" />
+          <stop offset="90%" stopColor="#7c3a1d" />
+          <stop offset="100%" stopColor="#9a4b22" />
+        </linearGradient>
+
+        {/* Oak Heartwood Sap Gradient */}
+        <linearGradient id="oakHeartwood" x1="0%" y1="100%" x2="0%" y2="0%">
+          <stop offset="0%" stopColor="#3d1b0d" />
+          <stop offset="50%" stopColor="#854d0e" />
           <stop offset="100%" stopColor="#d97706" />
         </linearGradient>
 
-        {/* Golden Sap Core Gradient */}
-        <linearGradient id="sapGradient" x1="0%" y1="100%" x2="0%" y2="0%">
-          <stop offset="0%" stopColor="#78350f" stopOpacity="0.8" />
-          <stop offset="50%" stopColor="#d97706" stopOpacity="0.9" />
-          <stop offset="100%" stopColor="#fbbf24" stopOpacity="0.95" />
-        </linearGradient>
+        {/* Oak Leaf Silhouette Template (Lobed leaf) */}
+        <g id="oakLeafLobe">
+          <path
+            d="M 0 0 C -4 -5, -10 -4, -8 -10 C -6 -15, -14 -16, -11 -23 C -8 -29, -13 -32, -9 -39 C -6 -44, -10 -48, 0 -54 C 10 -48, 6 -44, 9 -39 C 13 -32, 8 -29, 11 -23 C 14 -16, 6 -15, 8 -10 C 10 -4, 4 -5, 0 0 Z"
+            fill="#047857"
+            stroke="#065f46"
+            strokeWidth="0.8"
+          />
+          {/* Central vein */}
+          <line x1="0" y1="0" x2="0" y2="-50" stroke="#10b981" strokeWidth="1" opacity="0.6" />
+        </g>
 
-        {/* Celestial Light Cones from Crown */}
-        <linearGradient id="sunbeamLeft" x1="50%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#fbbf24" stopOpacity="0.12" />
-          <stop offset="100%" stopColor="#fbbf24" stopOpacity="0" />
-        </linearGradient>
-        <linearGradient id="sunbeamRight" x1="50%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#fbbf24" stopOpacity="0.12" />
-          <stop offset="100%" stopColor="#fbbf24" stopOpacity="0" />
-        </linearGradient>
+        {/* Acorn Motif (Жолудь) */}
+        <g id="acornDuo">
+          {/* Little twigs */}
+          <path d="M 0 0 Q -3 6 -6 12 M 0 0 Q 3 6 7 11" stroke="#5c2b0e" strokeWidth="1.5" strokeLinecap="round" />
+          
+          {/* Left Acorn */}
+          <g transform="translate(-7, 12)">
+            {/* Cupule / Cap (Шапочка жолудя з насічками) */}
+            <path d="M -5 0 Q 0 -3 5 0 L 4 3 Q 0 4 -4 3 Z" fill="#451a03" stroke="#78350f" strokeWidth="0.8" />
+            {/* Acorn body */}
+            <path d="M -4 2 Q -4.5 9 0 12 Q 4.5 9 4 2 Z" fill="#b45309" stroke="#d97706" strokeWidth="0.6" />
+            {/* Specular shine */}
+            <path d="M -1.5 4 Q -2 7 -0.5 9" stroke="#fef3c7" strokeWidth="0.8" strokeLinecap="round" opacity="0.6" />
+          </g>
 
-        {/* Foliage Glow */}
-        <radialGradient id="foliageGlowEmerald" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#10b981" stopOpacity="0.35" />
-          <stop offset="70%" stopColor="#047857" stopOpacity="0.15" />
+          {/* Right Acorn */}
+          <g transform="translate(7, 11)">
+            <path d="M -5 0 Q 0 -3 5 0 L 4 3 Q 0 4 -4 3 Z" fill="#451a03" stroke="#78350f" strokeWidth="0.8" />
+            <path d="M -4 2 Q -4.5 9 0 12 Q 4.5 9 4 2 Z" fill="#b45309" stroke="#d97706" strokeWidth="0.6" />
+            <path d="M -1.5 4 Q -2 7 -0.5 9" stroke="#fef3c7" strokeWidth="0.8" strokeLinecap="round" opacity="0.6" />
+          </g>
+        </g>
+
+        {/* Oak Canopy Cloud Gradient */}
+        <radialGradient id="oakCanopyDeep" cx="50%" cy="45%" r="55%">
+          <stop offset="0%" stopColor="#065f46" stopOpacity="0.85" />
+          <stop offset="60%" stopColor="#064e3b" stopOpacity="0.75" />
+          <stop offset="100%" stopColor="#022c22" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="oakCanopySunlit" cx="50%" cy="40%" r="55%">
+          <stop offset="0%" stopColor="#10b981" stopOpacity="0.7" />
+          <stop offset="50%" stopColor="#059669" stopOpacity="0.6" />
           <stop offset="100%" stopColor="#064e3b" stopOpacity="0" />
         </radialGradient>
-        <radialGradient id="foliageGlowGold" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.4" />
-          <stop offset="70%" stopColor="#b45309" stopOpacity="0.15" />
+        <radialGradient id="oakCanopyGold" cx="50%" cy="40%" r="50%">
+          <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.5" />
+          <stop offset="65%" stopColor="#b45309" stopOpacity="0.2" />
           <stop offset="100%" stopColor="#78350f" stopOpacity="0" />
         </radialGradient>
 
-        {/* Tree Glow Filter */}
-        <filter id="majesticTreeGlow" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="12" result="blur" />
+        {/* Oak Bark Texture Filter */}
+        <filter id="oakBarkFilter" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="6" result="blur" />
           <feMerge>
             <feMergeNode in="blur" />
             <feMergeNode in="SourceGraphic" />
@@ -313,172 +349,251 @@ const OrganicTreeSVG: React.FC<{ canvasW: number; canvasH: number }> = ({ canvas
       </defs>
 
       {/* ========================================================= */}
-      {/* 1. CELESTIAL SUNBEAMS FILTERING FROM TOP CROWN            */}
+      {/* 1. MIST & SUNBEAMS FILTERING THROUGH OAK DOME             */}
       {/* ========================================================= */}
-      <g opacity="0.6">
-        <polygon points={`${cx},0 ${cx - 450},${canvasH * 0.75} ${cx - 200},${canvasH * 0.75}`} fill="url(#sunbeamLeft)" />
-        <polygon points={`${cx},0 ${cx + 200},${canvasH * 0.75} ${cx + 450},${canvasH * 0.75}`} fill="url(#sunbeamRight)" />
-        <polygon points={`${cx},0 ${cx - 150},${canvasH * 0.55} ${cx + 150},${canvasH * 0.55}`} fill="url(#sunbeamLeft)" />
+      <g opacity="0.45">
+        <polygon points={`${cx},20 ${cx - 520},${canvasH * 0.8} ${cx - 250},${canvasH * 0.8}`} fill="#fbbf24" opacity="0.08" />
+        <polygon points={`${cx},20 ${cx + 250},${canvasH * 0.8} ${cx + 520},${canvasH * 0.8}`} fill="#fbbf24" opacity="0.08" />
+        <polygon points={`${cx},20 ${cx - 180},${canvasH * 0.55} ${cx + 180},${canvasH * 0.55}`} fill="#10b981" opacity="0.06" />
       </g>
 
       {/* ========================================================= */}
-      {/* 2. EARTHEN GROUND & STRATA (AT BOTTOM)                    */}
+      {/* 2. EARTHEN GROUND & MOSS STRATA                           */}
       {/* ========================================================= */}
       <g>
-        {/* Deep Soil Mound */}
-        <ellipse cx={cx} cy={bottom} rx={cx * 0.8} ry={60} fill="#180c05" />
-        <ellipse cx={cx} cy={bottom - 15} rx={cx * 0.65} ry={35} fill="#271207" />
-        <ellipse cx={cx} cy={bottom - 30} rx={cx * 0.45} ry={20} fill="#3d1b09" />
-        {/* Moss glow around base */}
-        <ellipse cx={cx} cy={bottom - 35} rx={320} ry={16} fill="#064e3b" opacity="0.4" />
+        <ellipse cx={cx} cy={bottom + 10} rx={cx * 0.85} ry={70} fill="#140a04" />
+        <ellipse cx={cx} cy={bottom - 10} rx={cx * 0.7} ry={45} fill="#1f0f07" />
+        <ellipse cx={cx} cy={bottom - 30} rx={cx * 0.52} ry={25} fill="#2e160a" />
+        {/* Ancient Oak Moss Base */}
+        <ellipse cx={cx} cy={bottom - 35} rx={380} ry={20} fill="#064e3b" opacity="0.55" />
+        <ellipse cx={cx - 120} cy={bottom - 32} rx={160} ry={14} fill="#047857" opacity="0.4" />
+        <ellipse cx={cx + 120} cy={bottom - 32} rx={160} ry={14} fill="#047857" opacity="0.4" />
       </g>
 
       {/* ========================================================= */}
-      {/* 3. ROOTS SYSTEM (EARTHBOUND ROOTS SPREADING OUT)          */}
+      {/* 3. MASSIVE OAK BUTTRESS ROOTS (МОГУТНІ ДУБОВІ КОРЕНІ)     */}
+      {/* Oak roots are famously thick, serpentine and ancient       */}
       {/* ========================================================= */}
-      <g strokeLinecap="round" opacity="0.85">
-        {/* Left deep root anchor */}
-        <path d={`M ${cx - 30} ${trunkBottom} C ${cx - 120} ${trunkBottom + 40}, ${cx - 320} ${bottom - 10}, ${cx - 480} ${bottom + 20}`} stroke="#3d1b09" strokeWidth="22" />
-        <path d={`M ${cx - 20} ${trunkBottom} C ${cx - 100} ${trunkBottom + 50}, ${cx - 220} ${bottom}, ${cx - 320} ${bottom + 30}`} stroke="#5c2b0e" strokeWidth="14" />
-        <path d={`M ${cx - 80} ${trunkBottom + 30} C ${cx - 180} ${trunkBottom + 70}, ${cx - 260} ${bottom + 20}, ${cx - 360} ${bottom + 40}`} stroke="#78350f" strokeWidth="8" />
+      <g strokeLinecap="round" opacity="0.95">
+        {/* Extreme Left Anchor Root */}
+        <path d={`M ${cx - 55} ${trunkBottom} C ${cx - 160} ${trunkBottom + 30}, ${cx - 360} ${bottom - 15}, ${cx - 520} ${bottom + 25}`} stroke="#1f0f07" strokeWidth="32" />
+        <path d={`M ${cx - 45} ${trunkBottom} C ${cx - 140} ${trunkBottom + 35}, ${cx - 340} ${bottom - 10}, ${cx - 490} ${bottom + 20}`} stroke="url(#oakBarkGrad)" strokeWidth="24" />
+        <path d={`M ${cx - 160} ${trunkBottom + 30} C ${cx - 260} ${trunkBottom + 70}, ${cx - 360} ${bottom + 15}, ${cx - 440} ${bottom + 35}`} stroke="#3d1b0d" strokeWidth="14" />
 
-        {/* Right deep root anchor */}
-        <path d={`M ${cx + 30} ${trunkBottom} C ${cx + 120} ${trunkBottom + 40}, ${cx + 320} ${bottom - 10}, ${cx + 480} ${bottom + 20}`} stroke="#3d1b09" strokeWidth="22" />
-        <path d={`M ${cx + 20} ${trunkBottom} C ${cx + 100} ${trunkBottom + 50}, ${cx + 220} ${bottom}, ${cx + 320} ${bottom + 30}`} stroke="#5c2b0e" strokeWidth="14" />
-        <path d={`M ${cx + 80} ${trunkBottom + 30} C ${cx + 180} ${trunkBottom + 70}, ${cx + 260} ${bottom + 20}, ${cx + 360} ${bottom + 40}`} stroke="#78350f" strokeWidth="8" />
+        {/* Extreme Right Anchor Root */}
+        <path d={`M ${cx + 55} ${trunkBottom} C ${cx + 160} ${trunkBottom + 30}, ${cx + 360} ${bottom - 15}, ${cx + 520} ${bottom + 25}`} stroke="#1f0f07" strokeWidth="32" />
+        <path d={`M ${cx + 45} ${trunkBottom} C ${cx + 140} ${trunkBottom + 35}, ${cx + 340} ${bottom - 10}, ${cx + 490} ${bottom + 20}`} stroke="url(#oakBarkGrad)" strokeWidth="24" />
+        <path d={`M ${cx + 160} ${trunkBottom + 30} C ${cx + 260} ${trunkBottom + 70}, ${cx + 360} ${bottom + 15}, ${cx + 440} ${bottom + 35}`} stroke="#3d1b0d" strokeWidth="14" />
 
-        {/* Central taproots */}
-        <path d={`M ${cx - 10} ${trunkBottom} C ${cx - 40} ${trunkBottom + 50}, ${cx - 80} ${bottom + 10}, ${cx - 110} ${bottom + 40}`} stroke="#451a03" strokeWidth="12" />
-        <path d={`M ${cx + 10} ${trunkBottom} C ${cx + 40} ${trunkBottom + 50}, ${cx + 80} ${bottom + 10}, ${cx + 110} ${bottom + 40}`} stroke="#451a03" strokeWidth="12" />
+        {/* Intermediate Knees & Roots */}
+        <path d={`M ${cx - 25} ${trunkBottom} C ${cx - 80} ${trunkBottom + 45}, ${cx - 180} ${bottom + 5}, ${cx - 260} ${bottom + 35}`} stroke="#4a2311" strokeWidth="18" />
+        <path d={`M ${cx + 25} ${trunkBottom} C ${cx + 80} ${trunkBottom + 45}, ${cx + 180} ${bottom + 5}, ${cx + 260} ${bottom + 35}`} stroke="#4a2311" strokeWidth="18" />
+
+        {/* Central Taproots into bedrock */}
+        <path d={`M ${cx - 10} ${trunkBottom} C ${cx - 30} ${trunkBottom + 50}, ${cx - 60} ${bottom + 15}, ${cx - 90} ${bottom + 45}`} stroke="#2e140a" strokeWidth="16" />
+        <path d={`M ${cx + 10} ${trunkBottom} C ${cx + 30} ${trunkBottom + 50}, ${cx + 60} ${bottom + 15}, ${cx + 90} ${bottom + 45}`} stroke="#2e140a" strokeWidth="16" />
       </g>
 
       {/* ========================================================= */}
-      {/* 4. MAIN CENTRAL TRUNK (BRAIDED & ANCIENT)                 */}
+      {/* 4. MONUMENTAL OAK TRUNK (ВЕЛИЧНИЙ СТОВБУР СТАРОГО ДУБА)    */}
+      {/* Oak trunk is extremely wide at base, tapering slowly with  */}
+      {/* muscular sinews, hollows and deep vertical bark grooves.   */}
       {/* ========================================================= */}
-      <g filter="url(#majesticTreeGlow)">
-        {/* Left trunk contour */}
+      <g filter="url(#oakBarkFilter)">
+        {/* Massive Outer Bark Shell */}
         <path
-          d={`M ${cx - 42} ${trunkBottom} C ${cx - 50} ${mid + 120}, ${cx - 36} ${mid}, ${cx - 28} ${trunkTop}`}
-          stroke="url(#barkGradient)" strokeWidth="48" strokeLinecap="round"
-        />
-        {/* Right trunk contour */}
-        <path
-          d={`M ${cx + 42} ${trunkBottom} C ${cx + 50} ${mid + 120}, ${cx + 36} ${mid}, ${cx + 28} ${trunkTop}`}
-          stroke="url(#barkGradient)" strokeWidth="48" strokeLinecap="round"
-        />
-        {/* Glowing Golden Core Heartwood */}
-        <path
-          d={`M ${cx} ${trunkBottom} C ${cx} ${mid + 90}, ${cx} ${mid - 30}, ${cx} ${trunkTop}`}
-          stroke="url(#sapGradient)" strokeWidth="26" strokeLinecap="round"
-        />
-      </g>
-
-      {/* ========================================================= */}
-      {/* 5. MAIN SPREADING BOUGHS (TIER 1 — PARENTS & UNCLES)     */}
-      {/* ========================================================= */}
-      <g strokeLinecap="round" opacity="0.9">
-        {/* Paternal Side Major Boughs (Left) */}
-        <path
-          d={`M ${cx - 20} ${mid + 50} C ${cx - 140} ${mid + 20}, ${cx - 300} ${mid - 20}, ${cx - 480} ${mid - 40}`}
-          stroke="url(#barkGradient)" strokeWidth="24"
+          d={`M ${cx - 70} ${trunkBottom} C ${cx - 75} ${mid + 140}, ${cx - 52} ${mid}, ${cx - 38} ${trunkTop}`}
+          stroke="url(#oakBarkGrad)" strokeWidth="68" strokeLinecap="round"
         />
         <path
-          d={`M ${cx - 15} ${mid + 30} C ${cx - 100} ${mid - 10}, ${cx - 220} ${mid - 50}, ${cx - 340} ${mid - 30}`}
-          stroke="#92400e" strokeWidth="16"
-        />
-        <path
-          d={`M ${cx - 280} ${mid - 35} C ${cx - 350} ${mid - 70}, ${cx - 420} ${mid - 75}, ${cx - 490} ${mid - 90}`}
-          stroke="#b45309" strokeWidth="10"
+          d={`M ${cx + 70} ${trunkBottom} C ${cx + 75} ${mid + 140}, ${cx + 52} ${mid}, ${cx + 38} ${trunkTop}`}
+          stroke="url(#oakBarkGrad)" strokeWidth="68" strokeLinecap="round"
         />
 
-        {/* Maternal Side Major Boughs (Right) */}
+        {/* Solid Trunk Body */}
         <path
-          d={`M ${cx + 20} ${mid + 50} C ${cx + 140} ${mid + 20}, ${cx + 300} ${mid - 20}, ${cx + 480} ${mid - 40}`}
-          stroke="url(#barkGradient)" strokeWidth="24"
+          d={`M ${cx} ${trunkBottom} C ${cx} ${mid + 110}, ${cx} ${mid - 20}, ${cx} ${trunkTop}`}
+          stroke="url(#oakHeartwood)" strokeWidth="48" strokeLinecap="round"
         />
-        <path
-          d={`M ${cx + 15} ${mid + 30} C ${cx + 100} ${mid - 10}, ${cx + 220} ${mid - 50}, ${cx + 340} ${mid - 30}`}
-          stroke="#92400e" strokeWidth="16"
-        />
-        <path
-          d={`M ${cx + 280} ${mid - 35} C ${cx + 350} ${mid - 70}, ${cx + 420} ${mid - 75}, ${cx + 490} ${mid - 90}`}
-          stroke="#b45309" strokeWidth="10"
-        />
-      </g>
 
-      {/* ========================================================= */}
-      {/* 6. TOP CANOPY BRANCHES (TIER 0 — ME & BROTHER)            */}
-      {/* ========================================================= */}
-      <g strokeLinecap="round" opacity="0.9">
-        {/* Crown Fork Left */}
-        <path
-          d={`M ${cx} ${trunkTop + 40} C ${cx - 50} ${trunkTop - 10}, ${cx - 120} ${trunkTop - 50}, ${cx - 190} ${trunkTop - 90}`}
-          stroke="#b45309" strokeWidth="20"
-        />
-        {/* Crown Fork Right */}
-        <path
-          d={`M ${cx} ${trunkTop + 40} C ${cx + 50} ${trunkTop - 10}, ${cx + 120} ${trunkTop - 50}, ${cx + 190} ${trunkTop - 90}`}
-          stroke="#b45309" strokeWidth="20"
-        />
-        {/* Golden Central Spire */}
-        <path
-          d={`M ${cx} ${trunkTop + 20} C ${cx - 15} ${trunkTop - 40}, ${cx + 10} ${trunkTop - 90}, ${cx} ${trunkTop - 140}`}
-          stroke="#d97706" strokeWidth="14"
-        />
-      </g>
-
-      {/* ========================================================= */}
-      {/* 7. LUSH FOLIAGE CLOUDS (EMERALD & GOLD LEAVES)            */}
-      {/* ========================================================= */}
-      <g>
-        {/* Canopy Clouds */}
-        <circle cx={cx} cy={trunkTop - 130} r={55} fill="url(#foliageGlowGold)" />
-        <circle cx={cx - 180} cy={trunkTop - 90} r={48} fill="url(#foliageGlowEmerald)" />
-        <circle cx={cx + 180} cy={trunkTop - 90} r={48} fill="url(#foliageGlowEmerald)" />
-        <circle cx={cx - 100} cy={trunkTop - 60} r={38} fill="url(#foliageGlowEmerald)" />
-        <circle cx={cx + 100} cy={trunkTop - 60} r={38} fill="url(#foliageGlowEmerald)" />
-        <circle cx={cx - 460} cy={mid - 60} r={35} fill="url(#foliageGlowEmerald)" />
-        <circle cx={cx + 460} cy={mid - 60} r={35} fill="url(#foliageGlowEmerald)" />
-        <circle cx={cx - 320} cy={mid - 40} r={30} fill="url(#foliageGlowEmerald)" />
-        <circle cx={cx + 320} cy={mid - 40} r={30} fill="url(#foliageGlowEmerald)" />
-
-        {/* Detailed Leaf Clusters */}
+        {/* Furrowed Bark Grooves & Fissures (Характерні тріщини кори дуба) */}
         {[
-          { cx: cx, cy: trunkTop - 145, color: '#fbbf24', r: 8 },
-          { cx: cx - 20, cy: trunkTop - 135, color: '#34d399', r: 10 },
-          { cx: cx + 20, cy: trunkTop - 135, color: '#34d399', r: 10 },
-          { cx: cx - 185, cy: trunkTop - 100, color: '#10b981', r: 9 },
-          { cx: cx + 185, cy: trunkTop - 100, color: '#10b981', r: 9 },
-          { cx: cx - 170, cy: trunkTop - 85, color: '#fbbf24', r: 7 },
-          { cx: cx + 170, cy: trunkTop - 85, color: '#fbbf24', r: 7 },
-          { cx: cx - 450, cy: mid - 70, color: '#10b981', r: 9 },
-          { cx: cx + 450, cy: mid - 70, color: '#10b981', r: 9 },
-          { cx: cx - 310, cy: mid - 50, color: '#34d399', r: 8 },
-          { cx: cx + 310, cy: mid - 50, color: '#34d399', r: 8 },
-        ].map((leaf, idx) => (
-          <circle key={`detail-leaf-${idx}`} cx={leaf.cx} cy={leaf.cy} r={leaf.r} fill={leaf.color} opacity="0.75" />
+          `M ${cx - 35} ${trunkBottom - 10} C ${cx - 40} ${mid + 100}, ${cx - 28} ${mid + 30}, ${cx - 20} ${trunkTop + 30}`,
+          `M ${cx - 15} ${trunkBottom - 20} C ${cx - 18} ${mid + 90}, ${cx - 12} ${mid + 10}, ${cx - 8} ${trunkTop + 20}`,
+          `M ${cx + 15} ${trunkBottom - 20} C ${cx + 18} ${mid + 90}, ${cx + 12} ${mid + 10}, ${cx + 8} ${trunkTop + 20}`,
+          `M ${cx + 35} ${trunkBottom - 10} C ${cx + 40} ${mid + 100}, ${cx + 28} ${mid + 30}, ${cx + 20} ${trunkTop + 30}`,
+          `M ${cx} ${trunkBottom - 30} C ${cx} ${mid + 60}, ${cx + 5} ${mid - 20}, ${cx} ${trunkTop + 40}`,
+        ].map((fissure, idx) => (
+          <path key={`fissure-${idx}`} d={fissure} stroke="#170903" strokeWidth="4" strokeLinecap="round" opacity="0.85" />
+        ))}
+
+        {/* Oak Knots / Burls (Дубові нарости та дупла) */}
+        <ellipse cx={cx - 18} cy={mid + 70} rx={10} ry={16} fill="#140702" stroke="#451e0e" strokeWidth="2.5" />
+        <ellipse cx={cx + 22} cy={mid + 120} rx={8} ry={13} fill="#140702" stroke="#451e0e" strokeWidth="2" />
+        <circle cx={cx - 18} cy={mid + 70} r={4} fill="#0d0401" />
+
+        {/* Moss climbing up the north bark */}
+        <path d={`M ${cx - 48} ${trunkBottom - 40} Q ${cx - 40} ${mid + 80} ${cx - 35} ${mid + 20}`} stroke="#15803d" strokeWidth="12" strokeLinecap="round" opacity="0.4" />
+        <path d={`M ${cx - 42} ${trunkBottom - 60} Q ${cx - 36} ${mid + 70} ${cx - 30} ${mid + 30}`} stroke="#16a34a" strokeWidth="6" strokeLinecap="round" opacity="0.5" />
+      </g>
+
+      {/* ========================================================= */}
+      {/* 5. GNARLED OAK BOUGHS (КОРЯВІ М'ЯЗИСТІ ДУБОВІ ГІЛЛЯКИ)     */}
+      {/* Oak branches make strong angular bends (elbows) rather    */}
+      {/* than soft curves.                                         */}
+      {/* ========================================================= */}
+      <g strokeLinecap="round" opacity="0.95">
+        {/* Left Father-line Heavy Oak Bough (with elbow joint) */}
+        <path
+          d={`M ${cx - 32} ${mid + 60} L ${cx - 140} ${mid + 35} L ${cx - 290} ${mid - 15} L ${cx - 480} ${mid - 35}`}
+          stroke="url(#oakBarkGrad)" strokeWidth="32" strokeLinejoin="round"
+        />
+        {/* Left Secondary Fork */}
+        <path
+          d={`M ${cx - 140} ${mid + 35} L ${cx - 240} ${mid - 45} L ${cx - 360} ${mid - 65}`}
+          stroke="#5c2b0e" strokeWidth="20" strokeLinejoin="round"
+        />
+        <path
+          d={`M ${cx - 290} ${mid - 15} L ${cx - 370} ${mid + 25} L ${cx - 460} ${mid + 15}`}
+          stroke="#78350f" strokeWidth="14" strokeLinejoin="round"
+        />
+        <path
+          d={`M ${cx - 360} ${mid - 65} L ${cx - 440} ${mid - 100} L ${cx - 500} ${mid - 90}`}
+          stroke="#92400e" strokeWidth="10" strokeLinejoin="round"
+        />
+
+        {/* Right Mother-line Heavy Oak Bough (with elbow joint) */}
+        <path
+          d={`M ${cx + 32} ${mid + 60} L ${cx + 140} ${mid + 35} L ${cx + 290} ${mid - 15} L ${cx + 480} ${mid - 35}`}
+          stroke="url(#oakBarkGrad)" strokeWidth="32" strokeLinejoin="round"
+        />
+        {/* Right Secondary Fork */}
+        <path
+          d={`M ${cx + 140} ${mid + 35} L ${cx + 240} ${mid - 45} L ${cx + 360} ${mid - 65}`}
+          stroke="#5c2b0e" strokeWidth="20" strokeLinejoin="round"
+        />
+        <path
+          d={`M ${cx + 290} ${mid - 15} L ${cx + 370} ${mid + 25} L ${cx + 460} ${mid + 15}`}
+          stroke="#78350f" strokeWidth="14" strokeLinejoin="round"
+        />
+        <path
+          d={`M ${cx + 360} ${mid - 65} L ${cx + 440} ${mid - 100} L ${cx + 500} ${mid - 90}`}
+          stroke="#92400e" strokeWidth="10" strokeLinejoin="round"
+        />
+
+        {/* Massive Top Oak Fork (Leading to Crown) */}
+        <path
+          d={`M ${cx} ${trunkTop + 45} L ${cx - 70} ${trunkTop} L ${cx - 160} ${trunkTop - 45} L ${cx - 240} ${trunkTop - 85}`}
+          stroke="url(#oakBarkGrad)" strokeWidth="26" strokeLinejoin="round"
+        />
+        <path
+          d={`M ${cx} ${trunkTop + 45} L ${cx + 70} ${trunkTop} L ${cx + 160} ${trunkTop - 45} L ${cx + 240} ${trunkTop - 85}`}
+          stroke="url(#oakBarkGrad)" strokeWidth="26" strokeLinejoin="round"
+        />
+        {/* Central Crown Spire */}
+        <path
+          d={`M ${cx} ${trunkTop + 20} L ${cx - 15} ${trunkTop - 50} L ${cx} ${trunkTop - 110} L ${cx} ${trunkTop - 150}`}
+          stroke="#78350f" strokeWidth="18" strokeLinejoin="round"
+        />
+      </g>
+
+      {/* ========================================================= */}
+      {/* 6. SPRAWLING DOME CANOPY OF OAK FOLIAGE (ДУБОВІ ШАТРА)   */}
+      {/* Distinctive lobed cloud masses + individual oak leaf     */}
+      {/* silhouettes.                                              */}
+      {/* ========================================================= */}
+      <g>
+        {/* Massive Background Canopy Silhouette (Dense Deep Green) */}
+        <circle cx={cx} cy={trunkTop - 140} r={75} fill="url(#oakCanopyDeep)" />
+        <circle cx={cx - 190} cy={trunkTop - 95} r={65} fill="url(#oakCanopyDeep)" />
+        <circle cx={cx + 190} cy={trunkTop - 95} r={65} fill="url(#oakCanopyDeep)" />
+        <circle cx={cx - 110} cy={trunkTop - 65} r={55} fill="url(#oakCanopyDeep)" />
+        <circle cx={cx + 110} cy={trunkTop - 65} r={55} fill="url(#oakCanopyDeep)" />
+
+        {/* Side Bough Canopy Masses */}
+        <circle cx={cx - 460} cy={mid - 65} r={50} fill="url(#oakCanopyDeep)" />
+        <circle cx={cx + 460} cy={mid - 65} r={50} fill="url(#oakCanopyDeep)" />
+        <circle cx={cx - 330} cy={mid - 45} r={46} fill="url(#oakCanopyDeep)" />
+        <circle cx={cx + 330} cy={mid - 45} r={46} fill="url(#oakCanopyDeep)" />
+        <circle cx={cx - 240} cy={mid - 25} r={40} fill="url(#oakCanopyDeep)" />
+        <circle cx={cx + 240} cy={mid - 25} r={40} fill="url(#oakCanopyDeep)" />
+
+        {/* Sunlit Foreground Oak Leaves Foliage Masses */}
+        <circle cx={cx} cy={trunkTop - 155} r={55} fill="url(#oakCanopySunlit)" />
+        <circle cx={cx - 170} cy={trunkTop - 110} r={48} fill="url(#oakCanopySunlit)" />
+        <circle cx={cx + 170} cy={trunkTop - 110} r={48} fill="url(#oakCanopySunlit)" />
+        <circle cx={cx - 80} cy={trunkTop - 140} r={42} fill="url(#oakCanopyGold)" />
+        <circle cx={cx + 80} cy={trunkTop - 140} r={42} fill="url(#oakCanopyGold)" />
+        <circle cx={cx - 440} cy={mid - 80} r={38} fill="url(#oakCanopySunlit)" />
+        <circle cx={cx + 440} cy={mid - 80} r={38} fill="url(#oakCanopySunlit)" />
+        <circle cx={cx - 310} cy={mid - 60} r={35} fill="url(#oakCanopySunlit)" />
+        <circle cx={cx + 310} cy={mid - 60} r={35} fill="url(#oakCanopySunlit)" />
+
+        {/* Distinctive Lobed Oak Leaves Silhouette Badges */}
+        {[
+          { x: cx - 210, y: trunkTop - 110, rot: -35, scale: 0.65 },
+          { x: cx - 180, y: trunkTop - 140, rot: -15, scale: 0.7 },
+          { x: cx + 180, y: trunkTop - 140, rot: 15, scale: 0.7 },
+          { x: cx + 210, y: trunkTop - 110, rot: 35, scale: 0.65 },
+          { x: cx, y: trunkTop - 175, rot: 0, scale: 0.75 },
+          { x: cx - 40, y: trunkTop - 165, rot: -20, scale: 0.6 },
+          { x: cx + 40, y: trunkTop - 165, rot: 20, scale: 0.6 },
+          { x: cx - 460, y: mid - 85, rot: -45, scale: 0.6 },
+          { x: cx + 460, y: mid - 85, rot: 45, scale: 0.6 },
+          { x: cx - 330, y: mid - 70, rot: -25, scale: 0.55 },
+          { x: cx + 330, y: mid - 70, rot: 25, scale: 0.55 },
+        ].map((leaf, i) => (
+          <use
+            key={`oak-leaf-${i}`}
+            href="#oakLeafLobe"
+            x={leaf.x}
+            y={leaf.y}
+            transform={`rotate(${leaf.rot}, ${leaf.x}, ${leaf.y}) scale(${leaf.scale})`}
+          />
         ))}
       </g>
 
       {/* ========================================================= */}
-      {/* 8. GOLDEN FIREFLIES / LINEAGE SPARKS (MAGIC PARTICLES)    */}
+      {/* 7. HANGING ACORNS (ЖОЛУДІ — СИМВОЛ ДУБА ТА НАЩАДКІВ)       */}
+      {/* Pairs of acorns hanging proudly beneath oak boughs         */}
       {/* ========================================================= */}
       <g>
         {[
-          { cx: cx - 70, cy: trunkTop - 100, r: 3 },
-          { cx: cx + 80, cy: trunkTop - 110, r: 2.5 },
-          { cx: cx - 240, cy: mid - 80, r: 3 },
-          { cx: cx + 250, cy: mid - 85, r: 3.5 },
-          { cx: cx - 150, cy: mid + 20, r: 2 },
-          { cx: cx + 160, cy: mid + 15, r: 2.5 },
-          { cx: cx - 30, cy: mid + 110, r: 2.5 },
-          { cx: cx + 35, cy: mid + 80, r: 3 },
-          { cx: cx - 380, cy: mid - 30, r: 2 },
-          { cx: cx + 390, cy: mid - 35, r: 2 },
+          { x: cx - 140, y: trunkTop - 70 },
+          { x: cx + 140, y: trunkTop - 70 },
+          { x: cx - 50, y: trunkTop - 110 },
+          { x: cx + 50, y: trunkTop - 110 },
+          { x: cx, y: trunkTop - 130 },
+          { x: cx - 380, y: mid - 45 },
+          { x: cx + 380, y: mid - 45 },
+          { x: cx - 260, y: mid - 30 },
+          { x: cx + 260, y: mid - 30 },
+          { x: cx - 470, y: mid - 55 },
+          { x: cx + 470, y: mid - 55 },
+        ].map((pos, idx) => (
+          <use key={`acorn-${idx}`} href="#acornDuo" x={pos.x} y={pos.y} />
+        ))}
+      </g>
+
+      {/* ========================================================= */}
+      {/* 8. GOLDEN OAK POLLEN & LINEAGE SPARKS                     */}
+      {/* ========================================================= */}
+      <g>
+        {[
+          { cx: cx - 60, cy: trunkTop - 100, r: 3 },
+          { cx: cx + 70, cy: trunkTop - 115, r: 2.5 },
+          { cx: cx - 220, cy: mid - 75, r: 3 },
+          { cx: cx + 230, cy: mid - 80, r: 3.5 },
+          { cx: cx - 130, cy: mid + 20, r: 2 },
+          { cx: cx + 140, cy: mid + 15, r: 2.5 },
+          { cx: cx - 25, cy: mid + 100, r: 2.5 },
+          { cx: cx + 30, cy: mid + 80, r: 3 },
+          { cx: cx - 360, cy: mid - 25, r: 2 },
+          { cx: cx + 370, cy: mid - 30, r: 2 },
         ].map((spark, i) => (
           <g key={`spark-${i}`}>
-            <circle cx={spark.cx} cy={spark.cy} r={spark.r * 2.5} fill="#fbbf24" opacity="0.3" />
-            <circle cx={spark.cx} cy={spark.cy} r={spark.r} fill="#fffbeb" opacity="0.9" />
+            <circle cx={spark.cx} cy={spark.cy} r={spark.r * 2.5} fill="#fbbf24" opacity="0.35" />
+            <circle cx={spark.cx} cy={spark.cy} r={spark.r} fill="#fffbeb" opacity="0.95" />
           </g>
         ))}
       </g>
@@ -809,22 +924,22 @@ export const TreeView: React.FC<TreeViewProps> = ({
     const tier1_y = CARD_H + GAP_Y;
     const tier2_y = (CARD_H + GAP_Y) * 2;
     return [
-      { y: tier0_y, label: '🍃 КРОНА РОДУ • МОЛОДЕ ПОКОЛІННЯ (Я ТА БРАТ)', color: 'text-amber-300 bg-amber-500/10 border-amber-500/30' },
-      { y: tier1_y, label: '🌿 ГОЛОВНИЙ СТОВБУР • БАТЬКИ, ДЯДЬКИ ТА ТІТКИ', color: 'text-sky-300 bg-sky-500/10 border-sky-500/30' },
-      { y: tier2_y, label: '🌱 КОРІННЯ РОДУ • ДІДУСІ ТА БАБУСІ', color: 'text-emerald-300 bg-emerald-500/10 border-emerald-500/30' },
+      { y: tier0_y, label: '🍃 КРОНА ДУБА • МОЛОДЕ ПОКОЛІННЯ (Я ТА БРАТ)', color: 'text-amber-300 bg-amber-500/10 border-amber-500/30' },
+      { y: tier1_y, label: '🌿 МОГУТНІ ДУБОВІ ГІЛЛЯКИ • БАТЬКИ, ДЯДЬКИ ТА ТІТКИ', color: 'text-sky-300 bg-sky-500/10 border-sky-500/30' },
+      { y: tier2_y, label: '🌱 КОРІННЯ СТАРОГО ДУБА • ДІДУСІ ТА БАБУСІ', color: 'text-emerald-300 bg-emerald-500/10 border-emerald-500/30' },
     ];
   }, []);
 
   return (
     <div className="relative w-full h-[calc(100dvh-130px)] sm:h-[calc(100vh-140px)] bg-slate-950 overflow-hidden select-none touch-none">
 
-      {/* Atmospheric Heritage Background */}
+      {/* Atmospheric Forest Depth Background */}
       <div 
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage: `
-            radial-gradient(ellipse 90% 70% at 50% 90%, rgba(120,53,15,0.18) 0%, transparent 60%),
-            radial-gradient(ellipse 70% 50% at 50% 10%, rgba(16,185,129,0.12) 0%, transparent 50%),
+            radial-gradient(ellipse 90% 70% at 50% 90%, rgba(120,53,15,0.22) 0%, transparent 60%),
+            radial-gradient(ellipse 70% 50% at 50% 10%, rgba(6,78,59,0.18) 0%, transparent 50%),
             radial-gradient(circle at center, rgba(15,23,42,0.6) 0%, transparent 80%)
           `,
         }}
@@ -861,7 +976,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
         <div className="absolute top-3 right-3 z-30 bg-slate-950/95 backdrop-blur-2xl p-3.5 rounded-2xl border border-amber-500/30 shadow-2xl shadow-black/80 text-[11px] space-y-2 max-w-[210px] animate-in fade-in duration-200">
           <h4 className="text-xs font-serif font-bold text-amber-200 flex items-center gap-1.5 border-b border-slate-800 pb-1.5">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>Легенда зв'язків</span>
+            <span>Віковий Дуб Роду</span>
           </h4>
           <div className="flex items-center gap-2"><div className="w-5 h-1 bg-amber-400 rounded-full shadow-sm shadow-amber-400/50" /><span className="text-slate-300 font-medium">💍 Шлюбний союз</span></div>
           <div className="flex items-center gap-2"><div className="w-5 h-1 bg-sky-400 rounded-full" /><span className="text-slate-300 font-medium">Лінія батька</span></div>
@@ -873,16 +988,16 @@ export const TreeView: React.FC<TreeViewProps> = ({
             <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full border border-amber-400 bg-amber-950" /><span className="text-slate-400">👑 Я (Власник)</span></div>
           </div>
           <div className="mt-2 pt-2 border-t border-slate-800 text-slate-500 text-[10px] italic">
-            🌳 Дерево зростає знизу вгору
+            🌳 Могутній дуб із жолудями та лопатевим листям
           </div>
         </div>
       )}
 
       {/* Floating Bottom Navigator Pill */}
       <div className="absolute bottom-3 left-3 right-3 sm:right-auto z-30 pointer-events-none text-[11px] sm:text-xs text-slate-300 bg-slate-950/90 px-3.5 py-2 rounded-2xl border border-amber-500/25 backdrop-blur-2xl flex items-center gap-2.5 shadow-xl">
-        <span className="text-amber-300 font-serif font-bold">🍃 Крона (Я)</span>
+        <span className="text-amber-300 font-serif font-bold">🍃 Крона дуба (Я)</span>
         <span className="text-amber-500/60">▲</span>
-        <span className="text-sky-300 font-serif font-bold">🌿 Стовбур (Батьки)</span>
+        <span className="text-sky-300 font-serif font-bold">🌿 Гілля (Батьки)</span>
         <span className="text-amber-500/60">▲</span>
         <span className="text-emerald-300 font-serif font-bold">🌱 Коріння (Дідусі)</span>
       </div>
@@ -911,8 +1026,8 @@ export const TreeView: React.FC<TreeViewProps> = ({
             margin: '0 auto',
           }}
         >
-          {/* Layer 1: Majestic Organic Tree Artwork */}
-          <OrganicTreeSVG canvasW={canvasW} canvasH={canvasH} />
+          {/* Layer 1: Ancient Oak Tree Artwork */}
+          <AncientOakTreeSVG canvasW={canvasW} canvasH={canvasH} />
 
           {/* Layer 2: Glowing Filament Connectors */}
           <svg
