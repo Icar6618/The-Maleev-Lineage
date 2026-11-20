@@ -6,11 +6,12 @@ import {
   Maximize2, 
   Heart, 
   MapPin, 
-  Briefcase,
-  ChevronDown,
-  ChevronUp,
-  PlusCircle,
-  Edit3
+  Briefcase, 
+  ChevronDown, 
+  ChevronUp, 
+  PlusCircle, 
+  Edit3,
+  Move
 } from 'lucide-react';
 
 interface TreeViewProps {
@@ -28,10 +29,12 @@ export const TreeView: React.FC<TreeViewProps> = ({
   onAddChild,
   onAddSpouse,
 }) => {
-  const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState(0.85); // start slightly zoomed out for great mobile overview
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [pinchStartDist, setPinchStartDist] = useState<number | null>(null);
+  const [pinchStartScale, setPinchStartScale] = useState<number>(0.85);
   const [selectedBranch, setSelectedBranch] = useState<string>('all');
   const [collapsedGenerations, setCollapsedGenerations] = useState<Record<number, boolean>>({});
 
@@ -88,12 +91,54 @@ export const TreeView: React.FC<TreeViewProps> = ({
     setIsDragging(false);
   };
 
+  // Touch handlers for mobile phones (finger drag + pinch to zoom)
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if ((e.target as HTMLElement).closest('.person-node') || (e.target as HTMLElement).closest('button')) {
+      return;
+    }
+    if (e.touches.length === 1) {
+      setIsDragging(true);
+      setDragStart({
+        x: e.touches[0].clientX - pan.x,
+        y: e.touches[0].clientY - pan.y,
+      });
+    } else if (e.touches.length === 2) {
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      setPinchStartDist(dist);
+      setPinchStartScale(scale);
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (e.touches.length === 1 && isDragging) {
+      setPan({
+        x: e.touches[0].clientX - dragStart.x,
+        y: e.touches[0].clientY - dragStart.y,
+      });
+    } else if (e.touches.length === 2 && pinchStartDist) {
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      const newScale = Math.min(Math.max(0.35, pinchStartScale * (dist / pinchStartDist)), 2.2);
+      setScale(newScale);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+    setPinchStartDist(null);
+  };
+
   const handleZoom = (delta: number) => {
-    setScale((prev) => Math.min(Math.max(0.4, prev + delta), 2.2));
+    setScale((prev) => Math.min(Math.max(0.35, prev + delta), 2.2));
   };
 
   const handleResetZoom = () => {
-    setScale(1);
+    setScale(0.85);
     setPan({ x: 0, y: 0 });
   };
 
@@ -112,56 +157,55 @@ export const TreeView: React.FC<TreeViewProps> = ({
   };
 
   return (
-    <div className="relative w-full h-[calc(100vh-140px)] bg-slate-950 overflow-hidden select-none border-b border-slate-800">
-      
+    <div 
+      className="relative w-full h-[calc(100dvh-130px)] sm:h-[calc(100vh-140px)] bg-slate-950 overflow-hidden select-none border-b border-slate-800 touch-none"
+    >
       {/* Background Grid Pattern */}
       <div 
         className="absolute inset-0 opacity-15 pointer-events-none"
         style={{
           backgroundImage: `radial-gradient(circle at 1px 1px, #94a3b8 1px, transparent 0)`,
-          backgroundSize: '28px 28px',
+          backgroundSize: '24px 24px',
         }}
       />
 
-      {/* Floating Toolbar */}
-      <div className="absolute top-4 left-4 z-20 flex flex-wrap items-center gap-2 bg-slate-900/90 backdrop-blur-md p-2 rounded-xl border border-slate-800 shadow-xl">
+      {/* Floating Toolbar (Optimized for mobile thumbs) */}
+      <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5 bg-slate-900/90 backdrop-blur-md p-1.5 sm:p-2 rounded-2xl border border-slate-800 shadow-2xl">
         <button
           onClick={() => handleZoom(0.15)}
-          className="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition cursor-pointer"
-          title="Збільшити масштаб"
+          className="p-2 sm:p-2 text-slate-300 hover:text-white bg-slate-800/60 active:bg-slate-700 rounded-xl transition"
+          title="Збільшити"
         >
           <ZoomIn className="w-4 h-4" />
         </button>
         <button
           onClick={() => handleZoom(-0.15)}
-          className="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition cursor-pointer"
-          title="Зменшити масштаб"
+          className="p-2 sm:p-2 text-slate-300 hover:text-white bg-slate-800/60 active:bg-slate-700 rounded-xl transition"
+          title="Зменшити"
         >
           <ZoomOut className="w-4 h-4" />
         </button>
         <button
           onClick={handleResetZoom}
-          className="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition text-xs font-mono cursor-pointer"
-          title="Скинути положення (100%)"
+          className="p-2 sm:p-2 text-slate-300 hover:text-white bg-slate-800/60 active:bg-slate-700 rounded-xl transition"
+          title="Скинути"
         >
           <Maximize2 className="w-4 h-4" />
         </button>
 
-        <div className="h-4 w-px bg-slate-700 mx-1" />
-
-        <span className="text-xs text-slate-400 font-mono px-1">
+        <span className="text-[11px] text-slate-400 font-mono px-1.5">
           {Math.round(scale * 100)}%
         </span>
 
         {branches.length > 0 && (
           <>
-            <div className="h-4 w-px bg-slate-700 mx-1" />
+            <div className="h-4 w-px bg-slate-700 mx-0.5" />
             <select
               value={selectedBranch}
               onChange={(e) => setSelectedBranch(e.target.value)}
-              className="bg-slate-800 border border-slate-700 text-xs text-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:border-amber-500 cursor-pointer"
+              className="bg-slate-800 border border-slate-700 text-xs text-slate-200 rounded-xl px-2 py-1.5 focus:outline-none max-w-[110px] sm:max-w-none truncate"
             >
-              <option value="all">Усі лінії роду</option>
+              <option value="all">Усі гілки</option>
               {branches.map((b) => (
                 <option key={b} value={b}>
                   {b}
@@ -172,10 +216,12 @@ export const TreeView: React.FC<TreeViewProps> = ({
         )}
       </div>
 
-      {/* Helper hint */}
-      <div className="absolute bottom-4 left-4 z-20 pointer-events-none text-xs text-slate-400 bg-slate-900/90 px-3.5 py-2 rounded-xl border border-slate-800 backdrop-blur-md hidden sm:flex items-center gap-2 shadow-lg">
-        <Edit3 className="w-4 h-4 text-amber-400 shrink-0" />
-        <span>Клікніть на будь-яку картку з написом <b>«+ Заповнити дані»</b>, щоб внести інформацію</span>
+      {/* Helper mobile tip */}
+      <div className="absolute bottom-3 left-3 right-3 sm:right-auto z-20 pointer-events-none text-[11px] sm:text-xs text-slate-300 bg-slate-900/90 px-3 py-2 rounded-xl border border-slate-800 backdrop-blur-md flex items-center justify-between sm:justify-start gap-2 shadow-xl">
+        <div className="flex items-center gap-1.5 truncate">
+          <Move className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+          <span className="truncate">Перетягуйте пальцем • Натисніть на картку для заповнення</span>
+        </div>
       </div>
 
       {/* Canvas Area */}
@@ -185,6 +231,9 @@ export const TreeView: React.FC<TreeViewProps> = ({
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
         className={`w-full h-full overflow-hidden flex items-center justify-center ${
           isDragging ? 'cursor-grabbing' : 'cursor-grab'
         }`}
@@ -193,9 +242,9 @@ export const TreeView: React.FC<TreeViewProps> = ({
           style={{
             transform: `translate(${pan.x}px, ${pan.y}px) scale(${scale})`,
             transformOrigin: 'center center',
-            transition: isDragging ? 'none' : 'transform 0.1s ease-out',
+            transition: isDragging ? 'none' : 'transform 0.08s ease-out',
           }}
-          className="p-16 flex flex-col items-center gap-16 min-w-max"
+          className="p-8 sm:p-16 flex flex-col items-center gap-10 sm:gap-14 min-w-max"
         >
           {generations.map(({ generation, members }) => {
             const isCollapsed = collapsedGenerations[generation];
@@ -209,10 +258,10 @@ export const TreeView: React.FC<TreeViewProps> = ({
               <div key={generation} className="flex flex-col items-center w-full relative">
                 
                 {/* Generation Header Pill */}
-                <div className="flex items-center gap-2 mb-6">
+                <div className="flex items-center gap-2 mb-4 sm:mb-6">
                   <button
                     onClick={() => toggleGenCollapse(generation)}
-                    className="flex items-center gap-2 px-4 py-1.5 bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/40 rounded-full text-xs font-semibold text-slate-300 shadow-lg transition cursor-pointer"
+                    className="flex items-center gap-2 px-3.5 py-1.5 bg-slate-900/90 hover:bg-slate-800 active:bg-slate-800 border border-slate-800 hover:border-amber-500/40 rounded-full text-xs font-semibold text-slate-300 shadow-lg transition cursor-pointer"
                   >
                     <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
                     <span>{genLabels[generation] || `Покоління ${generation}`}</span>
@@ -223,7 +272,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
 
                 {/* Generation Row Cards */}
                 {!isCollapsed && (
-                  <div className="flex flex-wrap items-center justify-center gap-8 relative z-10 max-w-7xl">
+                  <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 relative z-10 max-w-7xl">
                     {filteredMembers.map((person) => {
                       const hasName = Boolean(person.firstName || person.lastName);
                       const fullName = hasName 
@@ -241,24 +290,22 @@ export const TreeView: React.FC<TreeViewProps> = ({
                         .filter(Boolean) as Person[];
 
                       const isMale = person.gender === 'male';
-
-                      // Initial letter for avatar circle
                       const initialLetter = person.firstName?.[0] || person.lastName?.[0] || person.roleLabel?.[0] || '?';
 
                       return (
                         <div
                           key={person.id}
-                          className="flex items-center gap-3 relative person-node"
+                          className="flex items-center gap-2 sm:gap-3 relative person-node"
                         >
                           {/* Person Card */}
                           <div
                             onClick={() => onSelectPerson(person)}
-                            className={`w-64 rounded-2xl p-4 transition-all duration-200 cursor-pointer text-left relative group ${
+                            className={`w-[245px] sm:w-64 rounded-2xl p-3.5 sm:p-4 transition-all duration-200 cursor-pointer text-left relative group touch-manipulation ${
                               isMatchesSearch
                                 ? 'ring-2 ring-amber-400 bg-slate-900 shadow-amber-500/20 shadow-xl'
                                 : hasName
-                                  ? 'bg-slate-900/90 hover:bg-slate-850 border border-slate-800 hover:border-slate-700 shadow-xl hover:shadow-2xl'
-                                  : 'bg-slate-900/60 hover:bg-slate-900 border-2 border-dashed border-slate-800 hover:border-amber-500/60 shadow-lg'
+                                  ? 'bg-slate-900/90 active:bg-slate-850 hover:bg-slate-850 border border-slate-800 shadow-xl'
+                                  : 'bg-slate-900/70 active:bg-slate-900 hover:bg-slate-900 border-2 border-dashed border-slate-800 hover:border-amber-500/60 shadow-lg'
                             } ${
                               isMale 
                                 ? 'hover:border-cyan-500/60' 
@@ -284,15 +331,15 @@ export const TreeView: React.FC<TreeViewProps> = ({
                                   {person.isLiving ? 'Живий(а)' : 'У вічності'}
                                 </span>
                               ) : (
-                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 flex items-center gap-1 animate-pulse">
+                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30 flex items-center gap-1 font-medium">
                                   Порожнє поле
                                 </span>
                               )}
                             </div>
 
                             {/* Avatar & Names */}
-                            <div className="flex items-start gap-3">
-                              <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-serif text-lg font-bold shrink-0 ${
+                            <div className="flex items-start gap-2.5 sm:gap-3">
+                              <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center font-serif text-base sm:text-lg font-bold shrink-0 ${
                                 isMale
                                   ? 'bg-gradient-to-tr from-cyan-900/40 to-cyan-700/30 text-cyan-300 border border-cyan-500/30'
                                   : 'bg-gradient-to-tr from-rose-900/40 to-rose-700/30 text-rose-300 border border-rose-500/30'
@@ -322,7 +369,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
                                     {person.middleName}
                                   </p>
                                 ) : !hasName ? (
-                                  <p className="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5">
+                                  <p className="text-[11px] text-amber-400/90 flex items-center gap-1 mt-0.5 font-medium">
                                     <PlusCircle className="w-3 h-3 text-amber-400" />
                                     <span>Заповнити дані</span>
                                   </p>
@@ -337,7 +384,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
                             </div>
 
                             {/* Dates & Profession */}
-                            <div className="mt-3 pt-2.5 border-t border-slate-800/80 space-y-1 text-xs text-slate-400">
+                            <div className="mt-3 pt-2 border-t border-slate-800/80 space-y-1 text-xs text-slate-400">
                               <div className="flex items-center gap-1.5">
                                 <span className="text-[11px] font-mono text-slate-400">
                                   {person.birthDate ? (
@@ -363,18 +410,18 @@ export const TreeView: React.FC<TreeViewProps> = ({
                               )}
                             </div>
 
-                            {/* Quick Add buttons on hover */}
+                            {/* Mobile-Friendly Action buttons */}
                             <div className="mt-3 pt-2 border-t border-slate-800/60 flex items-center justify-between gap-1 text-[11px]">
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   onSelectPerson(person);
                                 }}
-                                className="px-2 py-0.5 text-amber-400 hover:text-amber-300 hover:bg-slate-800 rounded transition cursor-pointer flex items-center gap-1"
-                                title="Редагувати цю картку"
+                                className="px-2.5 py-1 text-amber-400 hover:text-amber-300 bg-slate-800/80 active:bg-slate-700 rounded-lg transition cursor-pointer flex items-center gap-1 font-medium"
+                                title="Редагувати"
                               >
                                 <Edit3 className="w-3 h-3" />
-                                <span>Редагувати</span>
+                                <span>{hasName ? 'Змінити' : 'Внести'}</span>
                               </button>
 
                               <div className="flex items-center gap-1">
@@ -383,7 +430,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
                                     e.stopPropagation();
                                     onAddChild(person);
                                   }}
-                                  className="px-2 py-0.5 text-slate-400 hover:text-amber-400 hover:bg-slate-800 rounded transition cursor-pointer"
+                                  className="px-2 py-1 text-slate-400 hover:text-amber-400 active:bg-slate-800 rounded-lg transition cursor-pointer"
                                   title="Додати дитину"
                                 >
                                   + Дитина
@@ -393,10 +440,10 @@ export const TreeView: React.FC<TreeViewProps> = ({
                                     e.stopPropagation();
                                     onAddSpouse(person);
                                   }}
-                                  className="px-2 py-0.5 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded transition cursor-pointer"
+                                  className="px-2 py-1 text-slate-400 hover:text-rose-400 active:bg-slate-800 rounded-lg transition cursor-pointer"
                                   title="Додати подружжя"
                                 >
-                                  + Подружжя
+                                  + Союз
                                 </button>
                               </div>
                             </div>
@@ -404,7 +451,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
 
                           {/* Spouse connector badge */}
                           {spouses.length > 0 && person.gender === 'male' && (
-                            <div className="flex items-center text-rose-400" title="Подружній союз">
+                            <div className="flex items-center text-rose-400 shrink-0" title="Подружній союз">
                               <Heart className="w-4 h-4 fill-rose-500/20 text-rose-400" />
                             </div>
                           )}
@@ -416,7 +463,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
 
                 {/* Connecting branch line to next generation */}
                 {generation < generations[generations.length - 1].generation && !isCollapsed && (
-                  <div className="w-0.5 h-12 bg-gradient-to-b from-slate-700 via-amber-500/40 to-slate-700 my-2" />
+                  <div className="w-0.5 h-10 sm:h-12 bg-gradient-to-b from-slate-700 via-amber-500/40 to-slate-700 my-1 sm:my-2" />
                 )}
               </div>
             );

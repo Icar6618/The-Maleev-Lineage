@@ -65,7 +65,6 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
       setTagsStr((initialPerson.tags || []).join(', '));
       setAvatarUrl(initialPerson.avatarUrl || '');
     } else {
-      // Empty defaults
       setRoleLabel('');
       setFirstName('');
       setLastName('');
@@ -163,46 +162,46 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm overflow-y-auto animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/80 backdrop-blur-sm overflow-y-auto animate-in fade-in duration-200">
       <div 
-        className="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden my-8"
+        className="bg-slate-900 border border-slate-800 rounded-t-3xl sm:rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden max-h-[92vh] sm:max-h-[85vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-6 border-b border-slate-800 flex items-center justify-between">
+        <div className="p-4 sm:p-6 border-b border-slate-800 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
             <UserPlus className="w-5 h-5 text-amber-400" />
-            <h2 className="font-serif text-lg font-bold text-slate-100">
-              {initialPerson ? `Заповнення: ${initialPerson.roleLabel || initialPerson.firstName || 'Картка родича'}` : 'Додати нового родича до дерева'}
+            <h2 className="font-serif text-base sm:text-lg font-bold text-slate-100 truncate">
+              {initialPerson ? `Заповнення: ${initialPerson.roleLabel || initialPerson.firstName || 'Картка'}` : 'Додати родича'}
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition cursor-pointer"
+            className="p-2 text-slate-400 hover:text-white rounded-xl active:bg-slate-800 transition"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-5 max-h-[80vh] overflow-y-auto">
+        {/* Form Body (Scrollable) */}
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-5">
           
           {/* Role Label */}
           <div>
             <label className="block text-xs font-medium text-slate-300 mb-1">
-              Роль / Ким приходиться (напр. «Я», «Батько», «Дідусь по татові»)
+              Роль / Ким приходиться
             </label>
             <input
               type="text"
               value={roleLabel}
               onChange={(e) => setRoleLabel(e.target.value)}
               placeholder="напр. Батько, Тітка, Я"
-              className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
+              className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
             />
           </div>
 
           {/* Names Row */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
               <label className="block text-xs font-medium text-slate-300 mb-1">
                 Прізвище
@@ -212,7 +211,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 placeholder="напр. Малеєв"
-                className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
               />
             </div>
 
@@ -224,8 +223,8 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 type="text"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                placeholder="напр. Віктор, Олександр"
-                className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
+                placeholder="напр. Віктор"
+                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
               />
             </div>
 
@@ -238,7 +237,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 value={middleName}
                 onChange={(e) => setMiddleName(e.target.value)}
                 placeholder="напр. Володимирович"
-                className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
               />
             </div>
 
@@ -251,13 +250,13 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 value={maidenName}
                 onChange={(e) => setMaidenName(e.target.value)}
                 placeholder="Дівоче прізвище"
-                className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
               />
             </div>
           </div>
 
           {/* Gender & Living status */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-950/50 p-4 rounded-2xl border border-slate-800">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-950/60 p-3.5 sm:p-4 rounded-2xl border border-slate-800">
             <div>
               <label className="block text-xs font-medium text-slate-300 mb-1.5">
                 Стать
@@ -266,10 +265,10 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setGender('male')}
-                  className={`flex-1 py-1.5 rounded-xl text-xs font-medium transition cursor-pointer ${
+                  className={`flex-1 py-2 sm:py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                     gender === 'male'
-                      ? 'bg-cyan-500 text-slate-950 font-bold'
-                      : 'bg-slate-800 text-slate-400 hover:text-white'
+                      ? 'bg-cyan-500 text-slate-950'
+                      : 'bg-slate-800 text-slate-400 active:text-white'
                   }`}
                 >
                   Чоловік
@@ -277,10 +276,10 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setGender('female')}
-                  className={`flex-1 py-1.5 rounded-xl text-xs font-medium transition cursor-pointer ${
+                  className={`flex-1 py-2 sm:py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                     gender === 'female'
-                      ? 'bg-rose-500 text-slate-950 font-bold'
-                      : 'bg-slate-800 text-slate-400 hover:text-white'
+                      ? 'bg-rose-500 text-slate-950'
+                      : 'bg-slate-800 text-slate-400 active:text-white'
                   }`}
                 >
                   Жінка
@@ -290,7 +289,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
 
             <div>
               <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                Покоління в дереві
+                Покоління
               </label>
               <input
                 type="number"
@@ -298,17 +297,17 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 max="10"
                 value={generation}
                 onChange={(e) => setGeneration(Number(e.target.value))}
-                className="w-full px-3 py-1.5 bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
+                className="w-full px-3.5 py-2 bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
               />
             </div>
 
-            <div className="flex items-center pt-5 sm:pt-4">
-              <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-slate-200">
+            <div className="flex items-center pt-2 sm:pt-4">
+              <label className="flex items-center gap-2.5 cursor-pointer text-xs sm:text-sm font-medium text-slate-200">
                 <input
                   type="checkbox"
                   checked={isLiving}
                   onChange={(e) => setIsLiving(e.target.checked)}
-                  className="w-4 h-4 rounded text-amber-500 focus:ring-amber-500 bg-slate-900 border-slate-700"
+                  className="w-5 h-5 rounded text-amber-500 focus:ring-amber-500 bg-slate-900 border-slate-700"
                 />
                 <span>Нині живий(а)</span>
               </label>
@@ -316,7 +315,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
           </div>
 
           {/* Dates & Places */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
               <label className="block text-xs font-medium text-slate-300 mb-1">
                 Рік / дата народження
@@ -325,8 +324,8 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 type="text"
                 value={birthDate}
                 onChange={(e) => setBirthDate(e.target.value)}
-                placeholder="напр. 1965 або 12.04.1965"
-                className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
+                placeholder="напр. 1965"
+                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
               />
             </div>
 
@@ -338,8 +337,8 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                 type="text"
                 value={birthPlace}
                 onChange={(e) => setBirthPlace(e.target.value)}
-                placeholder="напр. Київ, Одеса"
-                className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
+                placeholder="напр. Київ"
+                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
               />
             </div>
 
@@ -354,7 +353,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                     value={deathDate}
                     onChange={(e) => setDeathDate(e.target.value)}
                     placeholder="напр. 2010"
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
                   />
                 </div>
 
@@ -367,7 +366,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
                     value={deathPlace}
                     onChange={(e) => setDeathPlace(e.target.value)}
                     placeholder="напр. Київ"
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
                   />
                 </div>
               </>
@@ -375,36 +374,36 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
           </div>
 
           {/* Profession & Branch */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
               <label className="block text-xs font-medium text-slate-300 mb-1">
-                Професія / Рід діяльності
+                Професія
               </label>
               <input
                 type="text"
                 value={profession}
                 onChange={(e) => setProfession(e.target.value)}
-                placeholder="напр. Інженер, Лікар, Вчитель"
-                className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
+                placeholder="напр. Інженер, Лікар"
+                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
               />
             </div>
 
             <div>
               <label className="block text-xs font-medium text-slate-300 mb-1">
-                Лінія / Гілка роду
+                Лінія / Гілка
               </label>
               <input
                 type="text"
                 value={branch}
                 onChange={(e) => setBranch(e.target.value)}
-                placeholder="напр. Лінія батька, Лінія матері"
-                className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
+                placeholder="напр. Лінія батька"
+                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
               />
             </div>
           </div>
 
           {/* Parents & Spouses Selectors */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-950/40 p-4 rounded-2xl border border-slate-800">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 bg-slate-950/40 p-3.5 sm:p-4 rounded-2xl border border-slate-800">
             <div>
               <label className="block text-xs font-medium text-slate-300 mb-1">
                 Батько
@@ -412,7 +411,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
               <select
                 value={fatherId}
                 onChange={(e) => setFatherId(e.target.value)}
-                className="w-full px-3 py-2 bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl text-xs text-slate-200 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-xs text-slate-200 focus:outline-none"
               >
                 <option value="">Не вказано</option>
                 {potentialFathers.map((f) => (
@@ -430,7 +429,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
               <select
                 value={motherId}
                 onChange={(e) => setMotherId(e.target.value)}
-                className="w-full px-3 py-2 bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl text-xs text-slate-200 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-xs text-slate-200 focus:outline-none"
               >
                 <option value="">Не вказано</option>
                 {potentialMothers.map((m) => (
@@ -448,7 +447,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
               <select
                 value={spouseIds[0] || ''}
                 onChange={(e) => setSpouseIds(e.target.value ? [e.target.value] : [])}
-                className="w-full px-3 py-2 bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl text-xs text-slate-200 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-xs text-slate-200 focus:outline-none"
               >
                 <option value="">Не вказано</option>
                 {potentialSpouses.map((s) => (
@@ -463,61 +462,32 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
           {/* Bio / Memories */}
           <div>
             <label className="block text-xs font-medium text-slate-300 mb-1">
-              Біографія, спогади та цікаві факти
+              Біографія та спогади
             </label>
             <textarea
               rows={3}
               value={bio}
               onChange={(e) => setBio(e.target.value)}
-              placeholder="Спогади з життя, досягнення, родинні історії..."
-              className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
+              placeholder="Цікаві спогади з життя..."
+              className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-base sm:text-sm text-slate-100 focus:outline-none"
             />
           </div>
 
-          {/* Tags & Avatar URL */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
-                Мітки (через кому)
-              </label>
-              <input
-                type="text"
-                value={tagsStr}
-                onChange={(e) => setTagsStr(e.target.value)}
-                placeholder="напр. Архів, Засновник"
-                className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
-                Посилання на фото (URL)
-              </label>
-              <input
-                type="text"
-                value={avatarUrl}
-                onChange={(e) => setAvatarUrl(e.target.value)}
-                placeholder="https://..."
-                className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl text-sm text-slate-100 focus:outline-none"
-              />
-            </div>
-          </div>
-
-          {/* Footer Submit */}
-          <div className="pt-4 border-t border-slate-800 flex items-center justify-end gap-3">
+          {/* Sticky/Fixed Footer on Mobile */}
+          <div className="pt-3 border-t border-slate-800 flex items-center justify-end gap-2.5 pb-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium rounded-xl transition cursor-pointer"
+              className="px-4 py-2.5 bg-slate-800 active:bg-slate-700 text-slate-300 text-sm font-medium rounded-xl transition cursor-pointer"
             >
               Скасувати
             </button>
             <button
               type="submit"
-              className="flex items-center gap-2 px-5 py-2 bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 text-sm font-semibold rounded-xl shadow-lg shadow-amber-500/20 transition cursor-pointer"
+              className="flex items-center gap-2 px-6 py-2.5 bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 text-sm font-semibold rounded-xl shadow-lg shadow-amber-500/20 transition cursor-pointer"
             >
               <Save className="w-4 h-4" />
-              Зберегти
+              <span>Зберегти</span>
             </button>
           </div>
 
