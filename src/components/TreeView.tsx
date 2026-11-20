@@ -156,10 +156,10 @@ function buildLayout(persons: Person[]) {
       const cp = posMap.get(cid);
       if (!cp) return;
       const cb = botOf(cp);
-      const midY = hubY - (hubY - cb.y) * 0.5;
+      const deltaY = hubY - cb.y;
       connectors.push({
         key: `parent-patgp-${cid}`,
-        d: `M ${hubX} ${hubY} C ${hubX} ${midY}, ${cb.x} ${hubY - (hubY - cb.y) * 0.25}, ${cb.x} ${cb.y}`,
+        d: `M ${hubX} ${hubY} C ${hubX} ${hubY - deltaY * 0.5}, ${cb.x} ${cb.y + deltaY * 0.5}, ${cb.x} ${cb.y}`,
         color: '#b8860b',
         width: 2,
       });
@@ -177,10 +177,10 @@ function buildLayout(persons: Person[]) {
       const cp = posMap.get(cid);
       if (!cp) return;
       const cb = botOf(cp);
-      const midY = hubY - (hubY - cb.y) * 0.5;
+      const deltaY = hubY - cb.y;
       connectors.push({
         key: `parent-matgp-${cid}`,
-        d: `M ${hubX} ${hubY} C ${hubX} ${midY}, ${cb.x} ${hubY - (hubY - cb.y) * 0.25}, ${cb.x} ${cb.y}`,
+        d: `M ${hubX} ${hubY} C ${hubX} ${hubY - deltaY * 0.5}, ${cb.x} ${cb.y + deltaY * 0.5}, ${cb.x} ${cb.y}`,
         color: '#991b1b',
         width: 2,
       });
@@ -198,10 +198,10 @@ function buildLayout(persons: Person[]) {
       const cp = posMap.get(cid);
       if (!cp) return;
       const cb = botOf(cp);
-      const midY = hubY - (hubY - cb.y) * 0.5;
+      const deltaY = hubY - cb.y;
       connectors.push({
         key: `parent-fm-${cid}`,
-        d: `M ${hubX} ${hubY} C ${hubX} ${midY}, ${cb.x} ${hubY - (hubY - cb.y) * 0.25}, ${cb.x} ${cb.y}`,
+        d: `M ${hubX} ${hubY} C ${hubX} ${hubY - deltaY * 0.5}, ${cb.x} ${cb.y + deltaY * 0.5}, ${cb.x} ${cb.y}`,
         color: '#d4af37',
         width: 2.5,
       });
@@ -385,11 +385,11 @@ export const TreeView: React.FC<TreeViewProps> = ({
       >
         <div
           onClick={() => onSelectPerson(person)}
-          className={`w-full h-full rounded-2xl p-4 cursor-pointer relative overflow-hidden transition-all duration-200 backdrop-blur-md shadow-2xl shadow-black/80
+          className={`w-full h-full rounded-2xl p-4 cursor-pointer relative overflow-hidden transition-all duration-200 backdrop-blur-md shadow-2xl shadow-black/90
             ${parchmentBg}
             ${parchmentBorder}
             ${isSearchMatch
-              ? 'ring-4 ring-[#d4af37] scale-105 shadow-[0_0_30px_rgba(212,175,55,0.6)]'
+              ? 'ring-4 ring-[#d4af37] scale-105 shadow-[0_0_30px_rgba(212,175,55,0.7)]'
               : isHovered
                 ? '-translate-y-1.5 scale-[1.02]'
                 : ''
@@ -400,29 +400,31 @@ export const TreeView: React.FC<TreeViewProps> = ({
           {/* Antique Gold Filigree Header Bar */}
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent" />
 
-          {/* Corner Heraldic Castles/Rivet Accents */}
-          <div className="absolute top-1.5 left-1.5 text-[8px] text-[#d4af37]/60">❖</div>
-          <div className="absolute top-1.5 right-1.5 text-[8px] text-[#d4af37]/60">❖</div>
+          {/* Corner Heraldic Fleur-de-lis Accents */}
+          <div className="absolute top-1.5 left-2 text-[10px] text-[#d4af37]/80">⚜</div>
+          <div className="absolute top-1.5 right-2 text-[10px] text-[#d4af37]/80">⚜</div>
+          <div className="absolute bottom-1 left-2 text-[9px] text-[#d4af37]/50">⚜</div>
+          <div className="absolute bottom-1 right-2 text-[9px] text-[#d4af37]/50">⚜</div>
 
           {/* Top Row: Royal Title Banner + Dynasty Generation */}
-          <div className="flex items-center justify-between gap-1 mb-2.5">
+          <div className="flex items-center justify-between gap-1 mb-2.5 pl-3 pr-3">
             <span className={`text-[10px] font-['Cinzel'] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1.5 border shadow-sm ${
               isMe
-                ? 'bg-[#d4af37]/20 text-[#fef3c7] border-[#d4af37]/60 shadow-[0_0_8px_rgba(212,175,55,0.3)]'
+                ? 'bg-[#d4af37]/25 text-[#fffbeb] border-[#d4af37] shadow-[0_0_10px_rgba(212,175,55,0.3)]'
                 : isMale
-                  ? 'bg-[#b8860b]/20 text-[#fef3c7] border-[#b8860b]/40'
-                  : 'bg-[#991b1b]/20 text-[#fca5a5] border-[#991b1b]/40'
+                  ? 'bg-[#b8860b]/20 text-[#fef3c7] border-[#b8860b]/50'
+                  : 'bg-[#991b1b]/25 text-[#fca5a5] border-[#991b1b]/50'
             }`}>
-              {isMe ? <Crown className="w-3.5 h-3.5 text-[#d4af37] inline" /> : <Shield className="w-3 h-3 opacity-70" />}
+              {isMe ? <Crown className="w-3.5 h-3.5 text-[#d4af37] inline" /> : <Shield className="w-3 h-3 opacity-80" />}
               <span className="truncate">{person.roleLabel || (isMale ? 'Шляхтич' : 'Шляхтянка')}</span>
             </span>
 
             {/* Red Royal Wax Seal Motif */}
             <div className="flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded-full bg-[#991b1b] border border-[#f87171] shadow-sm flex items-center justify-center text-[7px] text-[#fef3c7] font-bold" title="Королівська Печать">
+              <span className="w-4 h-4 rounded-full bg-[#991b1b] border border-[#f87171] shadow-md flex items-center justify-center text-[7px] text-[#fef3c7] font-bold" title="Королівська Печать">
                 ⚜
               </span>
-              <span className="text-[9px] font-['Cinzel'] font-bold px-1.5 py-0.5 rounded bg-[#1e150d] border border-[#d4af37]/40 text-[#d4af37]">
+              <span className="text-[9px] font-['Cinzel'] font-bold px-1.5 py-0.5 rounded bg-[#1e150d] border border-[#d4af37]/50 text-[#d4af37]">
                 П{person.generation}
               </span>
             </div>
