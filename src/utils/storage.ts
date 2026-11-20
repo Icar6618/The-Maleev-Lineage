@@ -1,7 +1,7 @@
 import type { FamilyData, Person } from '../types/family';
 import { initialFamilyData } from '../data/initialData';
 
-const STORAGE_KEY = 'the_maleev_lineage_data_v1';
+const STORAGE_KEY = 'the_maleev_lineage_data_v2';
 
 export function loadFamilyData(): FamilyData {
   try {
