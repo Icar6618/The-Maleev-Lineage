@@ -116,7 +116,7 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
       metalness: 0.5,
     });
 
-    // 4. Procedural Continuous 3D Medieval Royal Oak
+    // 4. Procedural Continuous 3D Medieval Oak
     const treeGroup = new THREE.Group();
     treeGroup.position.set(0, -60, -30);
 
@@ -398,7 +398,7 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
     addJointSphere(new THREE.Vector3(0, 290, 0), 16);
     addJointSphere(new THREE.Vector3(0, 350, 0), 13);
 
-    // G. Royal Foliage Canopies
+    // G. Oak Foliage Canopies
     const foliageClusters = [
       // Crown Apex
       { x: 0, y: 420, z: 0, r: 70, mat: crownLeavesMaterial },

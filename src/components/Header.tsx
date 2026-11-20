@@ -12,7 +12,7 @@ import {
   RotateCcw,
   Sparkles,
   Shield,
-  Crown
+  TreePine
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -51,7 +51,7 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Top Navbar Row */}
         <div className="flex items-center justify-between h-16 sm:h-20 gap-2 sm:gap-4">
           
-          {/* Logo & Royal Coat of Arms */}
+          {/* Logo & Family Coat of Arms */}
           <div className="flex items-center gap-3 sm:gap-4 min-w-0">
             <div className="relative group cursor-pointer">
               {/* Heraldic Aura */}
@@ -59,7 +59,7 @@ export const Header: React.FC<HeaderProps> = ({
               
               <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-b from-[#2a1a0e] to-[#120d08] p-[1.5px] border border-[#d4af37]/60 shadow-xl flex items-center justify-center">
                 <div className="w-full h-full rounded-[14px] bg-[#1a110a] flex items-center justify-center text-[#d4af37]">
-                  <Crown className="w-6 h-6 text-[#d4af37] drop-shadow-[0_2px_10px_rgba(212,175,55,0.6)]" />
+                  <TreePine className="w-6 h-6 text-[#d4af37] drop-shadow-[0_2px_10px_rgba(212,175,55,0.6)]" />
                 </div>
               </div>
             </div>
@@ -67,7 +67,7 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="min-w-0">
               <div className="flex items-center gap-2">
                 <h1 className="font-['Cinzel'] font-bold text-base sm:text-xl md:text-2xl tracking-wide bg-gradient-to-r from-[#fffbeb] via-[#fef3c7] to-[#d4af37] bg-clip-text text-transparent truncate drop-shadow">
-                  Королівський Родовід Малеєвих
+                  Родовід Малеєвих
                 </h1>
                 <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#991b1b]/20 border border-[#d4af37]/40 text-[#fef3c7] text-[10px] sm:text-xs font-serif font-bold shadow-sm">
                   <span>{totalPersons} осіб</span>
@@ -75,7 +75,7 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
               <p className="text-[11px] sm:text-xs text-[#d4af37]/70 hidden md:flex items-center gap-1.5 truncate font-serif italic">
                 <Shield className="w-3.5 h-3.5 text-[#d4af37] inline" />
-                <span>The Royal Lineage of Maleev • Дерево Королівської Династії та Фамільний Літопис</span>
+                <span>The Maleev Lineage • Дерево Роду та Фамільний Літопис</span>
               </p>
             </div>
           </div>
@@ -100,7 +100,7 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </div>
 
-          {/* Top Actions: Add to Tree & Royal Archive */}
+          {/* Top Actions: Add to Tree & Archive */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             
             {/* Mobile Search Toggle */}
@@ -112,7 +112,7 @@ export const Header: React.FC<HeaderProps> = ({
               <Search className="w-4 h-4" />
             </button>
 
-            {/* Add Person (Royal Decree Button) */}
+            {/* Add Person (Button) */}
             <button
               onClick={onAddPerson}
               className="group relative flex items-center gap-1.5 px-3.5 py-2 sm:px-4 sm:py-2 bg-gradient-to-r from-[#d4af37] via-[#f59e0b] to-[#b45309] hover:from-[#f59e0b] hover:to-[#d4af37] text-slate-950 font-['Cinzel'] font-bold text-xs sm:text-sm rounded-xl shadow-[0_4px_16px_rgba(212,175,55,0.3)] transition-all duration-200 hover:scale-[1.02] cursor-pointer border border-[#fef3c7]/50"
@@ -218,7 +218,7 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             <GitFork className="w-3.5 h-3.5 rotate-180 text-[#d4af37]" />
-            <span>3D Дерево Королівства</span>
+            <span>3D Дерево Роду</span>
           </button>
 
           <button
@@ -230,7 +230,7 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             <Users className="w-3.5 h-3.5" />
-            <span>Шляхетні Особи ({totalPersons})</span>
+            <span>Родинні Особи ({totalPersons})</span>
           </button>
 
           <button

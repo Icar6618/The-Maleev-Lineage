@@ -12,7 +12,6 @@ import {
   Calendar,
   Users,
   Info,
-  Crown,
   Shield,
   Sparkles
 } from 'lucide-react';
@@ -141,7 +140,7 @@ function buildLayout(persons: Person[]) {
       d: `M ${xa} ${ya} L ${xb} ${ya}`,
       color: '#d4af37',
       width: 2.5,
-      label: '👑',
+      label: '⚜',
     });
   });
 
@@ -432,7 +431,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
           <div className="absolute bottom-1 left-2 text-[9px] text-[#d4af37]/50">⚜</div>
           <div className="absolute bottom-1 right-2 text-[9px] text-[#d4af37]/50">⚜</div>
 
-          {/* Top Row: Royal Title Banner + Dynasty Generation */}
+          {/* Top Row: Title Banner + Dynasty Generation */}
           <div className="flex items-center justify-between gap-1 mb-2.5 pl-3 pr-3">
             <span className={`text-[10px] font-['Cinzel'] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1.5 border shadow-sm ${
               isMe
@@ -441,13 +440,13 @@ export const TreeView: React.FC<TreeViewProps> = ({
                   ? 'bg-[#b8860b]/20 text-[#fef3c7] border-[#b8860b]/50'
                   : 'bg-[#991b1b]/25 text-[#fca5a5] border-[#991b1b]/50'
             }`}>
-              {isMe ? <Crown className="w-3.5 h-3.5 text-[#d4af37] inline" /> : <Shield className="w-3 h-3 opacity-80" />}
-              <span className="truncate">{person.roleLabel || (isMale ? 'Шляхтич' : 'Шляхтянка')}</span>
+              <Shield className="w-3 h-3 text-[#d4af37] inline opacity-90" />
+              <span className="truncate">{person.roleLabel || (isMe ? 'Власник Дерева' : isMale ? 'Член роду' : 'Членкиня роду')}</span>
             </span>
 
-            {/* Red Royal Wax Seal Motif */}
+            {/* Red Wax Seal Motif */}
             <div className="flex items-center gap-1.5">
-              <span className="w-4 h-4 rounded-full bg-[#991b1b] border border-[#f87171] shadow-md flex items-center justify-center text-[7px] text-[#fef3c7] font-bold" title="Королівська Печать">
+              <span className="w-4 h-4 rounded-full bg-[#991b1b] border border-[#f87171] shadow-md flex items-center justify-center text-[7px] text-[#fef3c7] font-bold" title="Родинна Печать">
                 ⚜
               </span>
               <span className="text-[9px] font-['Cinzel'] font-bold px-1.5 py-0.5 rounded bg-[#1e150d] border border-[#d4af37]/50 text-[#d4af37]">
@@ -625,17 +624,17 @@ export const TreeView: React.FC<TreeViewProps> = ({
             <Sparkles className="w-3.5 h-3.5 text-[#d4af37]" />
             <span>Геральдичні Узи</span>
           </h4>
-          <div className="flex items-center gap-2"><div className="w-5 h-1 bg-[#d4af37] rounded-full shadow-sm" /><span className="text-[#fef3c7] font-serif">👑 Священний Шлюб</span></div>
-          <div className="flex items-center gap-2"><div className="w-5 h-1 bg-[#b8860b] rounded-full" /><span className="text-[#d4af37]">Кров Батька</span></div>
-          <div className="flex items-center gap-2"><div className="w-5 h-1 bg-[#991b1b] rounded-full" /><span className="text-[#fca5a5]">Кров Матері</span></div>
-          <div className="flex items-center gap-2"><div className="w-5 h-1 bg-[#d4af37] rounded-full" /><span className="text-[#fef3c7]">Спадкоємці Престолу</span></div>
+          <div className="flex items-center gap-2"><div className="w-5 h-1 bg-[#d4af37] rounded-full shadow-sm" /><span className="text-[#fef3c7] font-serif">⚜ Родинний Союз</span></div>
+          <div className="flex items-center gap-2"><div className="w-5 h-1 bg-[#b8860b] rounded-full" /><span className="text-[#d4af37]">Батьківська лінія</span></div>
+          <div className="flex items-center gap-2"><div className="w-5 h-1 bg-[#991b1b] rounded-full" /><span className="text-[#fca5a5]">Материнська лінія</span></div>
+          <div className="flex items-center gap-2"><div className="w-5 h-1 bg-[#d4af37] rounded-full" /><span className="text-[#fef3c7]">Молодше покоління (Я та брат)</span></div>
           <div className="mt-2 pt-2 border-t border-[#d4af37]/30 space-y-1.5">
-            <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full border border-[#d4af37] bg-[#2a1a0e]" /><span className="text-[#fef3c7]">Шляхтич</span></div>
-            <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full border border-[#f87171] bg-[#261010]" /><span className="text-[#fca5a5]">Шляхтянка</span></div>
-            <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full border-2 border-[#d4af37] bg-[#78350f]" /><span className="text-[#fef3c7] font-bold">👑 Його Величність</span></div>
+            <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full border border-[#d4af37] bg-[#2a1a0e]" /><span className="text-[#fef3c7]">Чоловіча гілка</span></div>
+            <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full border border-[#f87171] bg-[#261010]" /><span className="text-[#fca5a5]">Жіноча гілка</span></div>
+            <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full border-2 border-[#d4af37] bg-[#78350f]" /><span className="text-[#fef3c7] font-bold">⚜ Власник Дерева (Я)</span></div>
           </div>
           <div className="mt-2 pt-2 border-t border-[#d4af37]/30 text-[#d4af37]/60 text-[9px] italic">
-            🌳 Живе 3D Дерево Королівства
+            🌳 Живе 3D Дерево Роду Малеєвих
           </div>
         </div>
       )}
@@ -718,8 +717,8 @@ export const TreeView: React.FC<TreeViewProps> = ({
                 <g key={`signet-${c.key}`}>
                   <circle cx={mx} cy={my} r={14} fill="#181109" stroke="#d4af37" strokeWidth="2" />
                   <circle cx={mx} cy={my} r={10} fill="#991b1b" />
-                  <text x={mx} y={my + 1} textAnchor="middle" dominantBaseline="central" fontSize="11" fill="#fef3c7">
-                    👑
+                  <text x={mx} y={my + 1} textAnchor="middle" dominantBaseline="central" fontSize="10" fill="#fef3c7">
+                    ⚜
                   </text>
                 </g>
               );

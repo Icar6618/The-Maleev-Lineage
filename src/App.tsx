@@ -15,7 +15,7 @@ import { StatsView } from './components/StatsView';
 import { PersonDetailModal } from './components/PersonDetailModal';
 import { PersonFormModal } from './components/PersonFormModal';
 import { ExportImportModal } from './components/ExportImportModal';
-import { Heart, ExternalLink } from 'lucide-react';
+import { Heart, ExternalLink, TreePine } from 'lucide-react';
 
 export function App() {
   const [familyData, setFamilyData] = useState<FamilyData>(() => loadFamilyData());
@@ -187,28 +187,43 @@ export function App() {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="bg-slate-900 border-t border-slate-800 py-6 px-4">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-          <div className="flex items-center gap-2">
-            <span className="font-serif font-bold text-slate-300">The Maleev Lineage</span>
-            <span>•</span>
-            <span>Пам'ять поколінь, родинні корені та майбутнє</span>
+      {/* Bottom Medieval Banner (Footer matching Top Header) */}
+      <footer className="bg-[#120d08]/95 backdrop-blur-xl border-t border-[#d4af37]/30 shadow-2xl shadow-black/90 py-5 px-4 relative z-20">
+        {/* Top Gold Leaf Trim of Bottom Banner */}
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#d4af37] to-transparent shadow-[0_0_10px_rgba(212,175,55,0.4)]" />
+
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-serif">
+          {/* Left: Emblem + Lineage Title */}
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-b from-[#2a1a0e] to-[#120d08] p-[1.5px] border border-[#d4af37]/50 shadow-md flex items-center justify-center">
+              <TreePine className="w-4 h-4 text-[#d4af37]" />
+            </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="font-['Cinzel'] font-bold text-sm tracking-wide bg-gradient-to-r from-[#fffbeb] via-[#fef3c7] to-[#d4af37] bg-clip-text text-transparent">
+                Родовід Малеєвих
+              </span>
+              <span className="text-[#d4af37]/50">⚜</span>
+              <span className="text-[#d4af37]/80 italic">
+                Пам'ять поколінь, родинні корені та майбутнє
+              </span>
+            </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          {/* Right: GitHub Project Link & Dedication */}
+          <div className="flex items-center gap-3 sm:gap-4 flex-wrap justify-center text-[11px]">
             <a
               href="https://github.com/Icar6618/The-Maleev-Lineage"
               target="_blank"
               rel="noreferrer"
-              className="flex items-center gap-1.5 hover:text-amber-400 transition"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#1e150d]/80 hover:bg-[#2a1d12] border border-[#d4af37]/40 text-[#fef3c7] hover:text-[#fffbeb] transition font-['Cinzel'] font-bold shadow-sm"
             >
               <span>GitHub проєкт</span>
-              <ExternalLink className="w-3.5 h-3.5" />
+              <ExternalLink className="w-3.5 h-3.5 text-[#d4af37]" />
             </a>
-            <span>•</span>
-            <span className="flex items-center gap-1">
-              Зроблено з любов'ю до родини <Heart className="w-3 h-3 text-rose-500 fill-rose-500 inline" />
+            <span className="text-[#d4af37]/40">⚜</span>
+            <span className="flex items-center gap-1.5 text-[#d4af37]/80">
+              <span>З повагою до роду</span>
+              <Heart className="w-3.5 h-3.5 text-[#991b1b] fill-[#991b1b] inline opacity-90" />
             </span>
           </div>
         </div>
