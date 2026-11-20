@@ -11,9 +11,7 @@ import {
   MapPin,
   Calendar,
   Users,
-  Info,
   Shield,
-  Sparkles,
   Quote
 } from 'lucide-react';
 
@@ -261,7 +259,6 @@ export const TreeView: React.FC<TreeViewProps> = ({
   const [pinchStartDist, setPinchStartDist] = useState<number | null>(null);
   const [pinchStartScale, setPinchStartScale] = useState<number>(0.55);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [showLegend, setShowLegend] = useState(true);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -602,41 +599,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
           <Maximize2 className="w-4 h-4" />
         </button>
         <span className="text-[11px] text-[#fef3c7] font-['Cinzel'] font-bold px-1.5">{Math.round(scale * 100)}%</span>
-        <div className="h-4 w-px bg-[#d4af37]/30 mx-0.5" />
-        <button
-          onClick={() => setShowLegend(v => !v)}
-          className={`p-2 rounded-xl transition cursor-pointer ${
-            showLegend 
-              ? 'bg-[#d4af37] text-slate-950 font-bold shadow-md shadow-[#d4af37]/30' 
-              : 'text-[#d4af37] hover:text-[#fffbeb] bg-[#26190e]'
-          }`}
-          title="Гербова Легенда"
-        >
-          <Info className="w-4 h-4" />
-        </button>
       </div>
-
-      {/* Medieval Heraldic Legend Card */}
-      {showLegend && (
-        <div className="absolute top-3 right-3 z-30 bg-[#181109]/95 backdrop-blur-2xl p-4 rounded-2xl border border-[#d4af37]/50 shadow-2xl shadow-black/90 text-[11px] space-y-2 max-w-[220px] animate-in fade-in duration-200 font-serif">
-          <h4 className="text-xs font-['Cinzel'] font-bold text-[#fef3c7] flex items-center gap-1.5 border-b border-[#d4af37]/30 pb-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-[#d4af37]" />
-            <span>Геральдичні Узи</span>
-          </h4>
-          <div className="flex items-center gap-2"><div className="w-5 h-1 bg-[#d4af37] rounded-full shadow-sm" /><span className="text-[#fef3c7] font-serif">⚜ Родинний Союз</span></div>
-          <div className="flex items-center gap-2"><div className="w-5 h-1 bg-[#b8860b] rounded-full" /><span className="text-[#d4af37]">Батьківська лінія</span></div>
-          <div className="flex items-center gap-2"><div className="w-5 h-1 bg-[#991b1b] rounded-full" /><span className="text-[#fca5a5]">Материнська лінія</span></div>
-          <div className="flex items-center gap-2"><div className="w-5 h-1 bg-[#d4af37] rounded-full" /><span className="text-[#fef3c7]">Гілка нащадків (Я та брат)</span></div>
-          <div className="mt-2 pt-2 border-t border-[#d4af37]/30 space-y-1.5">
-            <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full border border-[#d4af37] bg-[#2a1a0e]" /><span className="text-[#fef3c7]">Чоловіча гілка</span></div>
-            <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full border border-[#f87171] bg-[#261010]" /><span className="text-[#fca5a5]">Жіноча гілка</span></div>
-            <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full border-2 border-[#d4af37] bg-[#78350f]" /><span className="text-[#fef3c7] font-bold">⚜ Власник Дерева (Я)</span></div>
-          </div>
-          <div className="mt-2 pt-2 border-t border-[#d4af37]/30 text-[#d4af37]/60 text-[9px] italic">
-            🌳 Живе 3D Дерево Роду Малеєвих
-          </div>
-        </div>
-      )}
 
       {/* Canvas Area */}
       <div
