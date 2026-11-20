@@ -15,8 +15,8 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
 
     // 1. Scene, Camera, Renderer
     const scene = new THREE.Scene();
-    // Soft subtle atmospheric depth
-    scene.fog = new THREE.FogExp2(0x0c0906, 0.0009);
+    // Soft azure sky atmospheric depth
+    scene.fog = new THREE.FogExp2(0x2b6691, 0.0004);
 
     // Perfectly framed camera so entire crown, trunk, roots, and earthen mound
     // sit comfortably within the view without any clipping or rectangular borders
@@ -32,26 +32,31 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
     renderer.toneMappingExposure = 1.15;
     container.appendChild(renderer.domElement);
 
-    // 2. Lighting — Castle Sanctuary Warm Torchlight + Sunlight
-    const ambientLight = new THREE.AmbientLight(0x4a3319, 2.5);
+    // 2. Lighting — Brilliant Sunbeam + Azure Sky Ambient + Castle Torches
+    const ambientLight = new THREE.AmbientLight(0x9bd1f5, 2.3);
     scene.add(ambientLight);
 
-    // Sunbeam shining down onto crown
-    const sunLight = new THREE.DirectionalLight(0xffecd1, 2.8);
-    sunLight.position.set(200, 700, 350);
+    // Brilliant golden sunbeam shining down onto crown and island
+    const sunLight = new THREE.DirectionalLight(0xfff6dd, 3.4);
+    sunLight.position.set(300, 750, 400);
     scene.add(sunLight);
 
-    // Warm castle torchlights
-    const torchLeft = new THREE.PointLight(0xff7700, 4.0, 800);
+    // Upward sky reflection from the azure clouds below
+    const skyFill = new THREE.DirectionalLight(0xbfe4fc, 1.6);
+    skyFill.position.set(-200, -350, 200);
+    scene.add(skyFill);
+
+    // Warm castle torchlights on tree trunk
+    const torchLeft = new THREE.PointLight(0xff8800, 3.8, 800);
     torchLeft.position.set(-240, 90, 160);
     scene.add(torchLeft);
 
-    const torchRight = new THREE.PointLight(0xd97706, 4.0, 800);
+    const torchRight = new THREE.PointLight(0xffaa00, 3.8, 800);
     torchRight.position.set(240, 90, 160);
     scene.add(torchRight);
 
     // Ground level rim light for roots
-    const groundLight = new THREE.PointLight(0xb45309, 2.4, 600);
+    const groundLight = new THREE.PointLight(0xd97706, 2.4, 600);
     groundLight.position.set(0, -30, 200);
     scene.add(groundLight);
 
@@ -69,23 +74,45 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
     });
 
     const earthMaterial = new THREE.MeshStandardMaterial({
-      color: 0x1a110a,
+      color: 0x22170d,
       roughness: 0.98,
       metalness: 0.05,
       flatShading: true,
     });
 
     const mossMaterial = new THREE.MeshStandardMaterial({
-      color: 0x143820,
-      roughness: 0.92,
+      color: 0x1a4628,
+      roughness: 0.9,
       metalness: 0.05,
       flatShading: true,
     });
 
     const rockMaterial = new THREE.MeshStandardMaterial({
-      color: 0x2b221a,
+      color: 0x33281e,
       roughness: 0.95,
       metalness: 0.15,
+      flatShading: true,
+    });
+
+    const cliffMaterial = new THREE.MeshStandardMaterial({
+      color: 0x3d2f21,
+      roughness: 0.94,
+      metalness: 0.08,
+      flatShading: true,
+    });
+
+    const deepCliffMaterial = new THREE.MeshStandardMaterial({
+      color: 0x251c13,
+      roughness: 0.98,
+      metalness: 0.05,
+      flatShading: true,
+    });
+
+    const cloudMaterial = new THREE.MeshStandardMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.72,
+      roughness: 1.0,
       flatShading: true,
     });
 
@@ -121,11 +148,10 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
     treeGroup.position.set(0, -60, -30);
 
     // =========================================================
-    // A. EXPANSIVE 3D EARTHEN TERRAIN & MOUND (ЗЕМЛЯ)
-    // Tapered natural hillock that smoothly curves down to ground level
+    // A. 3D FLOATING ISLAND LANDMASS & CRAGGY KEEL (ЛІТАЮЧИЙ ОСТРІВ)
     // =========================================================
     const moundRadius = 420;
-    const earthGeo = new THREE.CylinderGeometry(moundRadius * 0.75, moundRadius, 28, 48);
+    const earthGeo = new THREE.CylinderGeometry(moundRadius * 0.78, moundRadius, 32, 48);
     const ePos = earthGeo.attributes.position;
     for (let i = 0; i < ePos.count; i++) {
       const vx = ePos.getX(i);
@@ -133,7 +159,7 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
       const vz = ePos.getZ(i);
       const r = Math.hypot(vx, vz);
       const normR = Math.min(1, r / moundRadius);
-      const dome = Math.cos(normR * Math.PI * 0.5) * 20;
+      const dome = Math.cos(normR * Math.PI * 0.5) * 22;
       const bump = Math.sin(vx * 0.03) * Math.cos(vz * 0.03) * 8;
       ePos.setY(i, vy + dome + bump);
     }
@@ -162,6 +188,104 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
     const mossMound = new THREE.Mesh(mossGeo, mossMaterial);
     mossMound.position.y = -8;
     treeGroup.add(mossMound);
+
+    // Inverted Floating Island Cliff Underbody (Скелясте підніжжя літаючого острова)
+    // 1. Upper Cliff Ring (y = -35 to -95)
+    const upperCliffGeo = new THREE.CylinderGeometry(moundRadius * 0.98, moundRadius * 0.68, 65, 36);
+    const ucPos = upperCliffGeo.attributes.position;
+    for (let i = 0; i < ucPos.count; i++) {
+      const vx = ucPos.getX(i);
+      const vy = ucPos.getY(i);
+      const vz = ucPos.getZ(i);
+      const angle = Math.atan2(vz, vx);
+      const crag = Math.sin(angle * 7) * 22 + Math.cos(angle * 13) * 14 + Math.sin(vy * 0.1) * 10;
+      ucPos.setX(i, vx + Math.cos(angle) * crag);
+      ucPos.setZ(i, vz + Math.sin(angle) * crag);
+    }
+    upperCliffGeo.computeVertexNormals();
+    const upperCliff = new THREE.Mesh(upperCliffGeo, cliffMaterial);
+    upperCliff.position.y = -58;
+    treeGroup.add(upperCliff);
+
+    // 2. Mid Cliff Shelf (y = -90 to -175)
+    const midCliffGeo = new THREE.CylinderGeometry(moundRadius * 0.7, moundRadius * 0.35, 85, 28);
+    const mcPos = midCliffGeo.attributes.position;
+    for (let i = 0; i < mcPos.count; i++) {
+      const vx = mcPos.getX(i);
+      const vy = mcPos.getY(i);
+      const vz = mcPos.getZ(i);
+      const angle = Math.atan2(vz, vx);
+      const crag = Math.sin(angle * 5) * 25 + Math.cos(angle * 9) * 16 + Math.cos(vy * 0.12) * 12;
+      mcPos.setX(i, vx + Math.cos(angle) * crag);
+      mcPos.setZ(i, vz + Math.sin(angle) * crag);
+    }
+    midCliffGeo.computeVertexNormals();
+    const midCliff = new THREE.Mesh(midCliffGeo, deepCliffMaterial);
+    midCliff.position.y = -130;
+    treeGroup.add(midCliff);
+
+    // 3. Hanging Island Spire / Stalactite Keel (y = -175 to -265)
+    const bottomSpireGeo = new THREE.ConeGeometry(moundRadius * 0.37, 95, 20);
+    const bsPos = bottomSpireGeo.attributes.position;
+    for (let i = 0; i < bsPos.count; i++) {
+      const vx = bsPos.getX(i);
+      const vz = bsPos.getZ(i);
+      const angle = Math.atan2(vz, vx);
+      const crag = Math.sin(angle * 4) * 18 + Math.cos(angle * 7) * 12;
+      bsPos.setX(i, vx + Math.cos(angle) * crag);
+      bsPos.setZ(i, vz + Math.sin(angle) * crag);
+    }
+    bottomSpireGeo.computeVertexNormals();
+    bottomSpireGeo.rotateX(Math.PI); // Invert cone so point faces down!
+    const bottomSpire = new THREE.Mesh(bottomSpireGeo, deepCliffMaterial);
+    bottomSpire.position.y = -215;
+    treeGroup.add(bottomSpire);
+
+    // 4. Satellite Floating Sky Boulders (Маленькі уламки скель, що парять поруч у небі)
+    const skyRocks = [
+      { x: -390, y: -90, z: 90, r: 24, rot: [0.3, 0.4, 0] },
+      { x: 410, y: -80, z: 80, r: 28, rot: [-0.2, 0.6, 0] },
+      { x: -330, y: -190, z: -50, r: 20, rot: [0.4, -0.2, 0] },
+      { x: 340, y: -200, z: -40, r: 22, rot: [-0.3, 0.5, 0] },
+      { x: 190, y: -250, z: 60, r: 16, rot: [0.2, 0.1, 0] },
+    ];
+    skyRocks.forEach(sr => {
+      const rockGeo = new THREE.DodecahedronGeometry(sr.r, 1);
+      const rockMesh = new THREE.Mesh(rockGeo, cliffMaterial);
+      rockMesh.position.set(sr.x, sr.y, sr.z);
+      rockMesh.rotation.set(sr.rot[0], sr.rot[1], sr.rot[2]);
+      treeGroup.add(rockMesh);
+
+      const mossCap = new THREE.Mesh(new THREE.ConeGeometry(sr.r * 0.8, sr.r * 0.5, 8), mossMaterial);
+      mossCap.position.set(sr.x, sr.y + sr.r * 0.7, sr.z);
+      treeGroup.add(mossCap);
+    });
+
+    // 5. Stylized Fluffy Clouds Floating Beneath the Island
+    const cloudGroup = new THREE.Group();
+    cloudGroup.position.set(0, -225, 0);
+    const cloudPuffs = [
+      { x: -280, y: -20, z: 60, r: 65 },
+      { x: -220, y: 0, z: 90, r: 75 },
+      { x: -330, y: -10, z: 30, r: 55 },
+      { x: -170, y: -25, z: 110, r: 60 },
+      { x: 260, y: -15, z: 70, r: 70 },
+      { x: 210, y: 5, z: 100, r: 78 },
+      { x: 310, y: -5, z: 40, r: 58 },
+      { x: 160, y: -20, z: 120, r: 65 },
+      { x: -60, y: -30, z: -120, r: 70 },
+      { x: 60, y: -25, z: -110, r: 75 },
+      { x: 0, y: -15, z: -150, r: 65 },
+      { x: -30, y: -55, z: 20, r: 50 },
+      { x: 40, y: -50, z: 30, r: 48 },
+    ];
+    cloudPuffs.forEach(cp => {
+      const puffGeo = new THREE.DodecahedronGeometry(cp.r, 2);
+      const puff = new THREE.Mesh(puffGeo, cloudMaterial);
+      puff.position.set(cp.x, cp.y, cp.z);
+      cloudGroup.add(puff);
+    });
+    treeGroup.add(cloudGroup);
 
     // Ancient Stone Dais Sanctuary in center of mound
     const daisGeo = new THREE.CylinderGeometry(180, 200, 14, 32);
@@ -490,8 +614,10 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
     const animate = () => {
       const elapsed = clock.getElapsedTime();
 
-      // Gentle continuous organic sway
-      treeGroup.rotation.y = Math.sin(elapsed * 0.18) * 0.03;
+      // Gentle continuous organic sway & floating island levitation
+      treeGroup.position.y = -60 + Math.sin(elapsed * 0.65) * 5;
+      treeGroup.rotation.y = Math.sin(elapsed * 0.16) * 0.025;
+      cloudGroup.rotation.y = elapsed * 0.02;
 
       // Torch flickering
       torchLeft.intensity = 3.8 + Math.sin(elapsed * 11) * 0.4 + Math.cos(elapsed * 7) * 0.3;

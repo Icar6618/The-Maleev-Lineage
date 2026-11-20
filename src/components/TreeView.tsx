@@ -563,29 +563,29 @@ export const TreeView: React.FC<TreeViewProps> = ({
   };
 
   return (
-    <div className="relative w-full h-[calc(100dvh-130px)] sm:h-[calc(100vh-140px)] bg-[#0c0906] overflow-hidden select-none touch-none">
+    <div className="relative w-full h-[calc(100dvh-130px)] sm:h-[calc(100vh-140px)] bg-gradient-to-b from-[#0f2c4d] via-[#1a4975] via-[#2a6d9e] to-[#4fa3d1] overflow-hidden select-none touch-none">
 
-      {/* Medieval Castle Stone / Tapestry Atmosphere */}
+      {/* Heavenly Azure Sky Atmosphere with Sunbeams & Floating Mist */}
       <div 
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage: `
-            radial-gradient(ellipse 90% 70% at 50% 90%, rgba(120,53,15,0.25) 0%, transparent 60%),
-            radial-gradient(ellipse 70% 50% at 50% 10%, rgba(212,175,55,0.15) 0%, transparent 50%),
-            radial-gradient(circle at center, rgba(30,19,10,0.8) 0%, transparent 80%)
+            radial-gradient(ellipse 80% 60% at 75% 20%, rgba(255, 243, 204, 0.45) 0%, transparent 55%),
+            radial-gradient(ellipse 100% 50% at 50% 95%, rgba(186, 230, 253, 0.5) 0%, transparent 65%),
+            radial-gradient(circle at 25% 40%, rgba(56, 189, 248, 0.25) 0%, transparent 60%)
           `,
         }}
       />
 
-      {/* Floating Medieval Toolbar */}
-      <div className="absolute top-3 left-3 z-30 flex items-center gap-1.5 bg-[#181109]/90 backdrop-blur-xl p-1.5 sm:p-2 rounded-2xl border border-[#d4af37]/40 shadow-2xl shadow-black/80">
-        <button onClick={() => handleZoom(0.12)} className="p-2 text-[#d4af37] hover:text-[#fffbeb] bg-[#26190e] active:bg-[#3d2716] rounded-xl transition" title="Збільшити">
+      {/* Floating Medieval Sky Toolbar */}
+      <div className="absolute top-3 left-3 z-30 flex items-center gap-1.5 bg-[#0f2844]/90 backdrop-blur-xl p-1.5 sm:p-2 rounded-2xl border border-[#d4af37]/50 shadow-2xl shadow-sky-950/80">
+        <button onClick={() => handleZoom(0.12)} className="p-2 text-[#d4af37] hover:text-[#fffbeb] bg-[#183a5e] active:bg-[#235080] rounded-xl transition cursor-pointer" title="Збільшити">
           <ZoomIn className="w-4 h-4" />
         </button>
-        <button onClick={() => handleZoom(-0.12)} className="p-2 text-[#d4af37] hover:text-[#fffbeb] bg-[#26190e] active:bg-[#3d2716] rounded-xl transition" title="Зменшити">
+        <button onClick={() => handleZoom(-0.12)} className="p-2 text-[#d4af37] hover:text-[#fffbeb] bg-[#183a5e] active:bg-[#235080] rounded-xl transition cursor-pointer" title="Зменшити">
           <ZoomOut className="w-4 h-4" />
         </button>
-        <button onClick={handleResetZoom} className="p-2 text-[#d4af37] hover:text-[#fffbeb] bg-[#26190e] active:bg-[#3d2716] rounded-xl transition" title="Центрувати літопис">
+        <button onClick={handleResetZoom} className="p-2 text-[#d4af37] hover:text-[#fffbeb] bg-[#183a5e] active:bg-[#235080] rounded-xl transition cursor-pointer" title="Центрувати літопис">
           <Maximize2 className="w-4 h-4" />
         </button>
         <span className="text-[11px] text-[#fef3c7] font-['Cinzel'] font-bold px-1.5">{Math.round(scale * 100)}%</span>
