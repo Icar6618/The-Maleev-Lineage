@@ -549,18 +549,6 @@ export const TreeView: React.FC<TreeViewProps> = ({
     );
   };
 
-  // Royal Stage Decrees
-  const tierLabels = useMemo(() => {
-    const tier0_y = 0;
-    const tier1_y = CARD_H + GAP_Y;
-    const tier2_y = (CARD_H + GAP_Y) * 2;
-    return [
-      { y: tier0_y, label: '👑 ВЕРХОВНА КОРОНА ДИНАСТІЇ • МОЛОДЕ ПОКОЛІННЯ (Я ТА БРАТ)', color: 'text-[#fef3c7] bg-[#2a1a0e]/90 border-[#d4af37]' },
-      { y: tier1_y, label: '⚔️ ДЕРЖАВНА РАДА КОРОЛІВСТВА • БАТЬКИ, КНЯЗІ ТА КНЯГИНІ', color: 'text-[#fef3c7] bg-[#1e150d]/90 border-[#b8860b]' },
-      { y: tier2_y, label: '🛡️ ПАТРІАРХИ-ЗАСНОВНИКИ ДИНАСТІЇ • ДІДУСІ ТА БАБУСІ', color: 'text-[#fef3c7] bg-[#181109]/90 border-[#78350f]' },
-    ];
-  }, []);
-
   return (
     <div className="relative w-full h-[calc(100dvh-130px)] sm:h-[calc(100vh-140px)] bg-[#0c0906] overflow-hidden select-none touch-none">
 
@@ -623,15 +611,6 @@ export const TreeView: React.FC<TreeViewProps> = ({
           </div>
         </div>
       )}
-
-      {/* Bottom Royal Ribbon Indicator */}
-      <div className="absolute bottom-3 left-3 right-3 sm:right-auto z-30 pointer-events-none text-[11px] sm:text-xs text-[#fef3c7] bg-[#181109]/90 px-3.5 py-2 rounded-2xl border border-[#d4af37]/40 backdrop-blur-xl flex items-center gap-2.5 shadow-xl font-['Cinzel'] font-bold">
-        <span className="text-[#d4af37]">🍃 Престол (Я)</span>
-        <span className="text-[#d4af37]/50">▲</span>
-        <span className="text-[#fef3c7]">⚔️ Державна Рада (Батьки)</span>
-        <span className="text-[#d4af37]/50">▲</span>
-        <span className="text-[#b8860b]">🛡️ Коріння Династії (Дідусі)</span>
-      </div>
 
       {/* Canvas Area */}
       <div
@@ -719,20 +698,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
           </svg>
 
           {/* ======================================================== */}
-          {/* LAYER 3: ROYAL STAGE DECREE BANNERS                      */}
-          {/* ======================================================== */}
-          {tierLabels.map(({ y, label, color }) => (
-            <div
-              key={label}
-              className={`absolute z-10 text-[10px] font-['Cinzel'] font-bold tracking-wider px-4 py-1.5 rounded-full border backdrop-blur-xl shadow-2xl ${color}`}
-              style={{ left: 16, top: y - bounds.minY - 40 }}
-            >
-              {label}
-            </div>
-          ))}
-
-          {/* ======================================================== */}
-          {/* LAYER 4: ROYAL HERALDIC PARCHMENT CARDS                  */}
+          {/* LAYER 3: ROYAL HERALDIC PARCHMENT CARDS                  */}
           {/* ======================================================== */}
           {positions.map(pos => {
             const person = personMap.get(pos.id);
