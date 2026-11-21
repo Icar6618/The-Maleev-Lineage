@@ -1,5 +1,6 @@
 import type { FamilyData } from '../types/family';
 import { VIKTOR_AUDIO_DATA_URL } from './viktorAudio';
+import { VIKTOR_AVATAR_DATA_URL, VIKTOR_INITIAL_PHOTOS } from './viktorPhotos';
 
 export const initialFamilyData: FamilyData = {
   title: 'Родовід Малеєвих',
@@ -303,16 +304,22 @@ export const initialFamilyData: FamilyData = {
     // Я (Віктор Малеєв)
     {
       id: 'p-me',
-      roleLabel: 'Я (Власник дерева)',
+      roleLabel: 'Син',
       firstName: 'Віктор',
       lastName: 'Малеєв',
+      middleName: 'Вікторович',
       gender: 'male',
       isLiving: true,
       generation: 4,
+      birthDate: '2003',
+      birthPlace: 'Дніпро',
+      profession: 'Музичкант, дизайнер',
+      favoriteQuote: 'Життя в кредит',
+      avatarUrl: VIKTOR_AVATAR_DATA_URL,
+      photos: VIKTOR_INITIAL_PHOTOS,
       branch: 'Основна гілка',
       fatherId: 'p-father',
       motherId: 'p-mother',
-      favoriteQuote: 'Давай, бублик',
       audioUrl: VIKTOR_AUDIO_DATA_URL,
       spouseIds: [],
       childrenIds: [],

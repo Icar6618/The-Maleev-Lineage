@@ -25,14 +25,21 @@ export function loadFamilyData(): FamilyData {
         saveFamilyData(parsed);
       }
 
-      // Ensure Viktor's audio message and name are present
+      // Ensure Viktor's profile details, avatar, photos, and audio message are present
       const pMe = parsed.persons.find((p: Person) => p.id === 'p-me');
-      if (pMe) {
+      const initMe = initialFamilyData.persons.find(p => p.id === 'p-me');
+      if (pMe && initMe) {
         let changed = false;
-        if (!pMe.firstName) { pMe.firstName = 'Віктор'; changed = true; }
-        if (!pMe.lastName) { pMe.lastName = 'Малеєв'; changed = true; }
-        if (!pMe.favoriteQuote) { pMe.favoriteQuote = 'Давай, бублик'; changed = true; }
-        if (!pMe.audioUrl) { pMe.audioUrl = initialFamilyData.persons.find(p => p.id === 'p-me')?.audioUrl; changed = true; }
+        if (!pMe.firstName) { pMe.firstName = initMe.firstName; changed = true; }
+        if (!pMe.lastName) { pMe.lastName = initMe.lastName; changed = true; }
+        if (!pMe.middleName && initMe.middleName) { pMe.middleName = initMe.middleName; changed = true; }
+        if (!pMe.birthDate && initMe.birthDate) { pMe.birthDate = initMe.birthDate; changed = true; }
+        if (!pMe.birthPlace && initMe.birthPlace) { pMe.birthPlace = initMe.birthPlace; changed = true; }
+        if (!pMe.profession && initMe.profession) { pMe.profession = initMe.profession; changed = true; }
+        if (!pMe.favoriteQuote && initMe.favoriteQuote) { pMe.favoriteQuote = initMe.favoriteQuote; changed = true; }
+        if (!pMe.audioUrl && initMe.audioUrl) { pMe.audioUrl = initMe.audioUrl; changed = true; }
+        if (!pMe.avatarUrl || pMe.avatarUrl.length < 50) { pMe.avatarUrl = initMe.avatarUrl; changed = true; }
+        if (!pMe.photos || pMe.photos.length === 0) { pMe.photos = initMe.photos; changed = true; }
         if (changed) saveFamilyData(parsed);
       }
 
