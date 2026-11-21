@@ -314,6 +314,80 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
 
     scene.add(skyCloudsGroup);
 
+    // Celestial Moon in the Night Sky Background (Задній план)
+    if (isNight) {
+      const moonGroup = new THREE.Group();
+      // Positioned in the deep background (z = -520) behind the left canopy of the oak tree
+      moonGroup.position.set(-360, 440, -520);
+
+      // 1. Lunar Sphere Core
+      const moonGeo = new THREE.SphereGeometry(72, 32, 32);
+      const moonMat = new THREE.MeshStandardMaterial({
+        color: 0xf8fafc,
+        emissive: 0xe0f2fe,
+        emissiveIntensity: 0.95,
+        roughness: 0.85,
+        metalness: 0.05,
+        fog: false,
+      });
+      const moonMesh = new THREE.Mesh(moonGeo, moonMat);
+      moonGroup.add(moonMesh);
+
+      // 2. Realistic Low-Poly Lunar Maria / Craters on the visible hemisphere
+      const craterMat = new THREE.MeshStandardMaterial({
+        color: 0x94a3b8,
+        emissive: 0x64748b,
+        emissiveIntensity: 0.45,
+        roughness: 0.95,
+        fog: false,
+      });
+      const craters = [
+        { x: -16, y: 14, z: 68, r: 18, sy: 0.9 },
+        { x: 22, y: -12, z: 66, r: 24, sy: 0.85 },
+        { x: -10, y: -24, z: 67, r: 15, sy: 0.9 },
+        { x: 26, y: 22, z: 63, r: 14, sy: 0.8 },
+        { x: 4, y: 30, z: 65, r: 12, sy: 0.85 },
+        { x: -28, y: -6, z: 64, r: 16, sy: 0.9 },
+      ];
+      craters.forEach(c => {
+        const cGeo = new THREE.SphereGeometry(c.r, 16, 16);
+        const cMesh = new THREE.Mesh(cGeo, craterMat);
+        cMesh.position.set(c.x, c.y, c.z);
+        cMesh.scale.set(1, c.sy, 0.18);
+        moonGroup.add(cMesh);
+      });
+
+      // 3. Radiant Celestial Halos (Multi-tiered glowing aura)
+      const haloCanvas = document.createElement('canvas');
+      haloCanvas.width = 256;
+      haloCanvas.height = 256;
+      const hCtx = haloCanvas.getContext('2d');
+      if (hCtx) {
+        const grad = hCtx.createRadialGradient(128, 128, 45, 128, 128, 128);
+        grad.addColorStop(0, 'rgba(224, 242, 254, 0.85)');
+        grad.addColorStop(0.3, 'rgba(125, 211, 252, 0.45)');
+        grad.addColorStop(0.65, 'rgba(56, 189, 248, 0.15)');
+        grad.addColorStop(1, 'rgba(14, 165, 233, 0)');
+        hCtx.fillStyle = grad;
+        hCtx.fillRect(0, 0, 256, 256);
+      }
+      const haloTexture = new THREE.CanvasTexture(haloCanvas);
+      const haloMat = new THREE.SpriteMaterial({
+        map: haloTexture,
+        transparent: true,
+        opacity: 0.9,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        fog: false,
+      });
+      const haloSprite = new THREE.Sprite(haloMat);
+      haloSprite.scale.set(380, 380, 1);
+      haloSprite.position.set(0, 0, -4);
+      moonGroup.add(haloSprite);
+
+      scene.add(moonGroup);
+    }
+
     // Ancient Stone Dais Sanctuary in center of mound
     const daisGeo = new THREE.CylinderGeometry(110, 125, 10, 28);
     const daisMat = new THREE.MeshStandardMaterial({ color: 0x1f160f, roughness: 0.92 });

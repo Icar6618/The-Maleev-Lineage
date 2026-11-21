@@ -695,7 +695,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
 
       {/* Heavenly Sky Atmosphere: Day (Sunbeams) vs Night (Moon & Stars) */}
       {isNight ? (
-        <div className="absolute inset-0 pointer-events-none overflow-hidden transition-opacity duration-700">
+        <div className="absolute inset-0 pointer-events-none overflow-hidden transition-opacity duration-700 z-0">
           {/* Deep Cosmic Nebulae */}
           <div
             className="absolute inset-0"
@@ -709,25 +709,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
             }}
           />
 
-          {/* Luminous Glowing Moon (Луна) in the Sky (Upper-Left) */}
-          <div 
-            className="absolute top-6 left-12 sm:top-10 sm:left-24 pointer-events-none select-none flex items-center justify-center z-20"
-          >
-            {/* Soft Ambient Moon Halo */}
-            <div className="absolute w-44 h-44 sm:w-56 sm:h-56 rounded-full bg-cyan-200/10 blur-3xl animate-pulse" />
-            <div className="absolute w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-blue-100/15 blur-xl" />
-            
-            {/* Radiant Moon Sphere */}
-            <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-[#cbd5e1] via-[#f1f5f9] to-[#ffffff] shadow-[0_0_40px_rgba(224,242,254,0.9),inset_-4px_-4px_12px_rgba(71,85,105,0.45)] border border-white/80 overflow-hidden">
-              {/* Soft Lunar Craters / Maria */}
-              <div className="absolute top-3 left-4 w-4 h-4 rounded-full bg-slate-400/25 blur-[0.5px]" />
-              <div className="absolute top-8 left-9 w-6 h-5 rounded-full bg-slate-400/20 blur-[0.5px]" />
-              <div className="absolute top-10 left-3 w-3 h-3 rounded-full bg-slate-400/25 blur-[0.5px]" />
-              <div className="absolute top-5 left-11 w-5 h-4 rounded-full bg-slate-400/15 blur-[0.5px]" />
-            </div>
-          </div>
-
-          {/* Twinkling Stars Field (Зірочки на небі) */}
+          {/* Twinkling Stars Field (Зірочки на небі у глибокому космосі) */}
           <div className="absolute inset-0">
             {nightStars.map((st) => (
               <div
@@ -792,7 +774,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         onWheel={handleWheel}
-        className={`w-full h-full overflow-hidden relative ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+        className={`w-full h-full overflow-hidden relative z-10 ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
       >
         <div
           style={{
