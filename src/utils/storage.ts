@@ -24,6 +24,18 @@ export function loadFamilyData(): FamilyData {
         });
         saveFamilyData(parsed);
       }
+
+      // Ensure Viktor's audio message and name are present
+      const pMe = parsed.persons.find((p: Person) => p.id === 'p-me');
+      if (pMe) {
+        let changed = false;
+        if (!pMe.firstName) { pMe.firstName = 'Віктор'; changed = true; }
+        if (!pMe.lastName) { pMe.lastName = 'Малеєв'; changed = true; }
+        if (!pMe.favoriteQuote) { pMe.favoriteQuote = 'Давай, бублик'; changed = true; }
+        if (!pMe.audioUrl) { pMe.audioUrl = initialFamilyData.persons.find(p => p.id === 'p-me')?.audioUrl; changed = true; }
+        if (changed) saveFamilyData(parsed);
+      }
+
       return parsed;
     }
   } catch (e) {

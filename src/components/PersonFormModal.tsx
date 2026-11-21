@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { Person, Gender, FamilyPhoto } from '../types/family';
-import { X, Save, UserPlus, Upload, Camera, Image as ImageIcon, Trash2, Plus, Link as LinkIcon } from 'lucide-react';
+import { X, Save, UserPlus, Upload, Camera, Image as ImageIcon, Trash2, Plus, Link as LinkIcon, Volume2 } from 'lucide-react';
 import { compressImageFile } from '../utils/imageCompressor';
 
 interface PersonFormModalProps {
@@ -43,6 +43,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
   const [bio, setBio] = useState('');
   const [tagsStr, setTagsStr] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
+  const [audioUrl, setAudioUrl] = useState('');
   const [photos, setPhotos] = useState<FamilyPhoto[]>([]);
 
   useEffect(() => {
@@ -68,6 +69,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
       setBio(initialPerson.bio || '');
       setTagsStr((initialPerson.tags || []).join(', '));
       setAvatarUrl(initialPerson.avatarUrl || '');
+      setAudioUrl(initialPerson.audioUrl || '');
       setPhotos(initialPerson.photos || []);
     } else {
       setRoleLabel('');
@@ -87,6 +89,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
       setBio('');
       setTagsStr('');
       setAvatarUrl('');
+      setAudioUrl('');
       setPhotos([]);
 
       if (presetParent) {
@@ -153,6 +156,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
       bio: bio.trim() || undefined,
       tags: tags.length > 0 ? tags : undefined,
       avatarUrl: avatarUrl.trim() || undefined,
+      audioUrl: audioUrl.trim() || undefined,
       photos: photos.length > 0 ? photos : undefined,
     };
 
@@ -571,6 +575,55 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
               placeholder="напр. «Сім'я — це коріння, з якого проростає майбутнє»"
               className="w-full px-3.5 py-2.5 bg-[#120b06] border border-[#d4af37]/40 focus:border-[#ffd700] rounded-xl text-base sm:text-sm text-[#fffbeb] placeholder-[#a89078]/50 focus:outline-none italic font-serif"
             />
+          </div>
+
+          {/* Voice Note / Audio Message */}
+          <div className="bg-[#170e08]/95 p-3.5 rounded-2xl border border-[#d4af37]/35 shadow-inner">
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-xs font-semibold text-[#ffd700] font-['Cinzel'] tracking-wide flex items-center gap-1.5">
+                <Volume2 className="w-4 h-4 text-[#ffd700]" />
+                <span>Голосове повідомлення / Аудіозапис</span>
+              </label>
+
+              <label className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#24170d] hover:bg-[#332012] text-[#ffd700] border border-[#d4af37]/50 rounded-lg text-xs font-['Cinzel'] font-bold cursor-pointer transition shadow-xs">
+                <Upload className="w-3.5 h-3.5" />
+                <span>{audioUrl ? 'Замінити аудіо' : 'Завантажити аудіо'}</span>
+                <input
+                  type="file"
+                  accept="audio/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                      if (typeof reader.result === 'string') {
+                        setAudioUrl(reader.result);
+                      }
+                    };
+                    reader.readAsDataURL(file);
+                  }}
+                />
+              </label>
+            </div>
+
+            {audioUrl ? (
+              <div className="flex items-center gap-3 pt-1">
+                <audio controls src={audioUrl} className="flex-1 h-8 rounded-lg outline-none" />
+                <button
+                  type="button"
+                  onClick={() => setAudioUrl('')}
+                  className="p-1.5 bg-[#221209] hover:bg-red-950/70 text-red-300 border border-red-800/40 rounded-lg text-xs transition cursor-pointer"
+                  title="Видалити аудіо"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ) : (
+              <p className="text-[11px] text-[#d4af37]/60 italic font-serif">
+                Немає прикріпленого аудіопослання. Ви можете завантажити голосовий запис.
+              </p>
+            )}
           </div>
 
           {/* Bio / Memories */}

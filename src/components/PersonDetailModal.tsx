@@ -14,7 +14,8 @@ import {
   Quote,
   Camera,
   Image as ImageIcon,
-  ZoomIn
+  ZoomIn,
+  Volume2
 } from 'lucide-react';
 
 interface PersonDetailModalProps {
@@ -254,6 +255,33 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
               </div>
             )}
           </div>
+
+          {/* Audio Message / Voice Note */}
+          {person.audioUrl && (
+            <div className="bg-gradient-to-r from-[#2c1a0e]/95 via-[#1e1208]/90 to-[#140b05]/95 p-3.5 sm:p-4 rounded-2xl border border-[#d4af37]/60 shadow-[0_4px_20px_rgba(212,175,55,0.2)] flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="flex items-center gap-3 w-full sm:w-auto">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#d4af37] to-[#8c501e] p-[1.5px] shrink-0 shadow-md">
+                  <div className="w-full h-full rounded-full bg-[#1c1007] flex items-center justify-center text-[#ffd700]">
+                    <Volume2 className="w-5 h-5 text-[#ffd700]" />
+                  </div>
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-['Cinzel'] font-bold text-[#ffd700] tracking-wide">
+                    Голосове послання Віктора
+                  </p>
+                  <p className="text-xs text-[#fef3c7] italic font-serif">
+                    «Давай, бублик»
+                  </p>
+                </div>
+              </div>
+
+              <audio 
+                controls 
+                src={person.audioUrl} 
+                className="w-full sm:w-64 h-9 rounded-xl outline-none"
+              />
+            </div>
+          )}
 
           {/* Favorite Quote */}
           {person.favoriteQuote && (

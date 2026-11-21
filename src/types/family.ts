@@ -20,6 +20,7 @@ export interface Person {
   deathPlace?: string;
   isLiving: boolean;
   avatarUrl?: string;
+  audioUrl?: string;
   profession?: string;
   favoriteQuote?: string;
   bio?: string;

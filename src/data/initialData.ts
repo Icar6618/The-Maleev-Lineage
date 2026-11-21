@@ -1,4 +1,5 @@
 import type { FamilyData } from '../types/family';
+import { VIKTOR_AUDIO_DATA_URL } from './viktorAudio';
 
 export const initialFamilyData: FamilyData = {
   title: 'Родовід Малеєвих',
@@ -299,21 +300,23 @@ export const initialFamilyData: FamilyData = {
     // ПОКОЛІННЯ 4: Я ТА МІЙ БРАТ (НА ВЕРХІВЦІ КРОНИ)
     // ========================================================
 
-    // Я
+    // Я (Віктор Малеєв)
     {
       id: 'p-me',
       roleLabel: 'Я (Власник дерева)',
-      firstName: '',
-      lastName: '',
+      firstName: 'Віктор',
+      lastName: 'Малеєв',
       gender: 'male',
       isLiving: true,
       generation: 4,
       branch: 'Основна гілка',
       fatherId: 'p-father',
       motherId: 'p-mother',
+      favoriteQuote: 'Давай, бублик',
+      audioUrl: VIKTOR_AUDIO_DATA_URL,
       spouseIds: [],
       childrenIds: [],
-      tags: ['Я', 'Основна гілка']
+      tags: ['Я', 'Основна гілка', 'Віктор']
     },
 
     // Мій брат

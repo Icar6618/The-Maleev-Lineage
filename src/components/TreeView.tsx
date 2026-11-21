@@ -12,7 +12,8 @@ import {
   Calendar,
   Users,
   Shield,
-  Quote
+  Quote,
+  Volume2
 } from 'lucide-react';
 
 interface TreeViewProps {
@@ -572,10 +573,27 @@ export const TreeView: React.FC<TreeViewProps> = ({
               <span className="font-medium text-[#fef3c7] truncate">{person.profession || 'Не зазначено'}</span>
             </div>
 
-            {/* 5) Улюблена цитата */}
-            <div className="bg-[#24170d]/90 px-1.5 py-0.5 rounded border-l-2 border-[#d4af37] text-[8.5px] text-[#fef3c7] italic truncate flex items-center gap-1 shadow-xs" title={person.favoriteQuote || 'Життєве кредо не вказано'}>
-              <Quote className="w-2 h-2 text-[#ffd700] shrink-0 inline opacity-90" />
-              <span className="truncate">{person.favoriteQuote ? `«${person.favoriteQuote}»` : '«Життєве кредо / цитата»'}</span>
+            {/* 5) Улюблена цитата та аудіоповідомлення */}
+            <div className="bg-[#24170d]/90 px-1.5 py-0.5 rounded border-l-2 border-[#d4af37] text-[8.5px] text-[#fef3c7] italic flex items-center justify-between gap-1 shadow-xs" title={person.favoriteQuote || 'Життєве кредо не вказано'}>
+              <div className="flex items-center gap-1 min-w-0 truncate">
+                <Quote className="w-2 h-2 text-[#ffd700] shrink-0 inline opacity-90" />
+                <span className="truncate">{person.favoriteQuote ? `«${person.favoriteQuote}»` : '«Життєве кредо / цитата»'}</span>
+              </div>
+              {person.audioUrl && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const audio = new Audio(person.audioUrl);
+                    audio.play().catch(console.error);
+                  }}
+                  className="px-1 py-0.2 bg-[#d4af37]/25 hover:bg-[#d4af37]/50 active:scale-90 text-[#ffd700] rounded text-[8px] font-['Cinzel'] font-bold flex items-center gap-0.5 shrink-0 transition cursor-pointer shadow-xs border border-[#d4af37]/40 not-italic"
+                  title="Прослухати голосове повідомлення"
+                >
+                  <Volume2 className="w-2.5 h-2.5 text-[#ffd700]" />
+                  <span>▶</span>
+                </button>
+              )}
             </div>
 
             {/* Connection count & Life status */}
