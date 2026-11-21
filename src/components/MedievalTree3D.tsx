@@ -20,8 +20,8 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
 
     // Perfectly framed camera for grand epic floating island scale
     const camera = new THREE.PerspectiveCamera(45, canvasW / canvasH, 0.1, 3500);
-    camera.position.set(0, 155, 820);
-    camera.lookAt(0, 155, 0);
+    camera.position.set(0, 160, 680);
+    camera.lookAt(0, 160, 0);
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setSize(canvasW, canvasH);
@@ -142,10 +142,10 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
       metalness: 0.5,
     });
 
-    // 4. Procedural Continuous 3D Medieval Oak (Grand Epic Scale)
+    // 4. Procedural Continuous 3D Medieval Oak (Grand Colossal Scale)
     const treeGroup = new THREE.Group();
-    treeGroup.scale.set(1.28, 1.28, 1.28);
-    treeGroup.position.set(0, -75, -20);
+    treeGroup.scale.set(1.85, 1.85, 1.85);
+    treeGroup.position.set(0, -105, -20);
 
     // =========================================================
     // A. 3D FLOATING ISLAND LANDMASS & CRAGGY KEEL (ЛІТАЮЧИЙ ОСТРІВ)
@@ -668,7 +668,7 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
       const elapsed = clock.getElapsedTime();
 
       // Gentle continuous organic sway & floating island levitation
-      treeGroup.position.y = -75 + Math.sin(elapsed * 0.65) * 6;
+      treeGroup.position.y = -105 + Math.sin(elapsed * 0.65) * 6;
       treeGroup.rotation.y = Math.sin(elapsed * 0.16) * 0.025;
       cloudGroup.rotation.y = elapsed * 0.025;
 
