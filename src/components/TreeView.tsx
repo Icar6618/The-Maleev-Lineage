@@ -43,11 +43,11 @@ interface Connector {
   label?: string;
 }
 
-const CARD_W = 295;
-const CARD_H = 270;
-const GAP_X = 46;
-const GAP_Y = 130;
-const COUPLE_GAP = 30;
+const CARD_W = 245;
+const CARD_H = 225;
+const GAP_X = 36;
+const GAP_Y = 110;
+const COUPLE_GAP = 22;
 
 function buildLayout(persons: Person[]) {
   const positions: NodePos[] = [];
@@ -403,44 +403,44 @@ export const TreeView: React.FC<TreeViewProps> = ({
       >
         <div
           onClick={() => onSelectPerson(person)}
-          className={`w-full h-full rounded-2xl p-3.5 cursor-pointer relative overflow-hidden transition-all duration-200 shadow-2xl
+          className={`w-full h-full rounded-2xl p-2.5 cursor-pointer relative overflow-hidden transition-all duration-200 shadow-2xl
             ${metallicBg}
             ${metallicBorder}
             ${isSearchMatch
               ? 'ring-4 ring-[#d4af37] scale-105 shadow-[0_0_35px_rgba(212,175,55,0.8)]'
               : isHovered
-                ? '-translate-y-1.5 scale-[1.02]'
+                ? '-translate-y-1 scale-[1.02]'
                 : ''
             }
             ${!hasName ? 'border-dashed border-[#d4af37]/50 opacity-90 hover:opacity-100' : ''}
           `}
         >
           {/* Metallic Gold Leaf Shimmer Top Bar */}
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#ffd700] to-transparent shadow-[0_1px_5px_rgba(212,175,55,0.7)]" />
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#ffd700] to-transparent shadow-[0_1px_4px_rgba(212,175,55,0.7)]" />
 
           {/* Top Corner Heraldic Fleur-de-lis Accents */}
-          <div className="absolute top-1.5 left-2 text-[10px] text-[#d4af37]/80 select-none pointer-events-none">⚜</div>
-          <div className="absolute top-1.5 right-2 text-[10px] text-[#d4af37]/80 select-none pointer-events-none">⚜</div>
+          <div className="absolute top-1 left-1.5 text-[8.5px] text-[#d4af37]/80 select-none pointer-events-none">⚜</div>
+          <div className="absolute top-1 right-1.5 text-[8.5px] text-[#d4af37]/80 select-none pointer-events-none">⚜</div>
 
           {/* Top Row: 2) Назва / Роль */}
-          <div className="flex items-center justify-between gap-1 mb-2 pl-3 pr-3">
-            <span className="text-[10px] font-['Cinzel'] font-bold px-2 py-0.5 rounded-full flex items-center gap-1.5 bg-[#26190e]/90 border border-[#d4af37]/60 text-[#fef3c7] shadow-xs">
-              <Shield className="w-3 h-3 text-[#d4af37] inline opacity-90" />
+          <div className="flex items-center justify-between gap-1 mb-1.5 pl-2.5 pr-2.5">
+            <span className="text-[9px] font-['Cinzel'] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-1 bg-[#26190e]/90 border border-[#d4af37]/60 text-[#fef3c7] shadow-xs">
+              <Shield className="w-2.5 h-2.5 text-[#d4af37] inline opacity-90" />
               <span className="truncate">{person.roleLabel || (isMe ? 'Власник Дерева' : isMale ? 'Член роду' : 'Членкиня роду')}</span>
             </span>
           </div>
 
           {/* 1) Фото + 2) Назва / Ім'я */}
-          <div className="flex items-start gap-2.5 mb-2">
+          <div className="flex items-start gap-2 mb-1.5">
             {/* 1) Фото Cameo Medallion */}
-            <div className={`relative w-12 h-12 rounded-full shrink-0 p-[2px] shadow-md ring-1 ring-[#d4af37]/50 ${
+            <div className={`relative w-9 h-9 rounded-full shrink-0 p-[1.5px] shadow-md ring-1 ring-[#d4af37]/50 ${
               isMe
                 ? 'bg-gradient-to-tr from-[#d4af37] via-[#ffd700] to-[#b45309]'
                 : isMale
                   ? 'bg-gradient-to-tr from-[#d4af37] via-[#fef08a] to-[#78350f]'
                   : 'bg-gradient-to-tr from-[#e6b17e] via-[#fef08a] to-[#991b1b]'
             }`}>
-              <div className="w-full h-full rounded-full bg-[#120c06] flex items-center justify-center font-['Cinzel'] text-base font-extrabold overflow-hidden border border-[#d4af37]/40">
+              <div className="w-full h-full rounded-full bg-[#120c06] flex items-center justify-center font-['Cinzel'] text-xs font-extrabold overflow-hidden border border-[#d4af37]/40">
                 {person.avatarUrl ? (
                   <img src={person.avatarUrl} alt={fullName} className="w-full h-full object-cover" />
                 ) : (
@@ -451,7 +451,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
 
             {/* 2) Назва / ПІБ */}
             <div className="flex-1 min-w-0">
-              <h3 className={`font-['Cinzel'] font-extrabold text-[13px] leading-tight transition-colors truncate drop-shadow-xs ${
+              <h3 className={`font-['Cinzel'] font-extrabold text-[11px] leading-tight transition-colors truncate drop-shadow-xs ${
                 hasName 
                   ? 'text-[#fffbeb] group-hover:text-[#ffd700]' 
                   : 'text-[#d4af37] font-bold'
@@ -460,15 +460,15 @@ export const TreeView: React.FC<TreeViewProps> = ({
               </h3>
 
               {person.middleName && (
-                <p className="text-[11px] text-[#d4af37]/75 truncate font-serif italic">{person.middleName}</p>
+                <p className="text-[9.5px] text-[#d4af37]/75 truncate font-serif italic leading-none mt-0.5">{person.middleName}</p>
               )}
               {person.maidenName && (
-                <p className="text-[10px] text-[#fca5a5] italic font-serif truncate">({person.maidenName})</p>
+                <p className="text-[9px] text-[#fca5a5] italic font-serif truncate leading-none">({person.maidenName})</p>
               )}
 
               {!hasName && (
-                <p className="text-[10px] text-[#d4af37] flex items-center gap-1 mt-0.5 font-serif font-bold">
-                  <PlusCircle className="w-3 h-3 text-[#d4af37]" />
+                <p className="text-[9px] text-[#d4af37] flex items-center gap-1 mt-0.5 font-serif font-bold">
+                  <PlusCircle className="w-2.5 h-2.5 text-[#d4af37]" />
                   <span>Вписати ім'я</span>
                 </p>
               )}
@@ -476,16 +476,16 @@ export const TreeView: React.FC<TreeViewProps> = ({
           </div>
 
           {/* Data List (3: Дата нар., 4: Дата смерті, 7: Місце нар., 6: Професія, 5: Цитата) */}
-          <div className="space-y-1 text-xs font-serif pt-1 border-t border-[#d4af37]/25">
+          <div className="space-y-0.5 text-xs font-serif pt-1 border-t border-[#d4af37]/25">
             {/* 3) Дата народження & 4) Дата смерті */}
-            <div className="grid grid-cols-2 gap-1 bg-[#1f150c]/80 px-2 py-0.5 rounded-lg border border-[#d4af37]/35 text-[10px] shadow-xs">
+            <div className="grid grid-cols-2 gap-1 bg-[#1f150c]/80 px-1.5 py-0.5 rounded border border-[#d4af37]/35 text-[8.5px] shadow-xs">
               <div className="flex items-center gap-1 text-[#d4af37]/90 truncate" title={`Дата народження: ${person.birthDate || 'не вказано'}`}>
-                <Calendar className="w-3 h-3 text-[#d4af37] shrink-0" />
+                <Calendar className="w-2.5 h-2.5 text-[#d4af37] shrink-0" />
                 <span className="font-semibold text-[#d4af37]/80">Нар:</span>
                 <span className="font-['Cinzel'] font-bold text-[#fffbeb] truncate">{person.birthDate || '—'}</span>
               </div>
               <div className="flex items-center gap-1 text-[#d4af37]/90 truncate" title={`Дата смерті: ${person.deathDate || (person.isLiving ? 'живе' : 'не вказано')}`}>
-                <span className="text-[#d4af37] text-[10px] font-bold">†</span>
+                <span className="text-[#d4af37] text-[8.5px] font-bold">†</span>
                 <span className="font-semibold text-[#d4af37]/80">Смерть:</span>
                 <span className="font-['Cinzel'] font-bold text-[#fffbeb] truncate">
                   {person.isLiving ? 'живе' : (person.deathDate || '—')}
@@ -494,33 +494,33 @@ export const TreeView: React.FC<TreeViewProps> = ({
             </div>
 
             {/* 7) Місце народження */}
-            <div className="flex items-center gap-1.5 text-[10px] text-[#fef3c7] truncate" title={`Місце народження: ${person.birthPlace || 'Не зазначено'}`}>
-              <MapPin className="w-3 h-3 text-[#d4af37] shrink-0" />
+            <div className="flex items-center gap-1 text-[8.5px] text-[#fef3c7] truncate" title={`Місце народження: ${person.birthPlace || 'Не зазначено'}`}>
+              <MapPin className="w-2.5 h-2.5 text-[#d4af37] shrink-0" />
               <span className="text-[#d4af37]/80 font-semibold shrink-0">Місце нар.:</span>
               <span className="font-medium text-[#fef3c7] truncate">{person.birthPlace || 'Не зазначено'}</span>
             </div>
 
             {/* 6) Професія (одна або декілька) */}
-            <div className="flex items-center gap-1.5 text-[10px] text-[#fef3c7] truncate" title={`Професія: ${person.profession || 'Не зазначено'}`}>
-              <Briefcase className="w-3 h-3 text-[#d4af37] shrink-0" />
+            <div className="flex items-center gap-1 text-[8.5px] text-[#fef3c7] truncate" title={`Професія: ${person.profession || 'Не зазначено'}`}>
+              <Briefcase className="w-2.5 h-2.5 text-[#d4af37] shrink-0" />
               <span className="text-[#d4af37]/80 font-semibold shrink-0">Фах:</span>
               <span className="font-medium text-[#fef3c7] truncate">{person.profession || 'Не зазначено'}</span>
             </div>
 
             {/* 5) Улюблена цитата */}
-            <div className="bg-[#24170d]/90 px-2 py-0.5 rounded border-l-2 border-[#d4af37] text-[10px] text-[#fef3c7] italic truncate flex items-center gap-1 shadow-xs" title={person.favoriteQuote || 'Життєве кредо не вказано'}>
-              <Quote className="w-2.5 h-2.5 text-[#ffd700] shrink-0 inline opacity-90" />
+            <div className="bg-[#24170d]/90 px-1.5 py-0.5 rounded border-l-2 border-[#d4af37] text-[8.5px] text-[#fef3c7] italic truncate flex items-center gap-1 shadow-xs" title={person.favoriteQuote || 'Життєве кредо не вказано'}>
+              <Quote className="w-2 h-2 text-[#ffd700] shrink-0 inline opacity-90" />
               <span className="truncate">{person.favoriteQuote ? `«${person.favoriteQuote}»` : '«Життєве кредо / цитата»'}</span>
             </div>
 
             {/* Connection count & Life status */}
-            <div className="flex items-center justify-between text-[10px] text-[#d4af37]/80 pt-0.5">
+            <div className="flex items-center justify-between text-[8.5px] text-[#d4af37]/80 pt-0.5">
               <span className="flex items-center gap-1">
-                <Users className="w-3 h-3 text-[#d4af37]" />
+                <Users className="w-2.5 h-2.5 text-[#d4af37]" />
                 <span className="font-medium">{connectionCount} зв'язків</span>
               </span>
 
-              <span className={`px-2 py-0.2 rounded-full font-serif font-bold text-[9px] shadow-xs ${
+              <span className={`px-1.5 py-0.2 rounded-full font-serif font-bold text-[8px] shadow-xs ${
                 person.isLiving
                   ? 'bg-emerald-950/70 text-emerald-300 border border-emerald-500/40'
                   : 'bg-[#24170d] text-[#d4af37]/70 border border-[#d4af37]/30'
@@ -531,26 +531,26 @@ export const TreeView: React.FC<TreeViewProps> = ({
           </div>
 
           {/* Action Footer (Metallic Gold Signet Buttons) */}
-          <div className="absolute bottom-2 left-3 right-3 pt-1 border-t border-[#d4af37]/25 flex items-center justify-between text-[10px]">
+          <div className="absolute bottom-1.5 left-2.5 right-2.5 pt-1 border-t border-[#d4af37]/25 flex items-center justify-between text-[8.5px]">
             <button
               onClick={(e) => { e.stopPropagation(); onSelectPerson(person); }}
-              className="px-2.5 py-1 bg-gradient-to-r from-[#d4af37] via-[#f59e0b] to-[#d4af37] text-slate-950 hover:text-black font-['Cinzel'] font-bold rounded-lg shadow-sm border border-[#b45309]/50 flex items-center gap-1 transition-all active:scale-95 cursor-pointer"
+              className="px-2 py-0.5 bg-gradient-to-r from-[#d4af37] via-[#f59e0b] to-[#d4af37] text-slate-950 hover:text-black font-['Cinzel'] font-bold rounded-lg shadow-sm border border-[#b45309]/50 flex items-center gap-1 transition-all active:scale-95 cursor-pointer"
             >
-              <Edit3 className="w-3 h-3 text-slate-950" />
+              <Edit3 className="w-2.5 h-2.5 text-slate-950" />
               <span>{hasName ? 'ГРАМОТА' : 'ВПИСАТИ'}</span>
             </button>
 
-            <div className="flex items-center gap-1.5 font-['Cinzel'] font-bold text-[9px]">
+            <div className="flex items-center gap-1 font-['Cinzel'] font-bold text-[8px]">
               <button
                 onClick={(e) => { e.stopPropagation(); onAddChild(person); }}
-                className="px-2 py-0.5 bg-[#24170d] hover:bg-[#332012] text-[#d4af37] hover:text-[#fffbeb] border border-[#d4af37]/50 rounded-md transition cursor-pointer shadow-xs"
+                className="px-1.5 py-0.5 bg-[#24170d] hover:bg-[#332012] text-[#d4af37] hover:text-[#fffbeb] border border-[#d4af37]/50 rounded-md transition cursor-pointer shadow-xs"
                 title="Вписати нащадка"
               >
                 +Нащадок
               </button>
               <button
                 onClick={(e) => { e.stopPropagation(); onAddSpouse(person); }}
-                className="px-2 py-0.5 bg-[#24170d] hover:bg-[#332012] text-[#d4af37] hover:text-[#fffbeb] border border-[#d4af37]/50 rounded-md transition cursor-pointer shadow-xs"
+                className="px-1.5 py-0.5 bg-[#24170d] hover:bg-[#332012] text-[#d4af37] hover:text-[#fffbeb] border border-[#d4af37]/50 rounded-md transition cursor-pointer shadow-xs"
                 title="Вписати союз"
               >
                 +Союз

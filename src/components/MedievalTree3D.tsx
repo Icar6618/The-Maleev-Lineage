@@ -86,13 +86,6 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
       flatShading: true,
     });
 
-    const rockMaterial = new THREE.MeshStandardMaterial({
-      color: 0x33281e,
-      roughness: 0.95,
-      metalness: 0.15,
-      flatShading: true,
-    });
-
     const cliffMaterial = new THREE.MeshStandardMaterial({
       color: 0x3d2f21,
       roughness: 0.94,
@@ -148,10 +141,10 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
     treeGroup.position.set(0, -78, -30);
 
     // =========================================================
-    // A. 3D FLOATING ISLAND LANDMASS & CRAGGY KEEL (ЛІТАЮЧИЙ ОСТРІВ)
+    // A. 3D FLOATING ISLAND LANDMASS & CRAGGY KEEL (ЛІТАЮЧИЙ ОСТРІВ - КОМПАКТНИЙ)
     // =========================================================
-    const moundRadius = 420;
-    const earthGeo = new THREE.CylinderGeometry(moundRadius * 0.78, moundRadius, 32, 48);
+    const moundRadius = 240;
+    const earthGeo = new THREE.CylinderGeometry(moundRadius * 0.78, moundRadius, 24, 40);
     const ePos = earthGeo.attributes.position;
     for (let i = 0; i < ePos.count; i++) {
       const vx = ePos.getX(i);
@@ -159,19 +152,19 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
       const vz = ePos.getZ(i);
       const r = Math.hypot(vx, vz);
       const normR = Math.min(1, r / moundRadius);
-      const dome = Math.cos(normR * Math.PI * 0.5) * 22;
-      const bump = Math.sin(vx * 0.03) * Math.cos(vz * 0.03) * 8;
+      const dome = Math.cos(normR * Math.PI * 0.5) * 16;
+      const bump = Math.sin(vx * 0.04) * Math.cos(vz * 0.04) * 6;
       ePos.setY(i, vy + dome + bump);
     }
     earthGeo.computeVertexNormals();
 
     const earthMound = new THREE.Mesh(earthGeo, earthMaterial);
-    earthMound.position.y = -25;
+    earthMound.position.y = -18;
     treeGroup.add(earthMound);
 
     // Mossy Upper Layer Mound
-    const mossRadius = 350;
-    const mossGeo = new THREE.CylinderGeometry(mossRadius * 0.7, mossRadius, 18, 40);
+    const mossRadius = 195;
+    const mossGeo = new THREE.CylinderGeometry(mossRadius * 0.7, mossRadius, 14, 32);
     const mPos = mossGeo.attributes.position;
     for (let i = 0; i < mPos.count; i++) {
       const vx = mPos.getX(i);
@@ -179,96 +172,90 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
       const vz = mPos.getZ(i);
       const r = Math.hypot(vx, vz);
       const normR = Math.min(1, r / mossRadius);
-      const dome = Math.cos(normR * Math.PI * 0.5) * 15;
-      const bump = Math.sin(vx * 0.04) * Math.cos(vz * 0.04) * 6;
+      const dome = Math.cos(normR * Math.PI * 0.5) * 12;
+      const bump = Math.sin(vx * 0.05) * Math.cos(vz * 0.05) * 5;
       mPos.setY(i, vy + dome + bump);
     }
     mossGeo.computeVertexNormals();
 
     const mossMound = new THREE.Mesh(mossGeo, mossMaterial);
-    mossMound.position.y = -8;
+    mossMound.position.y = -6;
     treeGroup.add(mossMound);
 
     // Inverted Floating Island Cliff Underbody (Скелясте підніжжя літаючого острова)
-    // 1. Upper Cliff Ring (y = -35 to -95)
-    const upperCliffGeo = new THREE.CylinderGeometry(moundRadius * 0.98, moundRadius * 0.68, 65, 36);
+    // 1. Upper Cliff Ring (y = -26 to -68)
+    const upperCliffGeo = new THREE.CylinderGeometry(moundRadius * 0.98, moundRadius * 0.65, 48, 32);
     const ucPos = upperCliffGeo.attributes.position;
     for (let i = 0; i < ucPos.count; i++) {
       const vx = ucPos.getX(i);
       const vy = ucPos.getY(i);
       const vz = ucPos.getZ(i);
       const angle = Math.atan2(vz, vx);
-      const crag = Math.sin(angle * 7) * 22 + Math.cos(angle * 13) * 14 + Math.sin(vy * 0.1) * 10;
+      const crag = Math.sin(angle * 7) * 16 + Math.cos(angle * 13) * 10 + Math.sin(vy * 0.15) * 8;
       ucPos.setX(i, vx + Math.cos(angle) * crag);
       ucPos.setZ(i, vz + Math.sin(angle) * crag);
     }
     upperCliffGeo.computeVertexNormals();
     const upperCliff = new THREE.Mesh(upperCliffGeo, cliffMaterial);
-    upperCliff.position.y = -58;
+    upperCliff.position.y = -44;
     treeGroup.add(upperCliff);
 
-    // 2. Mid Cliff Shelf (y = -90 to -175)
-    const midCliffGeo = new THREE.CylinderGeometry(moundRadius * 0.7, moundRadius * 0.35, 85, 28);
+    // 2. Mid Cliff Shelf (y = -68 to -128)
+    const midCliffGeo = new THREE.CylinderGeometry(moundRadius * 0.67, moundRadius * 0.32, 60, 24);
     const mcPos = midCliffGeo.attributes.position;
     for (let i = 0; i < mcPos.count; i++) {
       const vx = mcPos.getX(i);
       const vy = mcPos.getY(i);
       const vz = mcPos.getZ(i);
       const angle = Math.atan2(vz, vx);
-      const crag = Math.sin(angle * 5) * 25 + Math.cos(angle * 9) * 16 + Math.cos(vy * 0.12) * 12;
+      const crag = Math.sin(angle * 5) * 18 + Math.cos(angle * 9) * 12 + Math.cos(vy * 0.18) * 9;
       mcPos.setX(i, vx + Math.cos(angle) * crag);
       mcPos.setZ(i, vz + Math.sin(angle) * crag);
     }
     midCliffGeo.computeVertexNormals();
     const midCliff = new THREE.Mesh(midCliffGeo, deepCliffMaterial);
-    midCliff.position.y = -130;
+    midCliff.position.y = -95;
     treeGroup.add(midCliff);
 
-    // 3. Hanging Island Spire / Stalactite Keel (y = -175 to -265)
-    const bottomSpireGeo = new THREE.ConeGeometry(moundRadius * 0.37, 95, 20);
+    // 3. Hanging Island Spire / Stalactite Keel (y = -128 to -195)
+    const bottomSpireGeo = new THREE.ConeGeometry(moundRadius * 0.34, 75, 18);
     const bsPos = bottomSpireGeo.attributes.position;
     for (let i = 0; i < bsPos.count; i++) {
       const vx = bsPos.getX(i);
       const vz = bsPos.getZ(i);
       const angle = Math.atan2(vz, vx);
-      const crag = Math.sin(angle * 4) * 18 + Math.cos(angle * 7) * 12;
+      const crag = Math.sin(angle * 4) * 14 + Math.cos(angle * 7) * 9;
       bsPos.setX(i, vx + Math.cos(angle) * crag);
       bsPos.setZ(i, vz + Math.sin(angle) * crag);
     }
     bottomSpireGeo.computeVertexNormals();
     bottomSpireGeo.rotateX(Math.PI); // Invert cone so point faces down!
     const bottomSpire = new THREE.Mesh(bottomSpireGeo, deepCliffMaterial);
-    bottomSpire.position.y = -215;
+    bottomSpire.position.y = -158;
     treeGroup.add(bottomSpire);
 
     // 5. Stylized Fluffy Clouds Floating Beneath the Island (Sea of Clouds)
     const cloudGroup = new THREE.Group();
-    cloudGroup.position.set(0, -225, 0);
+    cloudGroup.position.set(0, -165, 0);
     const cloudPuffs = [
       // Left cloud bank
-      { x: -300, y: -20, z: 60, r: 75 },
-      { x: -240, y: 0, z: 100, r: 85 },
-      { x: -350, y: -10, z: 20, r: 65 },
-      { x: -180, y: -25, z: 130, r: 70 },
-      { x: -210, y: -45, z: 80, r: 60 },
+      { x: -190, y: -15, z: 40, r: 55 },
+      { x: -150, y: 0, z: 65, r: 60 },
+      { x: -220, y: -10, z: 15, r: 48 },
+      { x: -110, y: -20, z: 85, r: 50 },
       // Right cloud bank
-      { x: 280, y: -15, z: 70, r: 80 },
-      { x: 230, y: 5, z: 110, r: 88 },
-      { x: 330, y: -5, z: 30, r: 68 },
-      { x: 170, y: -20, z: 135, r: 72 },
-      { x: 220, y: -45, z: 75, r: 62 },
+      { x: 180, y: -12, z: 45, r: 58 },
+      { x: 145, y: 3, z: 70, r: 62 },
+      { x: 210, y: -6, z: 20, r: 50 },
+      { x: 105, y: -18, z: 90, r: 52 },
       // Central & back cloud sea
-      { x: -70, y: -30, z: -130, r: 80 },
-      { x: 70, y: -25, z: -120, r: 85 },
-      { x: 0, y: -15, z: -160, r: 75 },
-      { x: -140, y: -20, z: -100, r: 65 },
-      { x: 140, y: -15, z: -90, r: 70 },
+      { x: -45, y: -25, z: -85, r: 58 },
+      { x: 45, y: -20, z: -80, r: 60 },
+      { x: 0, y: -12, z: -105, r: 52 },
       // Lower mantle under rocky island keel
-      { x: -40, y: -65, z: 25, r: 60 },
-      { x: 50, y: -60, z: 35, r: 58 },
-      { x: 0, y: -80, z: -20, r: 65 },
-      { x: -80, y: -55, z: 0, r: 55 },
-      { x: 80, y: -50, z: 0, r: 55 },
+      { x: -25, y: -45, z: 20, r: 45 },
+      { x: 30, y: -42, z: 25, r: 44 },
+      { x: 0, y: -55, z: -15, r: 48 },
     ];
     cloudPuffs.forEach(cp => {
       const puffGeo = new THREE.DodecahedronGeometry(cp.r, 2);
@@ -321,45 +308,19 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
     scene.add(skyCloudsGroup);
 
     // Ancient Stone Dais Sanctuary in center of mound
-    const daisGeo = new THREE.CylinderGeometry(180, 200, 14, 32);
+    const daisGeo = new THREE.CylinderGeometry(110, 125, 10, 28);
     const daisMat = new THREE.MeshStandardMaterial({ color: 0x1f160f, roughness: 0.92 });
     const dais = new THREE.Mesh(daisGeo, daisMat);
     dais.position.y = 2;
     treeGroup.add(dais);
 
     // Gold Inlaid Runes Ring on Dais
-    const daisRingGeo = new THREE.TorusGeometry(160, 2.5, 10, 48);
+    const daisRingGeo = new THREE.TorusGeometry(95, 2.0, 8, 40);
     const goldRingMat = new THREE.MeshStandardMaterial({ color: 0xc69214, roughness: 0.35, metalness: 0.8 });
     const daisRing = new THREE.Mesh(daisRingGeo, goldRingMat);
     daisRing.rotation.x = Math.PI / 2;
-    daisRing.position.y = 10;
+    daisRing.position.y = 8;
     treeGroup.add(daisRing);
-
-    // Natural Castle Boulders & Stones around tree base
-    const rockLocations = [
-      { x: -150, y: -2, z: 95, r: 20, rx: 0.3, ry: 0.5 },
-      { x: 160, y: -2, z: 85, r: 24, rx: -0.2, ry: 0.8 },
-      { x: -180, y: -8, z: -60, r: 26, rx: 0.4, ry: -0.3 },
-      { x: 190, y: -10, z: -45, r: 28, rx: -0.3, ry: 0.6 },
-      { x: -75, y: 2, z: 130, r: 16, rx: 0.1, ry: 0.2 },
-      { x: 85, y: 3, z: 125, r: 17, rx: -0.4, ry: 0.4 },
-      { x: 0, y: -2, z: 155, r: 18, rx: 0.5, ry: 0.1 },
-    ];
-    rockLocations.forEach(rk => {
-      const rockGeo = new THREE.DodecahedronGeometry(rk.r, 1);
-      const rPos = rockGeo.attributes.position;
-      for (let i = 0; i < rPos.count; i++) {
-        const vx = rPos.getX(i);
-        const vy = rPos.getY(i);
-        const vz = rPos.getZ(i);
-        rPos.setXYZ(i, vx * (1 + Math.sin(vx) * 0.15), vy * 0.75, vz * (1 + Math.cos(vz) * 0.15));
-      }
-      rockGeo.computeVertexNormals();
-      const rock = new THREE.Mesh(rockGeo, rockMaterial);
-      rock.position.set(rk.x, rk.y, rk.z);
-      rock.rotation.set(rk.rx, rk.ry, 0);
-      treeGroup.add(rock);
-    });
 
     // Helper to generate seamless continuous branch/root tube
     const createTube = (points: THREE.Vector3[], rStart: number, mat: THREE.Material = barkMaterial) => {
@@ -371,7 +332,7 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
       return new THREE.Mesh(geom, mat);
     };
 
-    // Helper to add seamless joint sphere
+    // Helper to add seamless joint sphere for crown bough junctions
     const addJointSphere = (pos: THREE.Vector3, radius: number, mat: THREE.Material = barkMaterial) => {
       const sphere = new THREE.Mesh(new THREE.SphereGeometry(radius, 12, 12), mat);
       sphere.position.copy(pos);
@@ -380,85 +341,80 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
 
     // =========================================================
     // B. MIGHTY SNAKING OAK ROOTS (КОРІННЯ ДУБА)
-    // Massive serpentine roots snaking over the earth & rocks
+    // Serpentine roots snaking gracefully across the island
     // =========================================================
-    // 1. Far Left Primary Root System (Towards Paternal Grandparents)
+    // 1. Far Left Primary Root System
     const leftRootMajor = [
       new THREE.Vector3(0, 40, 0),
-      new THREE.Vector3(-45, 20, 20),
-      new THREE.Vector3(-105, 8, 40),
-      new THREE.Vector3(-175, -4, 60),
-      new THREE.Vector3(-250, -14, 70),
-      new THREE.Vector3(-330, -22, 80),
+      new THREE.Vector3(-35, 20, 15),
+      new THREE.Vector3(-80, 8, 30),
+      new THREE.Vector3(-130, -2, 45),
+      new THREE.Vector3(-180, -10, 50),
+      new THREE.Vector3(-225, -18, 55),
     ];
     treeGroup.add(createTube(leftRootMajor, 20, rootMaterial));
-    addJointSphere(new THREE.Vector3(-105, 8, 40), 18, rootMaterial);
-    addJointSphere(new THREE.Vector3(-175, -4, 60), 15, rootMaterial);
 
-    // Left Secondary Sub-Root (Reaching out backward-left)
+    // Left Secondary Sub-Root
     const leftRootBack = [
-      new THREE.Vector3(-105, 8, 40),
-      new THREE.Vector3(-155, 2, -15),
-      new THREE.Vector3(-225, -8, -45),
-      new THREE.Vector3(-285, -18, -75),
+      new THREE.Vector3(-80, 8, 30),
+      new THREE.Vector3(-115, 2, -10),
+      new THREE.Vector3(-165, -6, -30),
+      new THREE.Vector3(-205, -14, -50),
     ];
     treeGroup.add(createTube(leftRootBack, 14, rootMaterial));
 
     // Left Front Tendril Root
     const leftRootFront = [
-      new THREE.Vector3(-175, -4, 60),
-      new THREE.Vector3(-215, -10, 110),
-      new THREE.Vector3(-265, -20, 140),
+      new THREE.Vector3(-130, -2, 45),
+      new THREE.Vector3(-160, -8, 75),
+      new THREE.Vector3(-195, -16, 95),
     ];
     treeGroup.add(createTube(leftRootFront, 11, rootMaterial));
 
-    // 2. Far Right Primary Root System (Towards Maternal Grandparents)
+    // 2. Far Right Primary Root System
     const rightRootMajor = [
       new THREE.Vector3(0, 40, 0),
-      new THREE.Vector3(45, 20, -20),
-      new THREE.Vector3(105, 8, -40),
-      new THREE.Vector3(175, -4, -60),
-      new THREE.Vector3(250, -14, -70),
-      new THREE.Vector3(330, -22, -80),
+      new THREE.Vector3(35, 20, -15),
+      new THREE.Vector3(80, 8, -30),
+      new THREE.Vector3(130, -2, -45),
+      new THREE.Vector3(180, -10, -50),
+      new THREE.Vector3(225, -18, -55),
     ];
     treeGroup.add(createTube(rightRootMajor, 20, rootMaterial));
-    addJointSphere(new THREE.Vector3(105, 8, -40), 18, rootMaterial);
-    addJointSphere(new THREE.Vector3(175, -4, -60), 15, rootMaterial);
 
-    // Right Secondary Sub-Root (Reaching forward-right)
+    // Right Secondary Sub-Root
     const rightRootFront = [
-      new THREE.Vector3(105, 8, -40),
-      new THREE.Vector3(155, 2, 25),
-      new THREE.Vector3(225, -8, 55),
-      new THREE.Vector3(285, -18, 85),
+      new THREE.Vector3(80, 8, -30),
+      new THREE.Vector3(115, 2, 20),
+      new THREE.Vector3(165, -6, 40),
+      new THREE.Vector3(205, -14, 60),
     ];
     treeGroup.add(createTube(rightRootFront, 14, rootMaterial));
 
     // Right Back Tendril Root
     const rightRootBack = [
-      new THREE.Vector3(175, -4, -60),
-      new THREE.Vector3(215, -10, -110),
-      new THREE.Vector3(265, -20, -140),
+      new THREE.Vector3(130, -2, -45),
+      new THREE.Vector3(160, -8, -75),
+      new THREE.Vector3(195, -16, -95),
     ];
     treeGroup.add(createTube(rightRootBack, 11, rootMaterial));
 
-    // 3. Central Front Taproot (Snaking forward into sanctuary foreground)
+    // 3. Central Front Taproot
     const centerFrontRoot = [
       new THREE.Vector3(0, 45, 10),
-      new THREE.Vector3(10, 25, 55),
-      new THREE.Vector3(-15, 10, 105),
-      new THREE.Vector3(20, -2, 155),
-      new THREE.Vector3(-10, -16, 200),
+      new THREE.Vector3(10, 25, 45),
+      new THREE.Vector3(-10, 10, 80),
+      new THREE.Vector3(15, -2, 120),
+      new THREE.Vector3(-5, -14, 155),
     ];
     treeGroup.add(createTube(centerFrontRoot, 16, rootMaterial));
-    addJointSphere(new THREE.Vector3(10, 25, 55), 16, rootMaterial);
 
-    // 4. Central Back Anchor Root (Deep anchor)
+    // 4. Central Back Anchor Root
     const centerBackRoot = [
       new THREE.Vector3(0, 45, -10),
-      new THREE.Vector3(-15, 20, -60),
-      new THREE.Vector3(15, 4, -115),
-      new THREE.Vector3(0, -14, -170),
+      new THREE.Vector3(-10, 20, -45),
+      new THREE.Vector3(10, 4, -85),
+      new THREE.Vector3(0, -12, -125),
     ];
     treeGroup.add(createTube(centerBackRoot, 17, rootMaterial));
 
