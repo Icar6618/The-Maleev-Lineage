@@ -16,11 +16,13 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
     // 1. Scene, Camera, Renderer
     const scene = new THREE.Scene();
     // Soft azure sky atmospheric depth
-    scene.fog = new THREE.FogExp2(0x2b6691, 0.0004);
+    scene.fog = new THREE.FogExp2(0x2b6691, 0.00022);
 
-    // Elegant framed camera perspective for compact neat floating island
-    const camera = new THREE.PerspectiveCamera(45, canvasW / canvasH, 0.1, 4000);
-    camera.position.set(0, 150, 1050);
+    // Dynamic camera perspective: scales distance with canvasH so tree maintains constant pixel scale
+    // and generous viewport bounds prevent clipping at top and bottom
+    const camera = new THREE.PerspectiveCamera(45, canvasW / canvasH, 0.1, 5000);
+    const cameraZ = Math.max(1050, canvasH * 0.7024);
+    camera.position.set(0, 150, cameraZ);
     camera.lookAt(0, 150, 0);
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });

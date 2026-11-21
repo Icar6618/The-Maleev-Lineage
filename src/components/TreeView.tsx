@@ -251,12 +251,12 @@ export const TreeView: React.FC<TreeViewProps> = ({
   onAddChild,
   onAddSpouse,
 }) => {
-  const [scale, setScale] = useState(0.55);
+  const [scale, setScale] = useState(0.48);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [pinchStartDist, setPinchStartDist] = useState<number | null>(null);
-  const [pinchStartScale, setPinchStartScale] = useState<number>(0.55);
+  const [pinchStartScale, setPinchStartScale] = useState<number>(0.48);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -269,7 +269,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
     return m;
   }, [persons]);
 
-  // Compute bounds with generous margins so cards and 3D tree never touch edges
+  // Compute bounds with generous margins so cards, 3D tree crown, and floating island keel are never clipped
   const bounds = useMemo(() => {
     let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
     positions.forEach(np => {
@@ -278,7 +278,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
       minY = Math.min(minY, np.y);
       maxY = Math.max(maxY, np.y + CARD_H);
     });
-    return { minX: minX - 320, maxX: maxX + 320, minY: minY - 280, maxY: maxY + 320 };
+    return { minX: minX - 750, maxX: maxX + 750, minY: minY - 850, maxY: maxY + 890 };
   }, [positions]);
 
   const canvasW = bounds.maxX - bounds.minX;
