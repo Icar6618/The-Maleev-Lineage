@@ -2,11 +2,127 @@ import type { FamilyData } from '../types/family';
 
 export const initialFamilyData: FamilyData = {
   title: 'Родовід Малеєвих',
-  description: 'Порожнє дерево на 3 покоління. Заповніть дані родичів у кожній картці.',
+  description: 'Родовід на 4 покоління: Пращури під землею, Дідусі на землі, Батьки на стовбурі, Нащадки на верхівці.',
   lastUpdated: new Date().toISOString().split('T')[0],
   persons: [
     // ========================================================
-    // ПОКОЛІННЯ 1: ДІДУСІ ТА БАБУСІ
+    // ПОКОЛІННЯ 1: ПРАДІДУСІ ТА ПРАБАБУСІ (ПІД ЗЕМЛЕЮ)
+    // ========================================================
+
+    // Лінія батька: Батьки дідуся (по батькові)
+    {
+      id: 'p-pat-gf-father',
+      roleLabel: 'Прадідусь (батько дідуся по батькові)',
+      firstName: '',
+      lastName: '',
+      gender: 'male',
+      isLiving: false,
+      generation: 1,
+      branch: 'Лінія батька',
+      spouseIds: ['p-pat-gf-mother'],
+      childrenIds: ['p-paternal-grandfather'],
+      tags: ['Прадідусь', 'Лінія батька']
+    },
+    {
+      id: 'p-pat-gf-mother',
+      roleLabel: 'Прабабуся (мати дідуся по батькові)',
+      firstName: '',
+      lastName: '',
+      gender: 'female',
+      isLiving: false,
+      generation: 1,
+      branch: 'Лінія батька',
+      spouseIds: ['p-pat-gf-father'],
+      childrenIds: ['p-paternal-grandfather'],
+      tags: ['Прабабуся', 'Лінія батька']
+    },
+
+    // Лінія батька: Батьки бабусі (по батькові)
+    {
+      id: 'p-pat-gm-father',
+      roleLabel: 'Прадідусь (батько бабусі по батькові)',
+      firstName: '',
+      lastName: '',
+      gender: 'male',
+      isLiving: false,
+      generation: 1,
+      branch: 'Лінія батька',
+      spouseIds: ['p-pat-gm-mother'],
+      childrenIds: ['p-paternal-grandmother'],
+      tags: ['Прадідусь', 'Лінія батька']
+    },
+    {
+      id: 'p-pat-gm-mother',
+      roleLabel: 'Прабабуся (мати бабусі по батькові)',
+      firstName: '',
+      lastName: '',
+      gender: 'female',
+      isLiving: false,
+      generation: 1,
+      branch: 'Лінія батька',
+      spouseIds: ['p-pat-gm-father'],
+      childrenIds: ['p-paternal-grandmother'],
+      tags: ['Прабабуся', 'Лінія батька']
+    },
+
+    // Лінія матері: Батьки дідуся (по матері)
+    {
+      id: 'p-mat-gf-father',
+      roleLabel: 'Прадідусь (батько дідуся по матері)',
+      firstName: '',
+      lastName: '',
+      gender: 'male',
+      isLiving: false,
+      generation: 1,
+      branch: 'Лінія матері',
+      spouseIds: ['p-mat-gf-mother'],
+      childrenIds: ['p-maternal-grandfather'],
+      tags: ['Прадідусь', 'Лінія матері']
+    },
+    {
+      id: 'p-mat-gf-mother',
+      roleLabel: 'Прабабуся (мати дідуся по матері)',
+      firstName: '',
+      lastName: '',
+      gender: 'female',
+      isLiving: false,
+      generation: 1,
+      branch: 'Лінія матері',
+      spouseIds: ['p-mat-gf-father'],
+      childrenIds: ['p-maternal-grandfather'],
+      tags: ['Прабабуся', 'Лінія матері']
+    },
+
+    // Лінія матері: Батьки бабусі (по матері)
+    {
+      id: 'p-mat-gm-father',
+      roleLabel: 'Прадідусь (батько бабусі по матері)',
+      firstName: '',
+      lastName: '',
+      gender: 'male',
+      isLiving: false,
+      generation: 1,
+      branch: 'Лінія матері',
+      spouseIds: ['p-mat-gm-mother'],
+      childrenIds: ['p-maternal-grandmother'],
+      tags: ['Прадідусь', 'Лінія матері']
+    },
+    {
+      id: 'p-mat-gm-mother',
+      roleLabel: 'Прабабуся (мати бабусі по матері)',
+      firstName: '',
+      lastName: '',
+      gender: 'female',
+      isLiving: false,
+      generation: 1,
+      branch: 'Лінія матері',
+      spouseIds: ['p-mat-gm-father'],
+      childrenIds: ['p-maternal-grandmother'],
+      tags: ['Прабабуся', 'Лінія матері']
+    },
+
+    // ========================================================
+    // ПОКОЛІННЯ 2: ДІДУСІ ТА БАБУСІ (НА ЗЕМЛІ)
     // ========================================================
     
     // Лінія батька
@@ -17,8 +133,10 @@ export const initialFamilyData: FamilyData = {
       lastName: '',
       gender: 'male',
       isLiving: false,
-      generation: 1,
+      generation: 2,
       branch: 'Лінія батька',
+      fatherId: 'p-pat-gf-father',
+      motherId: 'p-pat-gf-mother',
       spouseIds: ['p-paternal-grandmother'],
       childrenIds: ['p-father', 'p-paternal-uncle', 'p-paternal-aunt'],
       tags: ['Дідусь', 'Лінія батька']
@@ -30,8 +148,10 @@ export const initialFamilyData: FamilyData = {
       lastName: '',
       gender: 'female',
       isLiving: false,
-      generation: 1,
+      generation: 2,
       branch: 'Лінія батька',
+      fatherId: 'p-pat-gm-father',
+      motherId: 'p-pat-gm-mother',
       spouseIds: ['p-paternal-grandfather'],
       childrenIds: ['p-father', 'p-paternal-uncle', 'p-paternal-aunt'],
       tags: ['Бабуся', 'Лінія батька']
@@ -45,8 +165,10 @@ export const initialFamilyData: FamilyData = {
       lastName: '',
       gender: 'male',
       isLiving: false,
-      generation: 1,
+      generation: 2,
       branch: 'Лінія матері',
+      fatherId: 'p-mat-gf-father',
+      motherId: 'p-mat-gf-mother',
       spouseIds: ['p-maternal-grandmother'],
       childrenIds: ['p-mother', 'p-maternal-aunt', 'p-maternal-uncle'],
       tags: ['Дідусь', 'Лінія матері']
@@ -58,15 +180,17 @@ export const initialFamilyData: FamilyData = {
       lastName: '',
       gender: 'female',
       isLiving: false,
-      generation: 1,
+      generation: 2,
       branch: 'Лінія матері',
+      fatherId: 'p-mat-gm-father',
+      motherId: 'p-mat-gm-mother',
       spouseIds: ['p-maternal-grandfather'],
       childrenIds: ['p-mother', 'p-maternal-aunt', 'p-maternal-uncle'],
       tags: ['Бабуся', 'Лінія матері']
     },
 
     // ========================================================
-    // ПОКОЛІННЯ 2: БАТЬКИ, ДЯДЬКИ ТА ТІТКИ
+    // ПОКОЛІННЯ 3: БАТЬКИ, ДЯДЬКИ ТА ТІТКИ (НА СТОВБУРІ)
     // ========================================================
 
     // Батько
@@ -77,7 +201,7 @@ export const initialFamilyData: FamilyData = {
       lastName: '',
       gender: 'male',
       isLiving: true,
-      generation: 2,
+      generation: 3,
       branch: 'Основна гілка',
       fatherId: 'p-paternal-grandfather',
       motherId: 'p-paternal-grandmother',
@@ -94,7 +218,7 @@ export const initialFamilyData: FamilyData = {
       lastName: '',
       gender: 'female',
       isLiving: true,
-      generation: 2,
+      generation: 3,
       branch: 'Основна гілка',
       fatherId: 'p-maternal-grandfather',
       motherId: 'p-maternal-grandmother',
@@ -111,7 +235,7 @@ export const initialFamilyData: FamilyData = {
       lastName: '',
       gender: 'male',
       isLiving: true,
-      generation: 2,
+      generation: 3,
       branch: 'Лінія батька',
       fatherId: 'p-paternal-grandfather',
       motherId: 'p-paternal-grandmother',
@@ -128,7 +252,7 @@ export const initialFamilyData: FamilyData = {
       lastName: '',
       gender: 'female',
       isLiving: true,
-      generation: 2,
+      generation: 3,
       branch: 'Лінія батька',
       fatherId: 'p-paternal-grandfather',
       motherId: 'p-paternal-grandmother',
@@ -145,7 +269,7 @@ export const initialFamilyData: FamilyData = {
       lastName: '',
       gender: 'female',
       isLiving: true,
-      generation: 2,
+      generation: 3,
       branch: 'Лінія матері',
       fatherId: 'p-maternal-grandfather',
       motherId: 'p-maternal-grandmother',
@@ -162,7 +286,7 @@ export const initialFamilyData: FamilyData = {
       lastName: '',
       gender: 'male',
       isLiving: true,
-      generation: 2,
+      generation: 3,
       branch: 'Лінія матері',
       fatherId: 'p-maternal-grandfather',
       motherId: 'p-maternal-grandmother',
@@ -172,7 +296,7 @@ export const initialFamilyData: FamilyData = {
     },
 
     // ========================================================
-    // ПОКОЛІННЯ 3: Я ТА МІЙ БРАТ
+    // ПОКОЛІННЯ 4: Я ТА МІЙ БРАТ (НА ВЕРХІВЦІ КРОНИ)
     // ========================================================
 
     // Я
@@ -183,7 +307,7 @@ export const initialFamilyData: FamilyData = {
       lastName: '',
       gender: 'male',
       isLiving: true,
-      generation: 3,
+      generation: 4,
       branch: 'Основна гілка',
       fatherId: 'p-father',
       motherId: 'p-mother',
@@ -200,7 +324,7 @@ export const initialFamilyData: FamilyData = {
       lastName: '',
       gender: 'male',
       isLiving: true,
-      generation: 3,
+      generation: 4,
       branch: 'Основна гілка',
       fatherId: 'p-father',
       motherId: 'p-mother',

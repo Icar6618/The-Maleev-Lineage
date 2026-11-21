@@ -46,66 +46,90 @@ interface Connector {
 const CARD_W = 245;
 const CARD_H = 225;
 const GAP_X = 36;
-const GAP_Y = 110;
 const COUPLE_GAP = 22;
 
 function buildLayout(persons: Person[]) {
   const positions: NodePos[] = [];
   const connectors: Connector[] = [];
 
-  const pairW = CARD_W * 2 + COUPLE_GAP;
-  const tierGap = 130;
-  const totalW = pairW * 2 + tierGap;
-  const startX = -totalW / 2;
+  // ================================================================
+  // 4-TIER MEDIEVAL DYNASTY LAYOUT:
+  // Tier 0: Я та Брат (Верхівка священної крони)
+  // Tier 1: Батьки, Дядьки, Тітки (Чутка нижче на розгалуженні стовбура)
+  // Tier 2: Батьки батьків — Дідусі та Бабусі (На землі острова)
+  // Tier 3: Батьки батьків їх батьки — Пращури (Під землею острова у скелях)
+  // ================================================================
 
-  // ---- Tier 2 (BOTTOM): Patriarchs & Founders of Kingdom ----
-  const tier2_y = (CARD_H + GAP_Y) * 2;
+  // ---- Tier 3 (ПІД ЗЕМЛЕЮ): Батьки батьків їх батьки (8 пращурів) ----
+  const tier3_y = 1170;
 
-  const pgf_x = startX;
-  const pgm_x = startX + CARD_W + COUPLE_GAP;
+  // Лінія батька: Батьки дідуся (по батькові)
+  const p_pat_gf_f_x = -1100;
+  const p_pat_gf_m_x = -1100 + CARD_W + COUPLE_GAP;
+  positions.push({ id: 'p-pat-gf-father', x: p_pat_gf_f_x, y: tier3_y });
+  positions.push({ id: 'p-pat-gf-mother', x: p_pat_gf_m_x, y: tier3_y });
+
+  // Лінія батька: Батьки бабусі (по батькові)
+  const p_pat_gm_f_x = -556;
+  const p_pat_gm_m_x = -556 + CARD_W + COUPLE_GAP;
+  positions.push({ id: 'p-pat-gm-father', x: p_pat_gm_f_x, y: tier3_y });
+  positions.push({ id: 'p-pat-gm-mother', x: p_pat_gm_m_x, y: tier3_y });
+
+  // Лінія матері: Батьки дідуся (по матері)
+  const p_mat_gf_f_x = 44;
+  const p_mat_gf_m_x = 44 + CARD_W + COUPLE_GAP;
+  positions.push({ id: 'p-mat-gf-father', x: p_mat_gf_f_x, y: tier3_y });
+  positions.push({ id: 'p-mat-gf-mother', x: p_mat_gf_m_x, y: tier3_y });
+
+  // Лінія матері: Батьки бабусі (по матері)
+  const p_mat_gm_f_x = 588;
+  const p_mat_gm_m_x = 588 + CARD_W + COUPLE_GAP;
+  positions.push({ id: 'p-mat-gm-father', x: p_mat_gm_f_x, y: tier3_y });
+  positions.push({ id: 'p-mat-gm-mother', x: p_mat_gm_m_x, y: tier3_y });
+
+  // ---- Tier 2 (НА ЗЕМЛІ): Батьки батьків — Дідусі та Бабусі (4 особи) ----
+  const tier2_y = 790;
+
+  const pgf_x = -828;
+  const pgm_x = -561;
   positions.push({ id: 'p-paternal-grandfather', x: pgf_x, y: tier2_y });
   positions.push({ id: 'p-paternal-grandmother', x: pgm_x, y: tier2_y });
 
-  const mgf_x = startX + pairW + tierGap;
-  const mgm_x = mgf_x + CARD_W + COUPLE_GAP;
+  const mgf_x = 316;
+  const mgm_x = 583;
   positions.push({ id: 'p-maternal-grandfather', x: mgf_x, y: tier2_y });
   positions.push({ id: 'p-maternal-grandmother', x: mgm_x, y: tier2_y });
 
-  // ---- Tier 1 (MIDDLE): Royal Council / Parents, Uncles, Aunts ----
-  const tier1_y = CARD_H + GAP_Y;
+  // ---- Tier 1 (ЧУТКА НИЖЧЕ): Батьки, Дядьки, Тітки (на стовбурі) ----
+  const tier1_y = 420;
 
-  const patCentreX = (pgf_x + pgm_x + CARD_W) / 2;
-  const matCentreX = (mgf_x + mgm_x + CARD_W) / 2;
-
-  const pUncle_x = patCentreX - CARD_W / 2 - GAP_X / 2 - CARD_W;
-  const pAunt_x = pUncle_x - GAP_X - CARD_W;
-
-  positions.push({ id: 'p-paternal-aunt', x: pAunt_x, y: tier1_y });
-  positions.push({ id: 'p-paternal-uncle', x: pUncle_x, y: tier1_y });
-
-  const parentsCentreX = (patCentreX + matCentreX) / 2;
-  const fatherFinal_x = parentsCentreX - COUPLE_GAP / 2 - CARD_W;
-  const mother_x = parentsCentreX + COUPLE_GAP / 2;
-  positions.push({ id: 'p-father', x: fatherFinal_x, y: tier1_y });
+  const father_x = -COUPLE_GAP / 2 - CARD_W;
+  const mother_x = COUPLE_GAP / 2;
+  positions.push({ id: 'p-father', x: father_x, y: tier1_y });
   positions.push({ id: 'p-mother', x: mother_x, y: tier1_y });
+
+  const pUncle_x = father_x - GAP_X - CARD_W;
+  const pAunt_x = pUncle_x - GAP_X - CARD_W;
+  positions.push({ id: 'p-paternal-uncle', x: pUncle_x, y: tier1_y });
+  positions.push({ id: 'p-paternal-aunt', x: pAunt_x, y: tier1_y });
 
   const mAunt_x = mother_x + CARD_W + GAP_X;
   const mUncle_x = mAunt_x + CARD_W + GAP_X;
   positions.push({ id: 'p-maternal-aunt', x: mAunt_x, y: tier1_y });
   positions.push({ id: 'p-maternal-uncle', x: mUncle_x, y: tier1_y });
 
-  // ---- Tier 0 (TOP): Supreme Crown / Me & Brother ----
-  const tier0_y = 0;
-  const me_x = parentsCentreX - COUPLE_GAP / 2 - CARD_W;
-  const bro_x = parentsCentreX + COUPLE_GAP / 2;
+  // ---- Tier 0 (НА САМОМУ ВЕРСІ ЦИФРОВОГО ДЕРЕВА): Я та брат у кроні ----
+  const tier0_y = 60;
+  const me_x = -COUPLE_GAP / 2 - CARD_W;
+  const bro_x = COUPLE_GAP / 2;
   positions.push({ id: 'p-me', x: me_x, y: tier0_y });
   positions.push({ id: 'p-brother', x: bro_x, y: tier0_y });
 
   // Extra dynamic persons
-  let extraX = mUncle_x + CARD_W + GAP_X * 2;
+  let extraX = 588 + CARD_W * 2 + COUPLE_GAP + GAP_X * 2;
   persons.forEach(p => {
     if (!positions.find(np => np.id === p.id)) {
-      const tier = p.generation === 1 ? tier2_y : p.generation === 2 ? tier1_y : tier0_y;
+      const tier = p.generation === 1 ? tier3_y : p.generation === 2 ? tier2_y : p.generation === 3 ? tier1_y : tier0_y;
       positions.push({ id: p.id, x: extraX, y: tier });
       extraX += CARD_W + GAP_X;
     }
@@ -122,8 +146,15 @@ function buildLayout(persons: Person[]) {
 
   // Holy Marriage Union Bonds
   const marriagePairs: [string, string][] = [
+    // Tier 3: Пращури під землею
+    ['p-pat-gf-father', 'p-pat-gf-mother'],
+    ['p-pat-gm-father', 'p-pat-gm-mother'],
+    ['p-mat-gf-father', 'p-mat-gf-mother'],
+    ['p-mat-gm-father', 'p-mat-gm-mother'],
+    // Tier 2: Дідусі та бабусі на землі
     ['p-paternal-grandfather', 'p-paternal-grandmother'],
     ['p-maternal-grandfather', 'p-maternal-grandmother'],
+    // Tier 1: Батьки
     ['p-father', 'p-mother'],
   ];
 
@@ -140,6 +171,32 @@ function buildLayout(persons: Person[]) {
       color: '#d4af37',
       width: 2.5,
     });
+  });
+
+  // Great-grandparents (Під землею) → Grandparents (На землі)
+  const greatGrandparentLinks = [
+    { fatherId: 'p-pat-gf-father', motherId: 'p-pat-gf-mother', childId: 'p-paternal-grandfather', color: '#b8860b' },
+    { fatherId: 'p-pat-gm-father', motherId: 'p-pat-gm-mother', childId: 'p-paternal-grandmother', color: '#b8860b' },
+    { fatherId: 'p-mat-gf-father', motherId: 'p-mat-gf-mother', childId: 'p-maternal-grandfather', color: '#991b1b' },
+    { fatherId: 'p-mat-gm-father', motherId: 'p-mat-gm-mother', childId: 'p-maternal-grandmother', color: '#991b1b' },
+  ];
+
+  greatGrandparentLinks.forEach(link => {
+    const fPos = posMap.get(link.fatherId);
+    const mPos = posMap.get(link.motherId);
+    const cPos = posMap.get(link.childId);
+    if (fPos && mPos && cPos) {
+      const hubX = (fPos.x + CARD_W + mPos.x) / 2;
+      const hubY = fPos.y;
+      const cb = botOf(cPos);
+      const deltaY = hubY - cb.y;
+      connectors.push({
+        key: `parent-gg-${link.childId}`,
+        d: `M ${hubX} ${hubY} C ${hubX} ${hubY - deltaY * 0.5}, ${cb.x} ${cb.y + deltaY * 0.5}, ${cb.x} ${cb.y}`,
+        color: link.color,
+        width: 2,
+      });
+    }
   });
 
   // Paternal Grandparents → Father, Uncle, Aunt
@@ -206,8 +263,16 @@ function buildLayout(persons: Person[]) {
   }
 
   // Dynamic additions
+  const coreIds = [
+    'p-pat-gf-father', 'p-pat-gf-mother', 'p-pat-gm-father', 'p-pat-gm-mother',
+    'p-mat-gf-father', 'p-mat-gf-mother', 'p-mat-gm-father', 'p-mat-gm-mother',
+    'p-paternal-grandfather', 'p-paternal-grandmother', 'p-maternal-grandfather', 'p-maternal-grandmother',
+    'p-father', 'p-mother', 'p-paternal-uncle', 'p-paternal-aunt', 'p-maternal-aunt', 'p-maternal-uncle',
+    'p-me', 'p-brother'
+  ];
+
   persons.forEach(p => {
-    if (['p-paternal-grandfather', 'p-paternal-grandmother', 'p-maternal-grandfather', 'p-maternal-grandmother', 'p-father', 'p-mother', 'p-paternal-uncle', 'p-paternal-aunt', 'p-maternal-aunt', 'p-maternal-uncle', 'p-me', 'p-brother'].includes(p.id)) return;
+    if (coreIds.includes(p.id)) return;
     if (p.fatherId) {
       const fp = posMap.get(p.fatherId);
       const cp = posMap.get(p.id);
@@ -251,12 +316,12 @@ export const TreeView: React.FC<TreeViewProps> = ({
   onAddChild,
   onAddSpouse,
 }) => {
-  const [scale, setScale] = useState(0.48);
+  const [scale, setScale] = useState(0.40);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [pinchStartDist, setPinchStartDist] = useState<number | null>(null);
-  const [pinchStartScale, setPinchStartScale] = useState<number>(0.48);
+  const [pinchStartScale, setPinchStartScale] = useState<number>(0.40);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -278,7 +343,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
       minY = Math.min(minY, np.y);
       maxY = Math.max(maxY, np.y + CARD_H);
     });
-    return { minX: minX - 750, maxX: maxX + 750, minY: minY - 850, maxY: maxY + 890 };
+    return { minX: minX - 450, maxX: maxX + 450, minY: minY - 450, maxY: maxY + 450 };
   }, [positions]);
 
   const canvasW = bounds.maxX - bounds.minX;

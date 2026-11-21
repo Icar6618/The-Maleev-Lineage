@@ -1,14 +1,29 @@
 import type { FamilyData, Person } from '../types/family';
 import { initialFamilyData } from '../data/initialData';
 
-const STORAGE_KEY = 'the_maleev_lineage_data_v3';
+const STORAGE_KEY = 'the_maleev_lineage_data_v4';
 
 export function loadFamilyData(): FamilyData {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('the_maleev_lineage_data_v3');
     if (!raw) return initialFamilyData;
     const parsed = JSON.parse(raw);
     if (parsed && Array.isArray(parsed.persons)) {
+      // Merge in any missing persons (such as great-grandparents)
+      const existingIds = new Set(parsed.persons.map((p: Person) => p.id));
+      const missing = initialFamilyData.persons.filter(p => !existingIds.has(p.id));
+      if (missing.length > 0) {
+        parsed.persons = [...missing, ...parsed.persons];
+        // Ensure grandfather/grandmother have their fatherId/motherId linked
+        initialFamilyData.persons.forEach(initP => {
+          const match = parsed.persons.find((p: Person) => p.id === initP.id);
+          if (match) {
+            if (initP.fatherId && !match.fatherId) match.fatherId = initP.fatherId;
+            if (initP.motherId && !match.motherId) match.motherId = initP.motherId;
+          }
+        });
+        saveFamilyData(parsed);
+      }
       return parsed;
     }
   } catch (e) {
