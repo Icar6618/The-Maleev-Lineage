@@ -161,6 +161,7 @@ export function App() {
             persons={familyData.persons}
             searchQuery={searchQuery}
             onSelectPerson={setSelectedPerson}
+            onEditPerson={handleEditPerson}
             onAddChild={handleAddChild}
             onAddSpouse={handleAddSpouse}
           />
@@ -171,6 +172,7 @@ export function App() {
             persons={familyData.persons}
             searchQuery={searchQuery}
             onSelectPerson={setSelectedPerson}
+            onEditPerson={handleEditPerson}
             onAddPerson={handleAddPerson}
           />
         )}

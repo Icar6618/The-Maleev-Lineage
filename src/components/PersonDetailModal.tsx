@@ -176,15 +176,37 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
             </div>
 
             <div className="flex-1 min-w-0">
-              <h2 className="text-2xl sm:text-3xl font-black font-['Cinzel'] text-transparent bg-clip-text bg-gradient-to-r from-[#fffbeb] via-[#ffd700] to-[#e6ca65] break-words drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                {fullName}
-              </h2>
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                <h2 className="text-2xl sm:text-3xl font-black font-['Cinzel'] text-transparent bg-clip-text bg-gradient-to-r from-[#fffbeb] via-[#ffd700] to-[#e6ca65] break-words drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                  {fullName}
+                </h2>
+                <button
+                  type="button"
+                  onClick={() => onEdit(person)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#d4af37]/20 hover:bg-[#d4af37]/40 active:scale-95 text-[#ffd700] rounded-xl border border-[#d4af37]/50 text-xs font-['Cinzel'] font-bold transition cursor-pointer"
+                  title="Редагувати"
+                >
+                  <Edit3 className="w-3.5 h-3.5" />
+                  <span>{hasName ? 'Редагувати' : 'Вписати'}</span>
+                </button>
+              </div>
 
               {!hasName && (
-                <p className="text-xs text-[#ffd700] mt-1 flex items-center justify-center sm:justify-start gap-1 font-['Cinzel']">
-                  <PlusCircle className="w-3.5 h-3.5 text-[#d4af37]" />
-                  <span>Порожній шаблон • Натисніть «Заповнити» вгорі</span>
-                </p>
+                <div 
+                  onClick={() => onEdit(person)}
+                  className="mt-2 p-3 bg-gradient-to-r from-[#382312] to-[#24170d] border border-[#d4af37] rounded-xl flex items-center justify-between gap-2 cursor-pointer hover:brightness-110 transition shadow-sm text-left"
+                >
+                  <div className="flex items-center gap-2">
+                    <PlusCircle className="w-4 h-4 text-[#ffd700] shrink-0" />
+                    <div>
+                      <p className="text-xs font-['Cinzel'] font-bold text-[#ffd700]">Порожній шаблон</p>
+                      <p className="text-[11px] text-[#fef3c7]/80">Натисніть тут, щоб вписати ім'я, дати, фах та світлину</p>
+                    </div>
+                  </div>
+                  <span className="px-2.5 py-1 bg-[#ffd700] text-slate-950 text-xs font-bold rounded-lg font-['Cinzel'] shrink-0">
+                    Вписати
+                  </span>
+                </div>
               )}
 
               {person.maidenName && (
@@ -489,6 +511,18 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
             </div>
           </div>
 
+        </div>
+
+        {/* Sticky Bottom Action Bar */}
+        <div className="p-3.5 sm:p-4 bg-gradient-to-r from-[#1c120a] via-[#24170d] to-[#1c120a] border-t border-[#d4af37]/40 flex items-center justify-between gap-3 shrink-0">
+          <button
+            type="button"
+            onClick={() => onEdit(person)}
+            className="flex-1 py-3 px-4 bg-gradient-to-r from-[#b48228] via-[#ffd700] to-[#b48228] hover:brightness-110 active:scale-[0.99] text-slate-950 font-extrabold text-sm rounded-2xl shadow-[0_4px_20px_rgba(212,175,55,0.4)] flex items-center justify-center gap-2 transition cursor-pointer font-['Cinzel'] tracking-wide"
+          >
+            <Edit3 className="w-4 h-4 text-slate-950" />
+            <span>{hasName ? 'Редагувати дані та світлини' : 'Вписати дані родича'}</span>
+          </button>
         </div>
       </div>
 

@@ -7,13 +7,15 @@ import {
   User, 
   ArrowUpDown,
   PlusCircle,
-  Quote
+  Quote,
+  Edit3
 } from 'lucide-react';
 
 interface CardsViewProps {
   persons: Person[];
   searchQuery: string;
   onSelectPerson: (person: Person) => void;
+  onEditPerson?: (person: Person) => void;
   onAddPerson?: () => void;
 }
 
@@ -21,6 +23,7 @@ export const CardsView: React.FC<CardsViewProps> = ({
   persons,
   searchQuery,
   onSelectPerson,
+  onEditPerson,
 }) => {
   const [genderFilter, setGenderFilter] = useState<'all' | 'male' | 'female'>('all');
   const [livingFilter, setLivingFilter] = useState<'all' | 'living' | 'deceased'>('all');
@@ -318,6 +321,35 @@ export const CardsView: React.FC<CardsViewProps> = ({
                     ))}
                   </div>
                 )}
+
+                {/* Direct Action Bar */}
+                <div className="mt-3 pt-2.5 border-t border-[#d4af37]/25 flex items-center justify-between gap-2">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (onEditPerson) {
+                        onEditPerson(person);
+                      } else {
+                        onSelectPerson(person);
+                      }
+                    }}
+                    className="flex-1 py-1.5 px-3 bg-gradient-to-r from-[#b48228] via-[#ffd700] to-[#b48228] text-slate-950 hover:brightness-110 active:scale-95 font-['Cinzel'] font-extrabold text-xs rounded-xl shadow-sm flex items-center justify-center gap-1.5 transition cursor-pointer"
+                  >
+                    <Edit3 className="w-3.5 h-3.5" />
+                    <span>{hasName ? 'Редагувати' : 'Вписати'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectPerson(person);
+                    }}
+                    className="py-1.5 px-3 bg-[#1e130a] hover:bg-[#2c1a0e] text-[#d4af37] hover:text-[#ffd700] border border-[#d4af37]/40 rounded-xl text-xs font-['Cinzel'] transition cursor-pointer"
+                  >
+                    Грамота
+                  </button>
+                </div>
               </div>
             );
           })}

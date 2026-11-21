@@ -20,6 +20,7 @@ interface TreeViewProps {
   persons: Person[];
   searchQuery: string;
   onSelectPerson: (person: Person) => void;
+  onEditPerson: (person: Person) => void;
   onAddChild: (parent: Person) => void;
   onAddSpouse: (person: Person) => void;
 }
@@ -314,6 +315,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
   persons,
   searchQuery,
   onSelectPerson,
+  onEditPerson,
   onAddChild,
   onAddSpouse,
 }) => {
@@ -469,6 +471,10 @@ export const TreeView: React.FC<TreeViewProps> = ({
       >
         <div
           onClick={() => onSelectPerson(person)}
+          onDoubleClick={(e) => {
+            e.stopPropagation();
+            onEditPerson(person);
+          }}
           className={`w-full h-full rounded-2xl p-2.5 cursor-pointer relative overflow-hidden transition-all duration-200 shadow-2xl
             ${metallicBg}
             ${metallicBorder}
@@ -488,12 +494,24 @@ export const TreeView: React.FC<TreeViewProps> = ({
           <div className="absolute top-1 left-1.5 text-[8.5px] text-[#d4af37]/80 select-none pointer-events-none">⚜</div>
           <div className="absolute top-1 right-1.5 text-[8.5px] text-[#d4af37]/80 select-none pointer-events-none">⚜</div>
 
-          {/* Top Row: 2) Назва / Роль */}
+          {/* Top Row: 2) Назва / Роль + Швидке редагування */}
           <div className="flex items-center justify-between gap-1 mb-1.5 pl-2.5 pr-2.5">
             <span className="text-[9px] font-['Cinzel'] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-1 bg-[#26190e]/90 border border-[#d4af37]/60 text-[#fef3c7] shadow-xs">
               <Shield className="w-2.5 h-2.5 text-[#d4af37] inline opacity-90" />
               <span className="truncate">{person.roleLabel || (isMe ? 'Власник Дерева' : isMale ? 'Член роду' : 'Членкиня роду')}</span>
             </span>
+
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onEditPerson(person);
+              }}
+              className="p-1 text-[#d4af37]/80 hover:text-[#ffd700] hover:bg-[#d4af37]/20 rounded-md transition cursor-pointer"
+              title="Редагувати картку"
+            >
+              <Edit3 className="w-2.5 h-2.5" />
+            </button>
           </div>
 
           {/* 1) Фото + 2) Назва / Ім'я */}
@@ -616,11 +634,16 @@ export const TreeView: React.FC<TreeViewProps> = ({
           {/* Action Footer (Metallic Gold Signet Buttons) */}
           <div className="absolute bottom-1.5 left-2.5 right-2.5 pt-1 border-t border-[#d4af37]/25 flex items-center justify-between text-[8.5px]">
             <button
-              onClick={(e) => { e.stopPropagation(); onSelectPerson(person); }}
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onEditPerson(person);
+              }}
               className="px-2 py-0.5 bg-gradient-to-r from-[#d4af37] via-[#f59e0b] to-[#d4af37] text-slate-950 hover:text-black font-['Cinzel'] font-bold rounded-lg shadow-sm border border-[#b45309]/50 flex items-center gap-1 transition-all active:scale-95 cursor-pointer"
+              title="Редагувати дані та світлину"
             >
               <Edit3 className="w-2.5 h-2.5 text-slate-950" />
-              <span>{hasName ? 'ГРАМОТА' : 'ВПИСАТИ'}</span>
+              <span>{hasName ? 'РЕДАГУВАТИ' : 'ВПИСАТИ'}</span>
             </button>
 
             <div className="flex items-center gap-1 font-['Cinzel'] font-bold text-[8px]">
