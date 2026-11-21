@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import type { Person, Gender } from '../types/family';
-import { X, Save, UserPlus } from 'lucide-react';
+import type { Person, Gender, FamilyPhoto } from '../types/family';
+import { X, Save, UserPlus, Upload, Camera, Image as ImageIcon, Trash2, Plus, Link as LinkIcon } from 'lucide-react';
+import { compressImageFile } from '../utils/imageCompressor';
 
 interface PersonFormModalProps {
   isOpen: boolean;
@@ -42,6 +43,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
   const [bio, setBio] = useState('');
   const [tagsStr, setTagsStr] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
+  const [photos, setPhotos] = useState<FamilyPhoto[]>([]);
 
   useEffect(() => {
     if (initialPerson) {
@@ -66,6 +68,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
       setBio(initialPerson.bio || '');
       setTagsStr((initialPerson.tags || []).join(', '));
       setAvatarUrl(initialPerson.avatarUrl || '');
+      setPhotos(initialPerson.photos || []);
     } else {
       setRoleLabel('');
       setFirstName('');
@@ -84,6 +87,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
       setBio('');
       setTagsStr('');
       setAvatarUrl('');
+      setPhotos([]);
 
       if (presetParent) {
         setGeneration((presetParent.generation || 1) + 1);
@@ -149,6 +153,7 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
       bio: bio.trim() || undefined,
       tags: tags.length > 0 ? tags : undefined,
       avatarUrl: avatarUrl.trim() || undefined,
+      photos: photos.length > 0 ? photos : undefined,
     };
 
     onSave(newPerson);
@@ -205,6 +210,108 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
               placeholder="напр. Батько, Тітка, Я"
               className="w-full px-3.5 py-2.5 bg-[#120b06] border border-[#d4af37]/40 focus:border-[#ffd700] rounded-xl text-base sm:text-sm text-[#fffbeb] placeholder-[#a89078]/50 focus:outline-none"
             />
+          </div>
+
+          {/* ======================================================== */}
+          {/* ПОРТРЕТ ТА СВІТЛИНА (AVATAR PHOTO UPLOAD)                 */}
+          {/* ======================================================== */}
+          <div className="bg-[#170e08]/95 p-3.5 sm:p-4 rounded-2xl border border-[#d4af37]/40 shadow-inner">
+            <div className="flex items-center justify-between mb-2.5">
+              <label className="text-xs font-semibold text-[#ffd700] font-['Cinzel'] tracking-wide flex items-center gap-1.5">
+                <Camera className="w-4 h-4 text-[#ffd700]" />
+                <span>Головна світлина / Портрет персони</span>
+              </label>
+              {avatarUrl && (
+                <span className="text-[10px] text-emerald-400 font-sans font-medium">
+                  ✓ Фото додано
+                </span>
+              )}
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+              {/* Cameo Avatar Preview */}
+              <div className="relative group shrink-0">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full p-[2.5px] bg-gradient-to-tr from-[#d4af37] via-[#ffd700] to-[#8c501e] shadow-[0_0_18px_rgba(212,175,55,0.4)]">
+                  <div className="w-full h-full rounded-full bg-[#120b06] flex items-center justify-center font-['Cinzel'] text-2xl font-black text-[#ffd700] overflow-hidden border border-[#d4af37]/40 relative">
+                    {avatarUrl ? (
+                      <img
+                        src={avatarUrl}
+                        alt="Портрет"
+                        className="w-full h-full object-cover rounded-full"
+                      />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center text-[#d4af37]/60">
+                        <Camera className="w-7 h-7 mb-0.5 opacity-75" />
+                        <span className="text-[9px] font-['Cinzel'] font-bold uppercase tracking-wider">
+                          {firstName?.[0] || lastName?.[0] || roleLabel?.[0] || 'Фото'}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {avatarUrl && (
+                  <button
+                    type="button"
+                    onClick={() => setAvatarUrl('')}
+                    className="absolute -top-1 -right-1 p-1 bg-red-900/90 hover:bg-red-700 text-white rounded-full border border-red-500 shadow-md transition cursor-pointer"
+                    title="Прибрати фото"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+
+              {/* Upload Controls */}
+              <div className="flex-1 space-y-2.5 w-full text-center sm:text-left">
+                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                  <label className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#2c1c10] to-[#3a2516] hover:from-[#3a2516] hover:to-[#4a301c] active:scale-95 text-[#ffd700] border border-[#d4af37]/60 hover:border-[#ffd700] rounded-xl text-xs font-['Cinzel'] font-bold cursor-pointer transition shadow-sm">
+                    <Upload className="w-4 h-4 text-[#ffd700]" />
+                    <span>{avatarUrl ? 'Замінити світлину' : 'Завантажити фото з пристрою'}</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        try {
+                          const compressed = await compressImageFile(file, 600, 0.85);
+                          setAvatarUrl(compressed);
+                        } catch (err) {
+                          console.error('Failed to compress image', err);
+                        }
+                      }}
+                    />
+                  </label>
+
+                  {avatarUrl && (
+                    <button
+                      type="button"
+                      onClick={() => setAvatarUrl('')}
+                      className="px-3 py-2 bg-[#221209] hover:bg-red-950/70 text-red-300 hover:text-red-200 border border-red-800/50 rounded-xl text-xs font-['Cinzel'] transition cursor-pointer"
+                    >
+                      Видалити
+                    </button>
+                  )}
+                </div>
+
+                {/* Direct URL input option */}
+                <div className="pt-1">
+                  <div className="flex items-center gap-1.5 text-[11px] text-[#d4af37]/70 mb-1">
+                    <LinkIcon className="w-3 h-3 text-[#d4af37]/80" />
+                    <span>Або вкажіть посилання на фото в інтернеті:</span>
+                  </div>
+                  <input
+                    type="url"
+                    value={avatarUrl.startsWith('data:') ? '' : avatarUrl}
+                    onChange={(e) => setAvatarUrl(e.target.value)}
+                    placeholder={avatarUrl.startsWith('data:') ? '✓ Завантажено локальний файл з вашого пристрою' : 'https://example.com/photo.jpg'}
+                    className="w-full px-3 py-1.5 bg-[#100905] border border-[#d4af37]/30 focus:border-[#ffd700] rounded-lg text-xs text-[#fffbeb] placeholder-[#a89078]/40 focus:outline-none"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Names Row */}
@@ -478,6 +585,92 @@ export const PersonFormModal: React.FC<PersonFormModalProps> = ({
               placeholder="Цікаві спогади з життя..."
               className="w-full px-3.5 py-2.5 bg-[#120b06] border border-[#d4af37]/40 focus:border-[#ffd700] rounded-xl text-base sm:text-sm text-[#fffbeb] placeholder-[#a89078]/50 focus:outline-none"
             />
+          </div>
+
+          {/* ======================================================== */}
+          {/* СІМЕЙНИЙ ФОТОАРХІВ (ADDITIONAL FAMILY PHOTOS)             */}
+          {/* ======================================================== */}
+          <div className="bg-[#170e08]/95 p-3.5 sm:p-4 rounded-2xl border border-[#d4af37]/40 shadow-inner">
+            <div className="flex items-center justify-between mb-3">
+              <label className="text-xs font-semibold text-[#ffd700] font-['Cinzel'] tracking-wide flex items-center gap-1.5">
+                <ImageIcon className="w-4 h-4 text-[#ffd700]" />
+                <span>Сімейний фотоальбом ({photos.length})</span>
+              </label>
+
+              <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#24170d] hover:bg-[#332012] active:scale-95 text-[#ffd700] border border-[#d4af37]/50 rounded-xl text-xs font-['Cinzel'] font-bold cursor-pointer transition shadow-xs">
+                <Plus className="w-3.5 h-3.5" />
+                <span>+ Додати світлину</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  onChange={async (e) => {
+                    const files = Array.from(e.target.files || []);
+                    if (files.length === 0) return;
+                    for (const f of files) {
+                      try {
+                        const compressed = await compressImageFile(f, 800, 0.82);
+                        setPhotos(prev => [
+                          ...prev,
+                          { url: compressed, caption: f.name.replace(/\.[^/.]+$/, ''), year: '' }
+                        ]);
+                      } catch (err) {
+                        console.error('Failed to load file', err);
+                      }
+                    }
+                  }}
+                />
+              </label>
+            </div>
+
+            {photos.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-56 overflow-y-auto pr-1">
+                {photos.map((ph, idx) => (
+                  <div key={idx} className="flex gap-2.5 p-2 bg-[#100905] border border-[#d4af37]/30 rounded-xl relative group">
+                    <div className="w-16 h-16 rounded-lg overflow-hidden bg-black shrink-0 border border-[#d4af37]/30">
+                      <img src={ph.url} alt={ph.caption || 'Фото'} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-1 space-y-1 min-w-0">
+                      <input
+                        type="text"
+                        value={ph.caption || ''}
+                        onChange={(e) => {
+                          const newPhotos = [...photos];
+                          newPhotos[idx] = { ...newPhotos[idx], caption: e.target.value };
+                          setPhotos(newPhotos);
+                        }}
+                        placeholder="Підпис світлини..."
+                        className="w-full px-2 py-1 bg-[#180e07] border border-[#d4af37]/25 focus:border-[#ffd700] rounded text-xs text-[#fef3c7] focus:outline-none"
+                      />
+                      <input
+                        type="text"
+                        value={ph.year || ''}
+                        onChange={(e) => {
+                          const newPhotos = [...photos];
+                          newPhotos[idx] = { ...newPhotos[idx], year: e.target.value };
+                          setPhotos(newPhotos);
+                        }}
+                        placeholder="Рік зйомки (напр. 1982)"
+                        className="w-full px-2 py-0.5 bg-[#180e07] border border-[#d4af37]/25 focus:border-[#ffd700] rounded text-[11px] text-[#fef3c7]/80 focus:outline-none"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setPhotos(photos.filter((_, i) => i !== idx))}
+                      className="p-1 text-[#d4af37]/60 hover:text-red-400 self-start transition cursor-pointer"
+                      title="Видалити"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-[#d4af37]/50 italic text-center py-2 font-serif">
+                Ще немає доданих світлин. Натисніть «+ Додати світлину», щоб завантажити архівні фото родича.
+              </p>
+            )}
           </div>
 
           {/* Sticky/Fixed Footer on Mobile */}

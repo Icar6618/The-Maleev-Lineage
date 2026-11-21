@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import type { Person } from '../types/family';
 import { 
   X, 
@@ -11,7 +11,10 @@ import {
   Sparkles,
   ArrowRight,
   PlusCircle,
-  Quote
+  Quote,
+  Camera,
+  Image as ImageIcon,
+  ZoomIn
 } from 'lucide-react';
 
 interface PersonDetailModalProps {
@@ -31,6 +34,8 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
   onDelete,
   onSelectPerson,
 }) => {
+  const [lightboxPhoto, setLightboxPhoto] = useState<{ url: string; caption?: string; year?: string } | null>(null);
+
   if (!person) return null;
 
   const personMap = useMemo(() => {
@@ -137,16 +142,34 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
           
           {/* Avatar & Main Info */}
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full p-[3px] bg-gradient-to-tr from-[#d4af37] via-[#ffd700] to-[#8c501e] shadow-[0_0_20px_rgba(212,175,55,0.35)] shrink-0">
-              <div className="w-full h-full rounded-full bg-gradient-to-br from-[#26170c] to-[#0f0904] flex items-center justify-center font-['Cinzel'] text-2xl sm:text-3xl font-black text-[#ffd700] overflow-hidden">
+            <div 
+              onClick={() => {
+                if (person.avatarUrl) {
+                  setLightboxPhoto({ url: person.avatarUrl, caption: `${fullName} • Портрет` });
+                } else {
+                  onEdit(person);
+                }
+              }}
+              className="w-20 h-20 sm:w-24 sm:h-24 rounded-full p-[3px] bg-gradient-to-tr from-[#d4af37] via-[#ffd700] to-[#8c501e] shadow-[0_0_20px_rgba(212,175,55,0.35)] shrink-0 cursor-pointer relative group transition-transform hover:scale-105"
+              title={person.avatarUrl ? 'Натисніть для перегляду у повний розмір' : 'Натисніть, щоб додати фото'}
+            >
+              <div className="w-full h-full rounded-full bg-gradient-to-br from-[#26170c] to-[#0f0904] flex items-center justify-center font-['Cinzel'] text-2xl sm:text-3xl font-black text-[#ffd700] overflow-hidden relative">
                 {person.avatarUrl ? (
-                  <img
-                    src={person.avatarUrl}
-                    alt={fullName}
-                    className="w-full h-full object-cover rounded-full"
-                  />
+                  <>
+                    <img
+                      src={person.avatarUrl}
+                      alt={fullName}
+                      className="w-full h-full object-cover rounded-full"
+                    />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-full">
+                      <ZoomIn className="w-6 h-6 text-[#ffd700]" />
+                    </div>
+                  </>
                 ) : (
-                  <span>{initialLetter}</span>
+                  <div className="flex flex-col items-center justify-center group-hover:text-[#ffd700]">
+                    <span className="group-hover:hidden">{initialLetter}</span>
+                    <Camera className="w-6 h-6 hidden group-hover:block text-[#ffd700]" />
+                  </div>
                 )}
               </div>
             </div>
@@ -257,6 +280,72 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
               </div>
             </div>
           )}
+
+          {/* ======================================================== */}
+          {/* СІМЕЙНИЙ ФОТОАЛЬБОМ (PHOTO GALLERY)                      */}
+          {/* ======================================================== */}
+          <div className="space-y-3 pt-2 border-t border-[#d4af37]/30">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs sm:text-sm font-bold text-[#ffd700] flex items-center gap-1.5 font-['Cinzel']">
+                <ImageIcon className="w-4 h-4 text-[#d4af37]" />
+                <span>Сімейний фотоальбом {person.photos && person.photos.length > 0 ? `(${person.photos.length})` : ''}</span>
+              </h3>
+
+              <button
+                onClick={() => onEdit(person)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#24170d] hover:bg-[#332012] active:scale-95 text-[#ffd700] border border-[#d4af37]/50 rounded-xl text-xs font-['Cinzel'] font-bold cursor-pointer transition shadow-xs"
+              >
+                <Camera className="w-3.5 h-3.5" />
+                <span>{person.photos && person.photos.length > 0 ? '+ Додати ще' : '+ Додати фото'}</span>
+              </button>
+            </div>
+
+            {person.photos && person.photos.length > 0 ? (
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {person.photos.map((ph, idx) => (
+                  <div
+                    key={idx}
+                    onClick={() => setLightboxPhoto(ph)}
+                    className="group bg-[#150d07] border border-[#d4af37]/35 hover:border-[#ffd700] rounded-xl overflow-hidden cursor-pointer transition-all hover:scale-[1.02] shadow-md flex flex-col"
+                  >
+                    <div className="aspect-square w-full bg-black/60 overflow-hidden relative">
+                      <img
+                        src={ph.url}
+                        alt={ph.caption || 'Світлина'}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                        <ZoomIn className="w-6 h-6 text-[#ffd700]" />
+                      </div>
+                      {ph.year && (
+                        <span className="absolute top-1.5 right-1.5 px-2 py-0.5 rounded-full bg-black/80 text-[10px] text-[#ffd700] border border-[#d4af37]/40 font-mono">
+                          {ph.year}
+                        </span>
+                      )}
+                    </div>
+                    {ph.caption && (
+                      <p className="p-2 text-xs text-[#fef3c7] font-medium truncate font-serif italic bg-[#180e07]">
+                        «{ph.caption}»
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div 
+                onClick={() => onEdit(person)}
+                className="bg-[#150d07]/70 p-4 rounded-2xl border border-dashed border-[#d4af37]/30 text-center cursor-pointer hover:border-[#d4af37]/60 hover:bg-[#1a1008] transition"
+              >
+                <Camera className="w-6 h-6 text-[#d4af37]/50 mx-auto mb-1" />
+                <p className="text-xs text-[#d4af37]/70 font-['Cinzel']">
+                  У цьому літописі ще немає світлин.
+                </p>
+                <p className="text-[11px] text-[#fef3c7]/60 mt-0.5">
+                  Натисніть тут, щоб додати світлину або поповнити сімейний архів
+                </p>
+              </div>
+            )}
+          </div>
 
           {/* Family Connections */}
           <div className="space-y-3 pt-2 border-t border-[#d4af37]/30">
@@ -374,6 +463,47 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
 
         </div>
       </div>
+
+      {/* Lightbox Modal (Full-Screen Photo Viewer) */}
+      {lightboxPhoto && (
+        <div 
+          className="fixed inset-0 z-[60] bg-black/95 flex flex-col items-center justify-center p-4 backdrop-blur-lg animate-in fade-in duration-200"
+          onClick={() => setLightboxPhoto(null)}
+        >
+          <button
+            onClick={() => setLightboxPhoto(null)}
+            className="absolute top-4 right-4 p-3 text-[#d4af37] hover:text-[#ffd700] bg-[#1a1107]/80 hover:bg-[#2a1b0d] rounded-full border border-[#d4af37]/50 cursor-pointer shadow-lg z-10 transition active:scale-95"
+            title="Закрити"
+          >
+            <X className="w-6 h-6" />
+          </button>
+
+          <div 
+            className="max-w-4xl max-h-[85vh] flex flex-col items-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={lightboxPhoto.url}
+              alt={lightboxPhoto.caption || 'Світлина'}
+              className="max-w-full max-h-[75vh] object-contain rounded-2xl border-2 border-[#d4af37]/70 shadow-[0_0_40px_rgba(212,175,55,0.4)]"
+            />
+            {(lightboxPhoto.caption || lightboxPhoto.year) && (
+              <div className="mt-3.5 text-center">
+                {lightboxPhoto.caption && (
+                  <p className="text-base sm:text-lg text-[#ffd700] font-['Cinzel'] font-bold drop-shadow">
+                    {lightboxPhoto.caption}
+                  </p>
+                )}
+                {lightboxPhoto.year && (
+                  <p className="text-xs text-[#fef3c7]/80 font-mono mt-0.5">
+                    Рік зйомки: {lightboxPhoto.year}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
