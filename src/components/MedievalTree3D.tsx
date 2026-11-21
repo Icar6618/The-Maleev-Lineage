@@ -142,10 +142,10 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
       metalness: 0.5,
     });
 
-    // 4. Procedural Continuous 3D Medieval Oak (+30% Scale)
+    // 4. Procedural Continuous 3D Medieval Oak (+45% Scale)
     const treeGroup = new THREE.Group();
-    treeGroup.scale.set(1.32, 1.32, 1.32);
-    treeGroup.position.set(0, -68, -30);
+    treeGroup.scale.set(1.52, 1.52, 1.52);
+    treeGroup.position.set(0, -78, -30);
 
     // =========================================================
     // A. 3D FLOATING ISLAND LANDMASS & CRAGGY KEEL (ЛІТАЮЧИЙ ОСТРІВ)
@@ -648,7 +648,7 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
       const elapsed = clock.getElapsedTime();
 
       // Gentle continuous organic sway & floating island levitation
-      treeGroup.position.y = -68 + Math.sin(elapsed * 0.6) * 5;
+      treeGroup.position.y = -78 + Math.sin(elapsed * 0.6) * 5;
       treeGroup.rotation.y = Math.sin(elapsed * 0.16) * 0.025;
       cloudGroup.rotation.y = elapsed * 0.025;
 
