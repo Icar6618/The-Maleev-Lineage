@@ -131,12 +131,6 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
       flatShading: true,
     });
 
-    const acornMaterial = new THREE.MeshStandardMaterial({
-      color: 0xb45309,
-      roughness: 0.35,
-      metalness: 0.5,
-    });
-
     // 4. Procedural Continuous 3D Medieval Oak (+45% Scale)
     const treeGroup = new THREE.Group();
     treeGroup.scale.set(1.52, 1.52, 1.52);
@@ -549,29 +543,6 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
       const mesh = new THREE.Mesh(geo, f.mat);
       mesh.position.set(f.x, f.y, f.z);
       treeGroup.add(mesh);
-    });
-
-    // H. Golden Acorns Hanging Beneath Boughs
-    const acornPositions = [
-      { x: -90, y: 255, z: 35 },
-      { x: 90, y: 255, z: -35 },
-      { x: -45, y: 345, z: 25 },
-      { x: 45, y: 345, z: -25 },
-      { x: -180, y: 285, z: 25 },
-      { x: 180, y: 285, z: -25 },
-    ];
-
-    acornPositions.forEach(p => {
-      const acornGroup = new THREE.Group();
-      const capMesh = new THREE.Mesh(new THREE.SphereGeometry(4.5, 8, 8, 0, Math.PI * 2, 0, Math.PI / 2), barkMaterial);
-      acornGroup.add(capMesh);
-      const nutMesh = new THREE.Mesh(new THREE.ConeGeometry(4, 9, 8), acornMaterial);
-      nutMesh.rotation.x = Math.PI;
-      nutMesh.position.y = -4.5;
-      acornGroup.add(nutMesh);
-
-      acornGroup.position.set(p.x, p.y, p.z);
-      treeGroup.add(acornGroup);
     });
 
     scene.add(treeGroup);
