@@ -37,24 +37,21 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
 }) => {
   const [lightboxPhoto, setLightboxPhoto] = useState<{ url: string; caption?: string; year?: string } | null>(null);
 
-  if (!person) return null;
-
   const personMap = useMemo(() => {
     const map = new Map<string, Person>();
     allPersons.forEach((p) => map.set(p.id, p));
     return map;
   }, [allPersons]);
 
-  const father = person.fatherId ? personMap.get(person.fatherId) : null;
-  const mother = person.motherId ? personMap.get(person.motherId) : null;
-
   const spouses = useMemo(() => {
+    if (!person) return [];
     return (person.spouseIds || [])
       .map((id) => personMap.get(id))
       .filter(Boolean) as Person[];
-  }, [person.spouseIds, personMap]);
+  }, [person, personMap]);
 
   const children = useMemo(() => {
+    if (!person) return [];
     const directChildren = (person.childrenIds || [])
       .map((id) => personMap.get(id))
       .filter(Boolean) as Person[];
@@ -68,7 +65,7 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
 
   // Siblings
   const siblings = useMemo(() => {
-    if (!person.fatherId && !person.motherId) return [];
+    if (!person || (!person.fatherId && !person.motherId)) return [];
     return allPersons.filter(
       (p) => p.id !== person.id && (
         (person.fatherId && p.fatherId === person.fatherId) ||
@@ -76,6 +73,11 @@ export const PersonDetailModal: React.FC<PersonDetailModalProps> = ({
       )
     );
   }, [person, allPersons]);
+
+  if (!person) return null;
+
+  const father = person.fatherId ? personMap.get(person.fatherId) : null;
+  const mother = person.motherId ? personMap.get(person.motherId) : null;
 
   const isMale = person.gender === 'male';
   const hasName = Boolean(person.firstName || person.lastName);
