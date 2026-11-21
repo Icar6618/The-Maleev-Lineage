@@ -18,10 +18,10 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
     // Soft azure sky atmospheric depth
     scene.fog = new THREE.FogExp2(0x2b6691, 0.0004);
 
-    // Harmonious balanced camera perspective
+    // Elegant framed camera perspective for compact neat floating island
     const camera = new THREE.PerspectiveCamera(45, canvasW / canvasH, 0.1, 4000);
-    camera.position.set(0, 155, 760);
-    camera.lookAt(0, 155, 0);
+    camera.position.set(0, 150, 1050);
+    camera.lookAt(0, 150, 0);
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setSize(canvasW, canvasH);
@@ -142,10 +142,10 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
       metalness: 0.5,
     });
 
-    // 4. Procedural Continuous 3D Medieval Oak (Harmonious Majestic Scale)
+    // 4. Procedural Continuous 3D Medieval Oak (Neat Compact Scale)
     const treeGroup = new THREE.Group();
-    treeGroup.scale.set(1.55, 1.55, 1.55);
-    treeGroup.position.set(0, -90, -20);
+    treeGroup.scale.set(1.0, 1.0, 1.0);
+    treeGroup.position.set(0, -50, -30);
 
     // =========================================================
     // A. 3D FLOATING ISLAND LANDMASS & CRAGGY KEEL (ЛІТАЮЧИЙ ОСТРІВ)
@@ -668,7 +668,7 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
       const elapsed = clock.getElapsedTime();
 
       // Gentle continuous organic sway & floating island levitation
-      treeGroup.position.y = -90 + Math.sin(elapsed * 0.6) * 6;
+      treeGroup.position.y = -50 + Math.sin(elapsed * 0.6) * 5;
       treeGroup.rotation.y = Math.sin(elapsed * 0.16) * 0.025;
       cloudGroup.rotation.y = elapsed * 0.025;
 
