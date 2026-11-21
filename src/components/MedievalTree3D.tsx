@@ -18,11 +18,10 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
     // Soft azure sky atmospheric depth
     scene.fog = new THREE.FogExp2(0x2b6691, 0.0004);
 
-    // Perfectly framed camera so entire crown, trunk, roots, and earthen mound
-    // sit comfortably within the view without any clipping or rectangular borders
+    // Perfectly framed camera for grand epic floating island scale
     const camera = new THREE.PerspectiveCamera(45, canvasW / canvasH, 0.1, 3500);
-    camera.position.set(0, 165, 1050);
-    camera.lookAt(0, 165, 0);
+    camera.position.set(0, 155, 820);
+    camera.lookAt(0, 155, 0);
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setSize(canvasW, canvasH);
@@ -143,9 +142,10 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
       metalness: 0.5,
     });
 
-    // 4. Procedural Continuous 3D Medieval Oak
+    // 4. Procedural Continuous 3D Medieval Oak (Grand Epic Scale)
     const treeGroup = new THREE.Group();
-    treeGroup.position.set(0, -60, -30);
+    treeGroup.scale.set(1.28, 1.28, 1.28);
+    treeGroup.position.set(0, -75, -20);
 
     // =========================================================
     // A. 3D FLOATING ISLAND LANDMASS & CRAGGY KEEL (ЛІТАЮЧИЙ ОСТРІВ)
@@ -261,23 +261,34 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
       treeGroup.add(mossCap);
     });
 
-    // 5. Stylized Fluffy Clouds Floating Beneath the Island
+    // 5. Stylized Fluffy Clouds Floating Beneath the Island (Sea of Clouds)
     const cloudGroup = new THREE.Group();
     cloudGroup.position.set(0, -225, 0);
     const cloudPuffs = [
-      { x: -280, y: -20, z: 60, r: 65 },
-      { x: -220, y: 0, z: 90, r: 75 },
-      { x: -330, y: -10, z: 30, r: 55 },
-      { x: -170, y: -25, z: 110, r: 60 },
-      { x: 260, y: -15, z: 70, r: 70 },
-      { x: 210, y: 5, z: 100, r: 78 },
-      { x: 310, y: -5, z: 40, r: 58 },
-      { x: 160, y: -20, z: 120, r: 65 },
-      { x: -60, y: -30, z: -120, r: 70 },
-      { x: 60, y: -25, z: -110, r: 75 },
-      { x: 0, y: -15, z: -150, r: 65 },
-      { x: -30, y: -55, z: 20, r: 50 },
-      { x: 40, y: -50, z: 30, r: 48 },
+      // Left cloud bank
+      { x: -300, y: -20, z: 60, r: 75 },
+      { x: -240, y: 0, z: 100, r: 85 },
+      { x: -350, y: -10, z: 20, r: 65 },
+      { x: -180, y: -25, z: 130, r: 70 },
+      { x: -210, y: -45, z: 80, r: 60 },
+      // Right cloud bank
+      { x: 280, y: -15, z: 70, r: 80 },
+      { x: 230, y: 5, z: 110, r: 88 },
+      { x: 330, y: -5, z: 30, r: 68 },
+      { x: 170, y: -20, z: 135, r: 72 },
+      { x: 220, y: -45, z: 75, r: 62 },
+      // Central & back cloud sea
+      { x: -70, y: -30, z: -130, r: 80 },
+      { x: 70, y: -25, z: -120, r: 85 },
+      { x: 0, y: -15, z: -160, r: 75 },
+      { x: -140, y: -20, z: -100, r: 65 },
+      { x: 140, y: -15, z: -90, r: 70 },
+      // Lower mantle under rocky island keel
+      { x: -40, y: -65, z: 25, r: 60 },
+      { x: 50, y: -60, z: 35, r: 58 },
+      { x: 0, y: -80, z: -20, r: 65 },
+      { x: -80, y: -55, z: 0, r: 55 },
+      { x: 80, y: -50, z: 0, r: 55 },
     ];
     cloudPuffs.forEach(cp => {
       const puffGeo = new THREE.DodecahedronGeometry(cp.r, 2);
@@ -286,6 +297,48 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
       cloudGroup.add(puff);
     });
     treeGroup.add(cloudGroup);
+
+    // 6. Azure Sky Clouds Group (Хмари, що парять у небесному просторі)
+    const skyCloudsGroup = new THREE.Group();
+
+    const createCloudCluster = (cx: number, cy: number, cz: number, scale: number = 1) => {
+      const cluster = new THREE.Group();
+      cluster.position.set(cx, cy, cz);
+      const subPuffs = [
+        { x: 0, y: 0, z: 0, r: 48 * scale },
+        { x: -35 * scale, y: -6 * scale, z: 10 * scale, r: 38 * scale },
+        { x: 38 * scale, y: -4 * scale, z: -8 * scale, r: 40 * scale },
+        { x: -18 * scale, y: 16 * scale, z: -12 * scale, r: 34 * scale },
+        { x: 22 * scale, y: 14 * scale, z: 14 * scale, r: 36 * scale },
+        { x: 55 * scale, y: -12 * scale, z: 8 * scale, r: 28 * scale },
+        { x: -52 * scale, y: -10 * scale, z: -6 * scale, r: 30 * scale },
+      ];
+      subPuffs.forEach(sp => {
+        const pGeo = new THREE.DodecahedronGeometry(sp.r, 2);
+        const pMesh = new THREE.Mesh(pGeo, cloudMaterial);
+        pMesh.position.set(sp.x, sp.y, sp.z);
+        cluster.add(pMesh);
+      });
+      return cluster;
+    };
+
+    // Distribute majestic cumulus cloud clusters in the sky around the tree
+    skyCloudsGroup.add(createCloudCluster(-520, 190, -160, 1.35));
+    skyCloudsGroup.add(createCloudCluster(-620, -30, -120, 1.5));
+    skyCloudsGroup.add(createCloudCluster(-420, 360, -220, 1.15));
+
+    skyCloudsGroup.add(createCloudCluster(540, 170, -150, 1.4));
+    skyCloudsGroup.add(createCloudCluster(640, -50, -110, 1.45));
+    skyCloudsGroup.add(createCloudCluster(440, 340, -210, 1.1));
+
+    skyCloudsGroup.add(createCloudCluster(-200, 480, -260, 1.05));
+    skyCloudsGroup.add(createCloudCluster(230, 470, -250, 1.1));
+
+    skyCloudsGroup.add(createCloudCluster(-380, -190, -240, 1.6));
+    skyCloudsGroup.add(createCloudCluster(390, -200, -220, 1.6));
+    skyCloudsGroup.add(createCloudCluster(0, -280, -260, 1.8));
+
+    scene.add(skyCloudsGroup);
 
     // Ancient Stone Dais Sanctuary in center of mound
     const daisGeo = new THREE.CylinderGeometry(180, 200, 14, 32);
@@ -615,9 +668,13 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
       const elapsed = clock.getElapsedTime();
 
       // Gentle continuous organic sway & floating island levitation
-      treeGroup.position.y = -60 + Math.sin(elapsed * 0.65) * 5;
+      treeGroup.position.y = -75 + Math.sin(elapsed * 0.65) * 6;
       treeGroup.rotation.y = Math.sin(elapsed * 0.16) * 0.025;
-      cloudGroup.rotation.y = elapsed * 0.02;
+      cloudGroup.rotation.y = elapsed * 0.025;
+
+      // Azure sky clouds gentle drift across the atmosphere
+      skyCloudsGroup.position.x = Math.sin(elapsed * 0.08) * 35;
+      skyCloudsGroup.position.y = Math.cos(elapsed * 0.06) * 12;
 
       // Torch flickering
       torchLeft.intensity = 3.8 + Math.sin(elapsed * 11) * 0.4 + Math.cos(elapsed * 7) * 0.3;

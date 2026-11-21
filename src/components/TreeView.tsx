@@ -565,14 +565,17 @@ export const TreeView: React.FC<TreeViewProps> = ({
   return (
     <div className="relative w-full h-[calc(100dvh-130px)] sm:h-[calc(100vh-140px)] bg-gradient-to-b from-[#0f2c4d] via-[#1a4975] via-[#2a6d9e] to-[#4fa3d1] overflow-hidden select-none touch-none">
 
-      {/* Heavenly Azure Sky Atmosphere with Sunbeams & Floating Mist */}
+      {/* Heavenly Azure Sky Atmosphere with Sunbeams & Floating Cloud Layers */}
       <div 
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage: `
-            radial-gradient(ellipse 80% 60% at 75% 20%, rgba(255, 243, 204, 0.45) 0%, transparent 55%),
-            radial-gradient(ellipse 100% 50% at 50% 95%, rgba(186, 230, 253, 0.5) 0%, transparent 65%),
-            radial-gradient(circle at 25% 40%, rgba(56, 189, 248, 0.25) 0%, transparent 60%)
+            radial-gradient(ellipse 85% 45% at 20% 75%, rgba(255, 255, 255, 0.35) 0%, transparent 60%),
+            radial-gradient(ellipse 90% 50% at 80% 80%, rgba(255, 255, 255, 0.4) 0%, transparent 60%),
+            radial-gradient(ellipse 100% 60% at 50% 95%, rgba(215, 240, 255, 0.55) 0%, transparent 70%),
+            radial-gradient(ellipse 70% 35% at 50% 30%, rgba(255, 255, 255, 0.2) 0%, transparent 55%),
+            radial-gradient(ellipse 80% 60% at 75% 15%, rgba(255, 243, 204, 0.4) 0%, transparent 55%),
+            radial-gradient(circle at 20% 35%, rgba(56, 189, 248, 0.25) 0%, transparent 60%)
           `,
         }}
       />
