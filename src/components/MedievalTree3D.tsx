@@ -18,45 +18,45 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
     // Soft azure sky atmospheric depth
     scene.fog = new THREE.FogExp2(0x2b6691, 0.0004);
 
-    // Perfectly framed camera for grand epic floating island scale
-    const camera = new THREE.PerspectiveCamera(45, canvasW / canvasH, 0.1, 3500);
-    camera.position.set(0, 160, 680);
-    camera.lookAt(0, 160, 0);
+    // Colossal scale camera perspective
+    const camera = new THREE.PerspectiveCamera(45, canvasW / canvasH, 0.1, 4500);
+    camera.position.set(0, 140, 580);
+    camera.lookAt(0, 140, 0);
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setSize(canvasW, canvasH);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0); // 100% transparent background outside meshes
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.15;
+    renderer.toneMappingExposure = 1.18;
     container.appendChild(renderer.domElement);
 
-    // 2. Lighting — Brilliant Sunbeam + Azure Sky Ambient + Castle Torches
-    const ambientLight = new THREE.AmbientLight(0x9bd1f5, 2.3);
+    // 2. Lighting — Brilliant Sunbeam + Azure Sky Ambient + Castle Torches (Boosted for Colossal Tree)
+    const ambientLight = new THREE.AmbientLight(0x9bd1f5, 2.6);
     scene.add(ambientLight);
 
-    // Brilliant golden sunbeam shining down onto crown and island
-    const sunLight = new THREE.DirectionalLight(0xfff6dd, 3.4);
-    sunLight.position.set(300, 750, 400);
+    // Brilliant golden sunbeam shining down onto colossal crown and island
+    const sunLight = new THREE.DirectionalLight(0xfff6dd, 3.8);
+    sunLight.position.set(500, 1200, 600);
     scene.add(sunLight);
 
     // Upward sky reflection from the azure clouds below
-    const skyFill = new THREE.DirectionalLight(0xbfe4fc, 1.6);
-    skyFill.position.set(-200, -350, 200);
+    const skyFill = new THREE.DirectionalLight(0xbfe4fc, 2.0);
+    skyFill.position.set(-400, -500, 400);
     scene.add(skyFill);
 
     // Warm castle torchlights on tree trunk
-    const torchLeft = new THREE.PointLight(0xff8800, 3.8, 800);
-    torchLeft.position.set(-240, 90, 160);
+    const torchLeft = new THREE.PointLight(0xff8800, 4.5, 1400);
+    torchLeft.position.set(-350, 140, 240);
     scene.add(torchLeft);
 
-    const torchRight = new THREE.PointLight(0xffaa00, 3.8, 800);
-    torchRight.position.set(240, 90, 160);
+    const torchRight = new THREE.PointLight(0xffaa00, 4.5, 1400);
+    torchRight.position.set(350, 140, 240);
     scene.add(torchRight);
 
     // Ground level rim light for roots
-    const groundLight = new THREE.PointLight(0xd97706, 2.4, 600);
-    groundLight.position.set(0, -30, 200);
+    const groundLight = new THREE.PointLight(0xd97706, 3.0, 1000);
+    groundLight.position.set(0, -60, 300);
     scene.add(groundLight);
 
     // 3. Materials
@@ -142,10 +142,10 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
       metalness: 0.5,
     });
 
-    // 4. Procedural Continuous 3D Medieval Oak (Grand Colossal Scale)
+    // 4. Procedural Continuous 3D Medieval Oak (Colossal Titanic Scale)
     const treeGroup = new THREE.Group();
-    treeGroup.scale.set(1.85, 1.85, 1.85);
-    treeGroup.position.set(0, -105, -20);
+    treeGroup.scale.set(2.8, 2.7, 2.7);
+    treeGroup.position.set(0, -180, -25);
 
     // =========================================================
     // A. 3D FLOATING ISLAND LANDMASS & CRAGGY KEEL (ЛІТАЮЧИЙ ОСТРІВ)
@@ -668,7 +668,7 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
       const elapsed = clock.getElapsedTime();
 
       // Gentle continuous organic sway & floating island levitation
-      treeGroup.position.y = -105 + Math.sin(elapsed * 0.65) * 6;
+      treeGroup.position.y = -180 + Math.sin(elapsed * 0.55) * 8;
       treeGroup.rotation.y = Math.sin(elapsed * 0.16) * 0.025;
       cloudGroup.rotation.y = elapsed * 0.025;
 
