@@ -241,26 +241,6 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
     bottomSpire.position.y = -215;
     treeGroup.add(bottomSpire);
 
-    // 4. Satellite Floating Sky Boulders (Маленькі уламки скель, що парять поруч у небі)
-    const skyRocks = [
-      { x: -390, y: -90, z: 90, r: 24, rot: [0.3, 0.4, 0] },
-      { x: 410, y: -80, z: 80, r: 28, rot: [-0.2, 0.6, 0] },
-      { x: -330, y: -190, z: -50, r: 20, rot: [0.4, -0.2, 0] },
-      { x: 340, y: -200, z: -40, r: 22, rot: [-0.3, 0.5, 0] },
-      { x: 190, y: -250, z: 60, r: 16, rot: [0.2, 0.1, 0] },
-    ];
-    skyRocks.forEach(sr => {
-      const rockGeo = new THREE.DodecahedronGeometry(sr.r, 1);
-      const rockMesh = new THREE.Mesh(rockGeo, cliffMaterial);
-      rockMesh.position.set(sr.x, sr.y, sr.z);
-      rockMesh.rotation.set(sr.rot[0], sr.rot[1], sr.rot[2]);
-      treeGroup.add(rockMesh);
-
-      const mossCap = new THREE.Mesh(new THREE.ConeGeometry(sr.r * 0.8, sr.r * 0.5, 8), mossMaterial);
-      mossCap.position.set(sr.x, sr.y + sr.r * 0.7, sr.z);
-      treeGroup.add(mossCap);
-    });
-
     // 5. Stylized Fluffy Clouds Floating Beneath the Island (Sea of Clouds)
     const cloudGroup = new THREE.Group();
     cloudGroup.position.set(0, -225, 0);
