@@ -12,7 +12,9 @@ import {
   RotateCcw,
   Sparkles,
   Shield,
-  TreePine
+  TreePine,
+  Moon,
+  Sun
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -25,6 +27,8 @@ interface HeaderProps {
   onImport: () => void;
   onReset: () => void;
   totalPersons: number;
+  isNight: boolean;
+  onToggleTheme: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -37,6 +41,8 @@ export const Header: React.FC<HeaderProps> = ({
   onImport,
   onReset,
   totalPersons,
+  isNight,
+  onToggleTheme,
 }) => {
   const [isDataMenuOpen, setIsDataMenuOpen] = useState(false);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
@@ -120,6 +126,30 @@ export const Header: React.FC<HeaderProps> = ({
               <UserPlus className="w-4 h-4 text-slate-950" />
               <span className="hidden sm:inline">Вписати у родовід</span>
               <span className="sm:hidden">Вписати</span>
+            </button>
+
+            {/* Theme Toggle Button: Day / Night with Stars & Moon */}
+            <button
+              type="button"
+              onClick={onToggleTheme}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border transition-all duration-300 cursor-pointer text-xs font-['Cinzel'] font-bold shadow-md ${
+                isNight
+                  ? 'bg-gradient-to-r from-[#0a1120] to-[#141f38] text-[#38bdf8] border-[#38bdf8]/50 hover:border-[#7dd3fc] hover:shadow-[0_0_15px_rgba(56,189,248,0.35)]'
+                  : 'bg-gradient-to-r from-[#24170d] to-[#362214] text-[#ffd700] border-[#d4af37]/60 hover:border-[#ffd700] hover:shadow-[0_0_15px_rgba(212,175,55,0.35)]'
+              }`}
+              title={isNight ? 'Перемкнути на сонячний небесний день' : 'Перемкнути на зоряну ніч з місяцем'}
+            >
+              {isNight ? (
+                <>
+                  <Moon className="w-4 h-4 text-[#38bdf8] fill-[#38bdf8]/20" />
+                  <span className="hidden sm:inline text-[#e0f2fe]">Зоряна ніч</span>
+                </>
+              ) : (
+                <>
+                  <Sun className="w-4 h-4 text-[#ffd700] fill-[#ffd700]/20" />
+                  <span className="hidden sm:inline text-[#fef3c7]">Світлий день</span>
+                </>
+              )}
             </button>
 
             {/* Archive Menu */}

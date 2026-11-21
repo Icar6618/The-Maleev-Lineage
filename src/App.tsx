@@ -30,6 +30,28 @@ export function App() {
   const [presetSpouse, setPresetSpouse] = useState<Person | null>(null);
   const [isExportImportOpen, setIsExportImportOpen] = useState(false);
 
+  // Night Theme State (Darkness with Stars and Moon)
+  const [isNight, setIsNight] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('maleev_lineage_theme');
+      return saved === 'night' || saved === null; // default to night
+    } catch {
+      return true;
+    }
+  });
+
+  const handleToggleTheme = () => {
+    setIsNight((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('maleev_lineage_theme', next ? 'night' : 'day');
+      } catch (e) {
+        console.error(e);
+      }
+      return next;
+    });
+  };
+
   // Synchronize on startup if needed
   useEffect(() => {
     const synchronized = synchronizeRelations(familyData.persons);
@@ -152,6 +174,8 @@ export function App() {
         onImport={() => setIsExportImportOpen(true)}
         onReset={handleReset}
         totalPersons={familyData.persons.length}
+        isNight={isNight}
+        onToggleTheme={handleToggleTheme}
       />
 
       {/* Main Content Area */}
@@ -164,6 +188,7 @@ export function App() {
             onEditPerson={handleEditPerson}
             onAddChild={handleAddChild}
             onAddSpouse={handleAddSpouse}
+            isNight={isNight}
           />
         )}
 
@@ -189,10 +214,8 @@ export function App() {
         )}
       </main>
 
-      {/* Bottom Medieval Banner (Footer matching Top Header) */}
-      <footer className="bg-[#120d08]/95 backdrop-blur-xl border-t border-[#d4af37]/30 shadow-2xl shadow-black/90 py-5 px-4 relative z-20">
-        {/* Top Gold Leaf Trim of Bottom Banner */}
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#d4af37] to-transparent shadow-[0_0_10px_rgba(212,175,55,0.4)]" />
+      {/* Bottom Medieval Banner */}
+      <footer className="bg-[#120d08]/95 backdrop-blur-xl py-5 px-4 relative z-20">
 
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-serif">
           {/* Left: Emblem + Lineage Title */}

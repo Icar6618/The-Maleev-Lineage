@@ -23,6 +23,7 @@ interface TreeViewProps {
   onEditPerson: (person: Person) => void;
   onAddChild: (parent: Person) => void;
   onAddSpouse: (person: Person) => void;
+  isNight?: boolean;
 }
 
 /* ================================================================
@@ -318,6 +319,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
   onEditPerson,
   onAddChild,
   onAddSpouse,
+  isNight = true,
 }) => {
   const [scale, setScale] = useState(0.40);
   const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -328,6 +330,22 @@ export const TreeView: React.FC<TreeViewProps> = ({
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Twinkling background stars for Night Mode
+  const nightStars = useMemo(() => {
+    const stars = [];
+    for (let i = 0; i < 96; i++) {
+      stars.push({
+        id: i,
+        x: (i * 37) % 100,
+        y: (i * 29) % 96,
+        size: (i % 4 === 0 ? 3 : i % 2 === 0 ? 2 : 1),
+        opacity: 0.35 + (i % 5) * 0.15,
+        delay: (i % 7) * 0.4,
+      });
+    }
+    return stars;
+  }, []);
 
   const { positions, connectors } = useMemo(() => buildLayout(persons), [persons]);
 
@@ -669,35 +687,98 @@ export const TreeView: React.FC<TreeViewProps> = ({
   };
 
   return (
-    <div className="relative w-full h-[calc(100dvh-130px)] sm:h-[calc(100vh-140px)] bg-gradient-to-b from-[#0f2c4d] via-[#1a4975] via-[#2a6d9e] to-[#4fa3d1] overflow-hidden select-none touch-none">
+    <div className={`relative w-full h-[calc(100dvh-130px)] sm:h-[calc(100vh-140px)] transition-colors duration-700 overflow-hidden select-none touch-none ${
+      isNight
+        ? 'bg-gradient-to-b from-[#02050f] via-[#050b1a] via-[#091326] to-[#0f1d38]'
+        : 'bg-gradient-to-b from-[#0f2c4d] via-[#1a4975] via-[#2a6d9e] to-[#4fa3d1]'
+    }`}>
 
-      {/* Heavenly Azure Sky Atmosphere with Sunbeams & Floating Cloud Layers */}
-      <div 
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage: `
-            radial-gradient(ellipse 85% 45% at 20% 75%, rgba(255, 255, 255, 0.35) 0%, transparent 60%),
-            radial-gradient(ellipse 90% 50% at 80% 80%, rgba(255, 255, 255, 0.4) 0%, transparent 60%),
-            radial-gradient(ellipse 100% 60% at 50% 95%, rgba(215, 240, 255, 0.55) 0%, transparent 70%),
-            radial-gradient(ellipse 70% 35% at 50% 30%, rgba(255, 255, 255, 0.2) 0%, transparent 55%),
-            radial-gradient(ellipse 80% 60% at 75% 15%, rgba(255, 243, 204, 0.4) 0%, transparent 55%),
-            radial-gradient(circle at 20% 35%, rgba(56, 189, 248, 0.25) 0%, transparent 60%)
-          `,
-        }}
-      />
+      {/* Heavenly Sky Atmosphere: Day (Sunbeams) vs Night (Moon & Stars) */}
+      {isNight ? (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden transition-opacity duration-700">
+          {/* Deep Cosmic Nebulae */}
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `
+                radial-gradient(circle at 18% 20%, rgba(224, 242, 254, 0.45) 0%, rgba(56, 189, 248, 0.16) 28%, transparent 65%),
+                radial-gradient(ellipse 75% 45% at 50% 12%, rgba(99, 102, 241, 0.2) 0%, transparent 60%),
+                radial-gradient(ellipse 90% 60% at 85% 35%, rgba(147, 51, 234, 0.14) 0%, transparent 60%),
+                radial-gradient(ellipse 100% 60% at 50% 90%, rgba(15, 23, 42, 0.75) 0%, transparent 70%)
+              `,
+            }}
+          />
+
+          {/* Luminous Glowing Moon (Луна) in the Sky (Upper-Left) */}
+          <div 
+            className="absolute top-6 left-12 sm:top-10 sm:left-24 pointer-events-none select-none flex items-center justify-center z-20"
+          >
+            {/* Soft Ambient Moon Halo */}
+            <div className="absolute w-44 h-44 sm:w-56 sm:h-56 rounded-full bg-cyan-200/10 blur-3xl animate-pulse" />
+            <div className="absolute w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-blue-100/15 blur-xl" />
+            
+            {/* Radiant Moon Sphere */}
+            <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-[#cbd5e1] via-[#f1f5f9] to-[#ffffff] shadow-[0_0_40px_rgba(224,242,254,0.9),inset_-4px_-4px_12px_rgba(71,85,105,0.45)] border border-white/80 overflow-hidden">
+              {/* Soft Lunar Craters / Maria */}
+              <div className="absolute top-3 left-4 w-4 h-4 rounded-full bg-slate-400/25 blur-[0.5px]" />
+              <div className="absolute top-8 left-9 w-6 h-5 rounded-full bg-slate-400/20 blur-[0.5px]" />
+              <div className="absolute top-10 left-3 w-3 h-3 rounded-full bg-slate-400/25 blur-[0.5px]" />
+              <div className="absolute top-5 left-11 w-5 h-4 rounded-full bg-slate-400/15 blur-[0.5px]" />
+            </div>
+          </div>
+
+          {/* Twinkling Stars Field (Зірочки на небі) */}
+          <div className="absolute inset-0">
+            {nightStars.map((st) => (
+              <div
+                key={st.id}
+                className="absolute rounded-full bg-white animate-pulse"
+                style={{
+                  left: `${st.x}%`,
+                  top: `${st.y}%`,
+                  width: `${st.size}px`,
+                  height: `${st.size}px`,
+                  opacity: st.opacity,
+                  animationDuration: `${2.2 + (st.id % 4)}s`,
+                  animationDelay: `${st.delay}s`,
+                  boxShadow: st.size > 2 ? '0 0 6px rgba(255, 255, 255, 0.95)' : 'none',
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div 
+          className="absolute inset-0 pointer-events-none transition-opacity duration-700"
+          style={{
+            backgroundImage: `
+              radial-gradient(ellipse 85% 45% at 20% 75%, rgba(255, 255, 255, 0.35) 0%, transparent 60%),
+              radial-gradient(ellipse 90% 50% at 80% 80%, rgba(255, 255, 255, 0.4) 0%, transparent 60%),
+              radial-gradient(ellipse 100% 60% at 50% 95%, rgba(215, 240, 255, 0.55) 0%, transparent 70%),
+              radial-gradient(ellipse 70% 35% at 50% 30%, rgba(255, 255, 255, 0.2) 0%, transparent 55%),
+              radial-gradient(ellipse 80% 60% at 75% 15%, rgba(255, 243, 204, 0.4) 0%, transparent 55%),
+              radial-gradient(circle at 20% 35%, rgba(56, 189, 248, 0.25) 0%, transparent 60%)
+            `,
+          }}
+        />
+      )}
 
       {/* Floating Medieval Sky Toolbar */}
-      <div className="absolute top-3 left-3 z-30 flex items-center gap-1.5 bg-[#0f2844]/90 backdrop-blur-xl p-1.5 sm:p-2 rounded-2xl border border-[#d4af37]/50 shadow-2xl shadow-sky-950/80">
-        <button onClick={() => handleZoom(0.12)} className="p-2 text-[#d4af37] hover:text-[#fffbeb] bg-[#183a5e] active:bg-[#235080] rounded-xl transition cursor-pointer" title="Збільшити">
+      <div className={`absolute top-3 left-3 z-30 flex items-center gap-1.5 backdrop-blur-xl p-1.5 sm:p-2 rounded-2xl border transition-colors duration-300 ${
+        isNight
+          ? 'bg-[#090f1d]/90 border-[#38bdf8]/40 shadow-2xl shadow-black/90'
+          : 'bg-[#0f2844]/90 border-[#d4af37]/50 shadow-2xl shadow-sky-950/80'
+      }`}>
+        <button onClick={() => handleZoom(0.12)} className={`p-2 rounded-xl transition cursor-pointer ${isNight ? 'text-[#38bdf8] hover:text-white bg-[#131f38] active:bg-[#1e2d4e]' : 'text-[#d4af37] hover:text-[#fffbeb] bg-[#183a5e] active:bg-[#235080]'}`} title="Збільшити">
           <ZoomIn className="w-4 h-4" />
         </button>
-        <button onClick={() => handleZoom(-0.12)} className="p-2 text-[#d4af37] hover:text-[#fffbeb] bg-[#183a5e] active:bg-[#235080] rounded-xl transition cursor-pointer" title="Зменшити">
+        <button onClick={() => handleZoom(-0.12)} className={`p-2 rounded-xl transition cursor-pointer ${isNight ? 'text-[#38bdf8] hover:text-white bg-[#131f38] active:bg-[#1e2d4e]' : 'text-[#d4af37] hover:text-[#fffbeb] bg-[#183a5e] active:bg-[#235080]'}`} title="Зменшити">
           <ZoomOut className="w-4 h-4" />
         </button>
-        <button onClick={handleResetZoom} className="p-2 text-[#d4af37] hover:text-[#fffbeb] bg-[#183a5e] active:bg-[#235080] rounded-xl transition cursor-pointer" title="Центрувати літопис">
+        <button onClick={handleResetZoom} className={`p-2 rounded-xl transition cursor-pointer ${isNight ? 'text-[#38bdf8] hover:text-white bg-[#131f38] active:bg-[#1e2d4e]' : 'text-[#d4af37] hover:text-[#fffbeb] bg-[#183a5e] active:bg-[#235080]'}`} title="Центрувати літопис">
           <Maximize2 className="w-4 h-4" />
         </button>
-        <span className="text-[11px] text-[#fef3c7] font-['Cinzel'] font-bold px-1.5">{Math.round(scale * 100)}%</span>
+        <span className={`text-[11px] font-['Cinzel'] font-bold px-1.5 ${isNight ? 'text-[#e0f2fe]' : 'text-[#fef3c7]'}`}>{Math.round(scale * 100)}%</span>
       </div>
 
       {/* Canvas Area */}
@@ -728,7 +809,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
           {/* ======================================================== */}
           {/* LAYER 1: INTERACTIVE 3D MEDIEVAL TREE OF LIFE            */}
           {/* ======================================================== */}
-          <MedievalTree3D canvasW={canvasW} canvasH={canvasH} />
+          <MedievalTree3D canvasW={canvasW} canvasH={canvasH} isNight={isNight} />
 
           {/* ======================================================== */}
           {/* LAYER 2: ROYAL GOLD RIBBONS & CHAINS                     */}

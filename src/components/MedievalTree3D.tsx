@@ -4,9 +4,10 @@ import * as THREE from 'three';
 interface MedievalTree3DProps {
   canvasW: number;
   canvasH: number;
+  isNight?: boolean;
 }
 
-export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH }) => {
+export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH, isNight = true }) => {
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -15,8 +16,13 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
 
     // 1. Scene, Camera, Renderer
     const scene = new THREE.Scene();
-    // Soft azure sky atmospheric depth
-    scene.fog = new THREE.FogExp2(0x2b6691, 0.00022);
+    
+    // Atmospheric fog: deep cosmic night vs soft azure day
+    if (isNight) {
+      scene.fog = new THREE.FogExp2(0x050a17, 0.00028);
+    } else {
+      scene.fog = new THREE.FogExp2(0x2b6691, 0.00022);
+    }
 
     // Dynamic camera perspective: scales distance with canvasH so tree maintains constant pixel scale
     // and generous viewport bounds prevent clipping at top and bottom
@@ -30,34 +36,39 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0); // 100% transparent background outside meshes
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.18;
+    renderer.toneMappingExposure = isNight ? 1.1 : 1.18;
     container.appendChild(renderer.domElement);
 
-    // 2. Lighting — Brilliant Sunbeam + Azure Sky Ambient + Castle Torches (Boosted for Colossal Tree)
-    const ambientLight = new THREE.AmbientLight(0x9bd1f5, 2.6);
+    // 2. Lighting — Moonlight/Sunlight + Sky Ambient + Castle Torches
+    const ambientLight = new THREE.AmbientLight(isNight ? 0x223659 : 0x9bd1f5, isNight ? 1.7 : 2.6);
     scene.add(ambientLight);
 
-    // Brilliant golden sunbeam shining down onto colossal crown and island
-    const sunLight = new THREE.DirectionalLight(0xfff6dd, 3.8);
-    sunLight.position.set(500, 1200, 600);
+    // Brilliant golden sunbeam OR cool celestial moonbeam
+    const sunLight = new THREE.DirectionalLight(isNight ? 0xd0e6ff : 0xfff6dd, isNight ? 3.2 : 3.8);
+    if (isNight) {
+      sunLight.position.set(-360, 750, 400);
+    } else {
+      sunLight.position.set(500, 1200, 600);
+    }
     scene.add(sunLight);
 
-    // Upward sky reflection from the azure clouds below
-    const skyFill = new THREE.DirectionalLight(0xbfe4fc, 2.0);
+    // Upward sky reflection
+    const skyFill = new THREE.DirectionalLight(isNight ? 0x162642 : 0xbfe4fc, isNight ? 1.3 : 2.0);
     skyFill.position.set(-400, -500, 400);
     scene.add(skyFill);
 
-    // Warm castle torchlights on tree trunk
-    const torchLeft = new THREE.PointLight(0xff8800, 4.5, 1400);
+    // Warm castle torchlights on tree trunk (extra vibrant in the night)
+    const torchBaseIntensity = isNight ? 5.8 : 4.5;
+    const torchLeft = new THREE.PointLight(0xff7700, torchBaseIntensity, 1600);
     torchLeft.position.set(-350, 140, 240);
     scene.add(torchLeft);
 
-    const torchRight = new THREE.PointLight(0xffaa00, 4.5, 1400);
+    const torchRight = new THREE.PointLight(0xff9900, torchBaseIntensity, 1600);
     torchRight.position.set(350, 140, 240);
     scene.add(torchRight);
 
     // Ground level rim light for roots
-    const groundLight = new THREE.PointLight(0xd97706, 3.0, 1000);
+    const groundLight = new THREE.PointLight(isNight ? 0xe67300 : 0xd97706, isNight ? 3.4 : 3.0, 1000);
     groundLight.position.set(0, -60, 300);
     scene.add(groundLight);
 
@@ -103,9 +114,9 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
     });
 
     const cloudMaterial = new THREE.MeshStandardMaterial({
-      color: 0xffffff,
+      color: isNight ? 0x22354c : 0xffffff,
       transparent: true,
-      opacity: 0.72,
+      opacity: isNight ? 0.48 : 0.72,
       roughness: 1.0,
       flatShading: true,
     });
@@ -572,10 +583,11 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
       skyCloudsGroup.position.x = Math.sin(elapsed * 0.08) * 35;
       skyCloudsGroup.position.y = Math.cos(elapsed * 0.06) * 12;
 
-      // Torch flickering
-      torchLeft.intensity = 3.8 + Math.sin(elapsed * 11) * 0.4 + Math.cos(elapsed * 7) * 0.3;
-      torchRight.intensity = 3.8 + Math.cos(elapsed * 9) * 0.4 + Math.sin(elapsed * 6) * 0.3;
-      groundLight.intensity = 2.2 + Math.sin(elapsed * 8) * 0.3;
+      // Torch flickering (warmer and brighter during starry night)
+      const baseTorch = isNight ? 5.8 : 3.8;
+      torchLeft.intensity = baseTorch + Math.sin(elapsed * 11) * 0.4 + Math.cos(elapsed * 7) * 0.3;
+      torchRight.intensity = baseTorch + Math.cos(elapsed * 9) * 0.4 + Math.sin(elapsed * 6) * 0.3;
+      groundLight.intensity = (isNight ? 3.0 : 2.2) + Math.sin(elapsed * 8) * 0.3;
 
       // Particle upward drift
       const pPositions = particleGeo.attributes.position.array as Float32Array;
@@ -603,7 +615,7 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
       particleGeo.dispose();
       particleMat.dispose();
     };
-  }, [canvasW, canvasH]);
+  }, [canvasW, canvasH, isNight]);
 
   return (
     <div
