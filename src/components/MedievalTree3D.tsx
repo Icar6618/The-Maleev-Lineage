@@ -414,19 +414,6 @@ export const MedievalTree3D: React.FC<MedievalTree3DProps> = ({ canvasW, canvasH
     ];
     treeGroup.add(createTube(centerBackRoot, 17, rootMaterial));
 
-    // Radial Buttress Root Collars around trunk base
-    const rootAngles = [0.4, 1.2, 2.0, 2.8, 3.6, 4.4, 5.2, 6.0];
-    rootAngles.forEach(ang => {
-      const rootMesh = new THREE.Mesh(
-        new THREE.CylinderGeometry(11, 24, 100, 8),
-        rootMaterial
-      );
-      rootMesh.position.set(Math.cos(ang) * 46, 28, Math.sin(ang) * 46);
-      rootMesh.rotation.z = Math.cos(ang) * 0.58;
-      rootMesh.rotation.x = Math.sin(ang) * 0.58;
-      treeGroup.add(rootMesh);
-    });
-
     // =========================================================
     // C. CONTINUOUS CENTRAL TRUNK (Roots to Fork at Y=230)
     // =========================================================
