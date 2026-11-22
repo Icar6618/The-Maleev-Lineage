@@ -133,13 +133,13 @@ export const Header: React.FC<HeaderProps> = ({
               type="button"
               onClick={onToggleTheme}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border transition-all duration-300 cursor-pointer text-xs font-['Cinzel'] font-bold shadow-md ${
-                isNight
+                !isNight
                   ? 'bg-gradient-to-r from-[#0a1120] to-[#141f38] text-[#38bdf8] border-[#38bdf8]/50 hover:border-[#7dd3fc] hover:shadow-[0_0_15px_rgba(56,189,248,0.35)]'
                   : 'bg-gradient-to-r from-[#24170d] to-[#362214] text-[#ffd700] border-[#d4af37]/60 hover:border-[#ffd700] hover:shadow-[0_0_15px_rgba(212,175,55,0.35)]'
               }`}
               title={isNight ? 'Перемкнути на сонячний небесний день' : 'Перемкнути на зоряну ніч з місяцем'}
             >
-              {isNight ? (
+              {!isNight ? (
                 <>
                   <Moon className="w-4 h-4 text-[#38bdf8] fill-[#38bdf8]/20" />
                   <span className="hidden sm:inline text-[#e0f2fe]">Зоряна ніч</span>
